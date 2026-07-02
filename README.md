@@ -20,12 +20,15 @@ npm run preview
 
 Pliki gotowe do wdrożenia znajdziesz w folderze `dist/`.
 
-## Wdrożenie
+## Wdrożenie (GitHub Pages)
 
-Możesz wdrożyć na darmowych platformach:
-- [Netlify](https://netlify.com) — przeciągnij folder `dist`
-- [Vercel](https://vercel.com) — połącz repozytorium Git
-- [GitHub Pages](https://pages.github.com) — ustaw folder `dist` jako źródło
+Strona publikuje się automatycznie po pushu na gałąź `master` przez GitHub Actions.
+
+**URL:** https://birex-stack.github.io/product-design-portfolio/
+
+W ustawieniach repozytorium (**Settings → Pages → Build and deployment**) źródło musi być ustawione na **GitHub Actions** (nie „Deploy from branch”).
+
+Po pushu status wdrożenia sprawdzisz w zakładce **Actions** repozytorium.
 
 ## Co dostosować
 
