@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Portfolio Product Designera — case studies, proces projektowy i wybrane projekty UX/UI."
+    />
+    <title>Portfolio — Product Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Przejdź do treści</a>
+
+    <header class="site-header" id="top">
+      <nav class="nav container" aria-label="Główna nawigacja">
+        <a class="logo" href="#top">Portfolio</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+          aria-label="Otwórz menu"
+        >
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#work">Projekty</a></li>
+          <li><a href="#about">O mnie</a></li>
+          <li><a href="#process">Proces</a></li>
+          <li><a href="#contact" class="nav-cta">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <p class="eyebrow">Product Designer</p>
+            <h1>
+              Projektuję produkty cyfrowe,<br />
+              które <em>rozwiązują problemy</em> użytkowników
+            </h1>
+            <p class="hero-lead">
+              Łączę research, strategię produktową i dopracowany UI, aby tworzyć
+              intuicyjne doświadczenia. Poniżej znajdziesz wybrane case studies
+              z ostatnich projektów.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#work">Zobacz projekty</a>
+              <a class="btn btn-secondary" href="#contact">Skontaktuj się</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-card hero-card--back"></div>
+            <div class="hero-card hero-card--front">
+              <div class="hero-card-label">Ostatni projekt</div>
+              <div class="hero-card-title">Redesign aplikacji bankowej</div>
+              <div class="hero-card-meta">Mobile UX · Figma · Research</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats container">
+        <div class="stat">
+          <span class="stat-value">5+</span>
+          <span class="stat-label">Lat doświadczenia</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">20+</span>
+          <span class="stat-label">Zrealizowanych projektów</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">B2B / B2C</span>
+          <span class="stat-label">Fintech, SaaS, E-commerce</span>
+        </div>
+      </section>
+
+      <section class="work section" id="work">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Wybrane prace</p>
+            <h2>Case studies</h2>
+            <p class="section-desc">
+              Pięć projektów pokazujących moje podejście — od discovery po
+              finalne UI i walidację z użytkownikami.
+            </p>
+          </div>
+
+          <div class="projects">
+            <article class="project-card" id="project-1">
+              <a class="project-link" href="#project-1-detail">
+                <div class="project-image-wrap">
+                  <img
+                    src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=800&fit=crop&q=80"
+                    alt="Mockup aplikacji bankowej na telefonie"
+                    loading="lazy"
+                    width="1200"
+                    height="800"
+                  />
+                </div>
+                <div class="project-info">
+                  <div class="project-tags">
+                    <span>Mobile UX</span>
+                    <span>Fintech</span>
+                  </div>
+                  <h3>Redesign aplikacji bankowej</h3>
+                  <p>
+                    Uproszczenie przepływu płatności i przelewów — redukcja
+                    liczby kroków o 40%.
+                  </p>
+                  <span class="project-cta">Zobacz case study →</span>
+                </div>
+              </a>
+            </article>
+
+            <article class="project-card project-card--reverse" id="project-2">
+              <a class="project-link" href="#project-2-detail">
+                <div class="project-image-wrap">
+                  <img
+                    src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=800&fit=crop&q=80"
+                    alt="Interfejs checkout e-commerce na laptopie"
+                    loading="lazy"
+                    width="1200"
+                    height="800"
+                  />
+                </div>
+                <div class="project-info">
+                  <div class="project-tags">
+                    <span>E-commerce</span>
+                    <span>Conversion</span>
+                  </div>
+                  <h3>Optymalizacja checkoutu</h3>
+                  <p>
+                    Redesign procesu zakupowego z naciskiem na mobile-first i
+                    redukcję porzuceń koszyka.
+                  </p>
+                  <span class="project-cta">Zobacz case study →</span>
+                </div>
+              </a>
+            </article>
+
+            <article class="project-card" id="project-3">
+              <a class="project-link" href="#project-3-detail">
+                <div class="project-image-wrap">
+                  <img
+                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop&q=80"
+                    alt="Dashboard analityczny SaaS"
+                    loading="lazy"
+                    width="1200"
+                    height="800"
+                  />
+                </div>
+                <div class="project-info">
+                  <div class="project-tags">
+                    <span>Design System</span>
+                    <span>SaaS</span>
+                  </div>
+                  <h3>Design System dla platformy SaaS</h3>
+                  <p>
+                    Spójna biblioteka komponentów i dokumentacja dla zespołu
+                    produktowego i developerskiego.
+                  </p>
+                  <span class="project-cta">Zobacz case study →</span>
+                </div>
+              </a>
+            </article>
+
+            <article class="project-card project-card--reverse" id="project-4">
+              <a class="project-link" href="#project-4-detail">
+                <div class="project-image-wrap">
+                  <img
+                    src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50c?w=1200&h=800&fit=crop&q=80"
+                    alt="Aplikacja wellness i fitness"
+                    loading="lazy"
+                    width="1200"
+                    height="800"
+                  />
+                </div>
+                <div class="project-info">
+                  <div class="project-tags">
+                    <span>Health</span>
+                    <span>Mobile App</span>
+                  </div>
+                  <h3>Aplikacja wellness od zera</h3>
+                  <p>
+                    End-to-end design — onboarding, śledzenie nawyków i
+                    personalizacja doświadczenia.
+                  </p>
+                  <span class="project-cta">Zobacz case study →</span>
+                </div>
+              </a>
+            </article>
+
+            <article class="project-card" id="project-5">
+              <a class="project-link" href="#project-5-detail">
+                <div class="project-image-wrap">
+                  <img
+                    src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=800&fit=crop&q=80"
+                    alt="Platforma rezerwacji podróży"
+                    loading="lazy"
+                    width="1200"
+                    height="800"
+                  />
+                </div>
+                <div class="project-info">
+                  <div class="project-tags">
+                    <span>Travel</span>
+                    <span>User Journey</span>
+                  </div>
+                  <h3>Platforma rezerwacji podróży</h3>
+                  <p>
+                    Mapowanie customer journey i redesign wyszukiwarki lotów z
+                    hotelami.
+                  </p>
+                  <span class="project-cta">Zobacz case study →</span>
+                </div>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-studies section" id="case-studies">
+        <div class="container">
+          <div class="section-header">
+            <p class="eyebrow">Szczegóły</p>
+            <h2>Case studies w skrócie</h2>
+          </div>
+
+          <div class="case-study" id="project-1-detail">
+            <div class="case-study-header">
+              <span class="case-number">01</span>
+              <h3>Redesign aplikacji bankowej</h3>
+            </div>
+            <div class="case-study-grid">
+              <div class="case-meta">
+                <div><strong>Rola</strong> Lead Product Designer</div>
+                <div><strong>Czas</strong> 4 miesiące</div>
+                <div><strong>Narzędzia</strong> Figma, Maze, FigJam</div>
+              </div>
+              <div class="case-content">
+                <h4>Wyzwanie</h4>
+                <p>
+                  Użytkownicy porzucali proces przelewu w 62% przypadków z
+                  powodu zbyt skomplikowanego flow i braku jasnej informacji
+                  zwrotnej.
+                </p>
+                <h4>Rozwiązanie</h4>
+                <p>
+                  Przeprowadziłem 12 wywiadań, zmapowałem user journey i
+                  zaprojektowałem uproszczony flow z progressive disclosure.
+                  Prototyp przetestowany z 24 użytkownikami przed wdrożeniem.
+                </p>
+                <div class="case-gallery">
+                  <img
+                    src="https://images.unsplash.com/photo-1611162617474-5b21e939e113?w=800&h=600&fit=crop&q=80"
+                    alt="Ekrany aplikacji mobilnej — placeholder"
+                    loading="lazy"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop&q=80"
+                    alt="Wireframe'y — placeholder"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study" id="project-2-detail">
+            <div class="case-study-header">
+              <span class="case-number">02</span>
+              <h3>Optymalizacja checkoutu</h3>
+            </div>
+            <div class="case-study-grid">
+              <div class="case-meta">
+                <div><strong>Rola</strong> Product Designer</div>
+                <div><strong>Czas</strong> 3 miesiące</div>
+                <div><strong>Narzędzia</strong> Figma, Hotjar, GA4</div>
+              </div>
+              <div class="case-content">
+                <h4>Wyzwanie</h4>
+                <p>
+                  Wysoki wskaźnik porzuceń koszyka na mobile (78%) i
+                  niespójne doświadczenie między krokami checkoutu.
+                </p>
+                <h4>Rozwiązanie</h4>
+                <p>
+                  One-page checkout, guest checkout na pierwszym planie,
+                  sticky summary koszyka. A/B test potwierdził wzrost konwersji
+                  o 23%.
+                </p>
+                <div class="case-gallery">
+                  <img
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&q=80"
+                    alt="Checkout flow — placeholder"
+                    loading="lazy"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1555421689-d68471ad4402?w=800&h=600&fit=crop&q=80"
+                    alt="Mobile checkout — placeholder"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study" id="project-3-detail">
+            <div class="case-study-header">
+              <span class="case-number">03</span>
+              <h3>Design System dla platformy SaaS</h3>
+            </div>
+            <div class="case-study-grid">
+              <div class="case-meta">
+                <div><strong>Rola</strong> Design System Lead</div>
+                <div><strong>Czas</strong> 6 miesięcy</div>
+                <div><strong>Narzędzia</strong> Figma, Storybook, Zeroheight</div>
+              </div>
+              <div class="case-content">
+                <h4>Wyzwanie</h4>
+                <p>
+                  Zespół produktowy projektował od zera w każdym nowym feature,
+                  co prowadziło do niespójności UI i wolniejszego developmentu.
+                </p>
+                <h4>Rozwiązanie</h4>
+                <p>
+                  Tokeny designu, 45 komponentów, guidelines i dokumentacja.
+                  Skrócenie czasu projektowania nowych ekranów o ~35%.
+                </p>
+                <div class="case-gallery">
+                  <img
+                    src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop&q=80"
+                    alt="Komponenty design systemu — placeholder"
+                    loading="lazy"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&h=600&fit=crop&q=80"
+                    alt="Dokumentacja design systemu — placeholder"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study" id="project-4-detail">
+            <div class="case-study-header">
+              <span class="case-number">04</span>
+              <h3>Aplikacja wellness od zera</h3>
+            </div>
+            <div class="case-study-grid">
+              <div class="case-meta">
+                <div><strong>Rola</strong> Product Designer</div>
+                <div><strong>Czas</strong> 5 miesięcy</div>
+                <div><strong>Narzędzia</strong> Figma, Notion, UserTesting</div>
+              </div>
+              <div class="case-content">
+                <h4>Wyzwanie</h4>
+                <p>
+                  Wejście na rynek wellness z produktem, który musi budować
+                  codzienny nawyk bez przytłaczania użytkownika.
+                </p>
+                <h4>Rozwiązanie</h4>
+                <p>
+                  Personalizowany onboarding, micro-interactions jako reward loop
+                  i dashboard z jasną hierarchią priorytetów dnia.
+                </p>
+                <div class="case-gallery">
+                  <img
+                    src="https://images.unsplash.com/photo-1576678927484-cc907957088c?w=800&h=600&fit=crop&q=80"
+                    alt="Onboarding wellness app — placeholder"
+                    loading="lazy"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=800&h=600&fit=crop&q=80"
+                    alt="Dashboard aplikacji — placeholder"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="case-study" id="project-5-detail">
+            <div class="case-study-header">
+              <span class="case-number">05</span>
+              <h3>Platforma rezerwacji podróży</h3>
+            </div>
+            <div class="case-study-grid">
+              <div class="case-meta">
+                <div><strong>Rola</strong> Senior Product Designer</div>
+                <div><strong>Czas</strong> 4 miesiące</div>
+                <div><strong>Narzędzia</strong> Figma, Miro, Dovetail</div>
+              </div>
+              <div class="case-content">
+                <h4>Wyzwanie</h4>
+                <p>
+                  Użytkownicy gubili się w wyszukiwarce lotów + hoteli —
+                  zbyt wiele filtrów i brak porównania opcji side-by-side.
+                </p>
+                <h4>Rozwiązanie</h4>
+                <p>
+                  Unified search bar, smart filters z podglądem wyników na żywo
+                  i widok porównawczy pakietów podróży.
+                </p>
+                <div class="case-gallery">
+                  <img
+                    src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=600&fit=crop&q=80"
+                    alt="Wyszukiwarka podróży — placeholder"
+                    loading="lazy"
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&h=600&fit=crop&q=80"
+                    alt="Porównanie pakietów — placeholder"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about section" id="about">
+        <div class="container about-grid">
+          <div class="section-header">
+            <p class="eyebrow">O mnie</p>
+            <h2>Product Designer z pasją do prostoty</h2>
+            <p class="section-desc">
+              <!-- TODO: Podmień na swoje dane -->
+              Jestem Product Designerem z doświadczeniem w projektowaniu produktów
+              B2B i B2C. Pracuję na styku biznesu, technologii i potrzeb
+              użytkowników — od discovery, przez prototypowanie, po współpracę z
+              developerami przy wdrożeniu.
+            </p>
+          </div>
+          <div class="skills">
+            <h3>Umiejętności</h3>
+            <ul class="skill-list">
+              <li>User Research &amp; Discovery</li>
+              <li>Information Architecture</li>
+              <li>Wireframing &amp; Prototyping</li>
+              <li>UI Design &amp; Design Systems</li>
+              <li>Usability Testing</li>
+              <li>Design Handoff &amp; Dev Collaboration</li>
+            </ul>
+            <h3>Narzędzia</h3>
+            <ul class="tool-list">
+              <li>Figma</li>
+              <li>FigJam</li>
+              <li>Miro</li>
+              <li>Principle / ProtoPie</li>
+              <li>Notion</li>
+              <li>Jira / Linear</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="process section" id="process">
+        <div class="container">
+          <div class="section-header section-header--center">
+            <p class="eyebrow">Proces</p>
+            <h2>Jak pracuję</h2>
+          </div>
+          <ol class="process-steps">
+            <li>
+              <span class="step-num">1</span>
+              <h3>Discover</h3>
+              <p>
+                Research, wywiady, analiza danych i zdefiniowanie problemu
+                wraz z metrykami sukcesu.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <h3>Define</h3>
+              <p>
+                Persony, user journeys, hipotezy i priorytetyzacja scope'u
+                MVP.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <h3>Design</h3>
+              <p>
+                Wireframe'y, prototypy high-fidelity, iteracje na podstawie
+                feedbacku zespołu i użytkowników.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <h3>Deliver</h3>
+              <p>
+                Specyfikacja, design handoff, QA wizualne i wsparcie przy
+                wdrożeniu.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="contact section" id="contact">
+        <div class="container contact-inner">
+          <div class="contact-content">
+            <p class="eyebrow">Kontakt</p>
+            <h2>Porozmawiajmy o Twoim produkcie</h2>
+            <p>
+              Szukasz Product Designera do swojego zespołu? Chętnie opowiem więcej
+              o moich projektach i podejściu do pracy.
+            </p>
+          </div>
+          <div class="contact-links">
+            <!-- TODO: Podmień linki na swoje -->
+            <a class="contact-link" href="mailto:twoj.email@example.com">
+              <span class="contact-label">Email</span>
+              <span>twoj.email@example.com</span>
+            </a>
+            <a
+              class="contact-link"
+              href="https://linkedin.com/in/twoj-profil"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="contact-label">LinkedIn</span>
+              <span>linkedin.com/in/twoj-profil</span>
+            </a>
+            <a class="contact-link" href="#" aria-disabled="true">
+              <span class="contact-label">CV / Resume</span>
+              <span>PDF — wkrótce</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© 2026 — Product Design Portfolio</p>
+        <a href="#top">Wróć na górę ↑</a>
+      </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
