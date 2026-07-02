@@ -535,6 +535,23 @@ p {
   border: 1px solid var(--color-border);
 }
 
+.case-gallery__portrait {
+  aspect-ratio: auto;
+  object-fit: contain;
+  grid-column: 1 / -1;
+  background: #161616;
+}
+
+.case-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.case-content a:hover {
+  color: var(--color-accent-hover);
+}
+
 /* About */
 
 .about-grid {

@@ -64,8 +64,8 @@
             <div class="hero-card hero-card--back"></div>
             <div class="hero-card hero-card--front">
               <div class="hero-card-label">Ostatni projekt</div>
-              <div class="hero-card-title">Redesign aplikacji bankowej</div>
-              <div class="hero-card-meta">Mobile UX · Figma · Research</div>
+              <div class="hero-card-title">IBM Security — IBM TMX</div>
+              <div class="hero-card-meta">Enterprise UX · Security · Triage Analyst</div>
             </div>
           </div>
         </div>
@@ -102,8 +102,8 @@
               <a class="project-link" href="#project-1-detail">
                 <div class="project-image-wrap">
                   <img
-                    src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1200&h=800&fit=crop&q=80"
-                    alt="Mockup aplikacji bankowej na telefonie"
+                    src="./images/ibm-tmx-cases.png"
+                    alt="IBM TMX — widok listy Cases dla analityków triage"
                     loading="lazy"
                     width="1200"
                     height="800"
@@ -111,13 +111,13 @@
                 </div>
                 <div class="project-info">
                   <div class="project-tags">
-                    <span>Mobile UX</span>
-                    <span>Fintech</span>
+                    <span>Enterprise</span>
+                    <span>Security</span>
                   </div>
-                  <h3>Redesign aplikacji bankowej</h3>
+                  <h3>IBM Security — IBM TMX</h3>
                   <p>
-                    Uproszczenie przepływu płatności i przelewów — redukcja
-                    liczby kroków o 40%.
+                    Platforma dla Triage Analyst — ocena ryzyka, security
+                    investigations i szybka decyzja o eskalacji incydentów.
                   </p>
                   <span class="project-cta">Zobacz case study →</span>
                 </div>
@@ -241,37 +241,56 @@
           <div class="case-study" id="project-1-detail">
             <div class="case-study-header">
               <span class="case-number">01</span>
-              <h3>Redesign aplikacji bankowej</h3>
+              <h3>IBM Security — IBM TMX</h3>
             </div>
             <div class="case-study-grid">
               <div class="case-meta">
-                <div><strong>Rola</strong> Lead Product Designer</div>
-                <div><strong>Czas</strong> 4 miesiące</div>
-                <div><strong>Narzędzia</strong> Figma, Maze, FigJam</div>
+                <div><strong>Rola</strong> Product Designer</div>
+                <div><strong>Klient</strong> IBM Security</div>
+                <div><strong>Użytkownik</strong> Triage Analyst</div>
+                <div><strong>Narzędzia</strong> Figma, IBM Carbon Design System</div>
               </div>
               <div class="case-content">
+                <h4>Kontekst</h4>
+                <p>
+                  Projekt dla roli
+                  <a
+                    href="https://www.ibm.com/docs/en/fcifi/3.0.1?topic=roles-triage-analyst"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Triage Analyst</a
+                  >
+                  — analityków oceniających przychodzące alerty security,
+                  identyfikujących podejrzane zdarzenia i decydujących o dalszym
+                  postępowaniu: zamknięciu false positive lub eskalacji do
+                  pełnej investigacji.
+                </p>
                 <h4>Wyzwanie</h4>
                 <p>
-                  Użytkownicy porzucali proces przelewu w 62% przypadków z
-                  powodu zbyt skomplikowanego flow i braku jasnej informacji
-                  zwrotnej.
+                  Analityk triage musi podejmować szybkie decyzje w oparciu o
+                  duże ilości danych — severity, źródła IP, powiązane eventy i
+                  historię podobnych przypadków. Interfejs musiał skrócić czas
+                  oceny ryzyka bez utraty kontekstu potrzebnego do audytu.
                 </p>
                 <h4>Rozwiązanie</h4>
                 <p>
-                  Przeprowadziłem 12 wywiadań, zmapowałem user journey i
-                  zaprojektowałem uproszczony flow z progressive disclosure.
-                  Prototyp przetestowany z 24 użytkownikami przed wdrożeniem.
+                  Zaprojektowałem widok <strong>Cases</strong> — tabelaryczną
+                  listę incydentów z filtrowaniem po severity, client group i
+                  przypisaniu — oraz szczegółowy widok <strong>Case</strong> z
+                  metrykami ryzyka, analizą wskaźników IP, sugestiami podobnych
+                  investigacji i akcjami eskalacji do Tier 2.
                 </p>
                 <div class="case-gallery">
                   <img
-                    src="https://images.unsplash.com/photo-1611162617474-5b21e939e113?w=800&h=600&fit=crop&q=80"
-                    alt="Ekrany aplikacji mobilnej — placeholder"
+                    src="./images/ibm-tmx-cases.png"
+                    alt="IBM TMX — widok Cases z listą incydentów security"
                     loading="lazy"
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop&q=80"
-                    alt="Wireframe'y — placeholder"
+                    src="./images/ibm-tmx-case-detail.png"
+                    alt="IBM TMX — szczegóły Case z oceną ryzyka i opcjami eskalacji"
                     loading="lazy"
+                    class="case-gallery__portrait"
                   />
                 </div>
               </div>
