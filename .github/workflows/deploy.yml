@@ -33,10 +33,16 @@ jobs:
           BASE_PATH: /product-design-portfolio/
         run: npm run build
 
-      - name: Deploy to gh-pages branch
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist
-          branch: gh-pages
-          single-commit: true
-          commit-message: Deploy portfolio from ${{ github.sha }}
+      - name: Prepare docs folder
+        run: |
+          rm -rf docs
+          cp -r dist docs
+          touch docs/.nojekyll
+
+      - name: Deploy to master/docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git diff --staged --quiet || git commit -m "Deploy site to docs [skip ci]"
+          git push
