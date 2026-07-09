@@ -8,6 +8,13 @@
   --carbon-g90: #262626;
   --carbon-g100: #161616;
 
+  /* Project dark surfaces (IBM, KARMEN) — revert to graphite:
+     --project-dark-bg: var(--carbon-g100);
+     --teaser-footer-bg-dark: rgba(22, 22, 22, 0.72); */
+  --project-dark-bg: #000000;
+  --teaser-bg-dark: var(--project-dark-bg);
+  --teaser-footer-bg-dark: rgba(0, 0, 0, 0.72);
+
   --bg: var(--carbon-white);
   --bg-g10: var(--carbon-g10);
   --bg-g100: var(--carbon-g100);
@@ -41,35 +48,13 @@
   --cta-gradient: linear-gradient(
     90deg,
     #0f62fe 0%,
-    #1e74f8 4%,
-    #2d86fa 8%,
-    #4589ff 12%,
-    #4d9aef 15%,
-    #48a8dc 18%,
-    #44b4b8 21%,
-    #42be82 24%,
-    #42be65 28%,
-    #42be65 34%,
-    #42be82 38%,
-    #44b4b8 41%,
-    #48a8dc 44%,
-    #4d9aef 46%,
-    #4589ff 48%,
+    #4589ff 12.5%,
+    #78a9ff 25%,
+    #4589ff 37.5%,
     #0f62fe 50%,
-    #1e74f8 54%,
-    #2d86fa 58%,
-    #4589ff 62%,
-    #4d9aef 65%,
-    #48a8dc 68%,
-    #44b4b8 71%,
-    #42be82 74%,
-    #42be65 78%,
-    #42be65 84%,
-    #42be82 88%,
-    #44b4b8 91%,
-    #48a8dc 94%,
-    #4d9aef 96%,
-    #4589ff 98%,
+    #4589ff 62.5%,
+    #78a9ff 75%,
+    #4589ff 87.5%,
     #0f62fe 100%
   );
   --shadow: 0 1px 2px rgba(22, 22, 22, 0.06);
@@ -471,6 +456,11 @@ p {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
 
+.story-project--ibm.story-band--g100,
+.story-project--karmen.story-band--g100 {
+  background: var(--project-dark-bg);
+}
+
 .story-band--grid .container {
   position: relative;
   z-index: 1;
@@ -652,7 +642,7 @@ p {
 /* Per-project teaser backgrounds */
 
 .project-card-teaser--ibm {
-  background-color: var(--carbon-g100);
+  background-color: var(--teaser-bg-dark);
 }
 
 .project-card-teaser--ibm::after {
@@ -688,8 +678,8 @@ p {
 /* Section themes */
 
 .story-project--ibm {
-  --card-fade-color: var(--carbon-g100);
-  --card-footer-bg: rgba(22, 22, 22, 0.72);
+  --card-fade-color: var(--project-dark-bg);
+  --card-footer-bg: var(--teaser-footer-bg-dark);
   --card-footer-border: rgba(255, 255, 255, 0.1);
 }
 
@@ -735,8 +725,8 @@ p {
 }
 
 .story-project--karmen {
-  --card-fade-color: var(--carbon-g100);
-  --card-footer-bg: rgba(22, 22, 22, 0.72);
+  --card-fade-color: var(--project-dark-bg);
+  --card-footer-bg: var(--teaser-footer-bg-dark);
   --card-footer-border: rgba(255, 255, 255, 0.1);
 }
 
