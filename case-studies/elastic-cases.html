@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Elastic Cases — Helping analysts connect signals into actionable cases."
+    />
+    <title>Elastic Cases — Maciej Forc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav container" aria-label="Case study navigation">
+        <a class="logo" href="../index.html">Maciej Forc</a>
+        <a class="case-back" href="../index.html#challenges">← All challenges</a>
+      </nav>
+    </header>
+
+    <main>
+      <header class="case-hero container">
+        <p class="label">Observability · Elastic Cases</p>
+        <h1>Helping analysts connect signals into actionable cases.</h1>
+        <div class="case-hero-meta">
+          <span>Role: Product Designer</span>
+          <span>User: Security / Ops Analyst</span>
+        </div>
+      </header>
+
+      <section class="case-block container reveal">
+        <h2>The Problem</h2>
+        <p class="case-problem-text">
+          Analysts detected anomalies across logs, metrics and alerts — but
+          turning isolated signals into coherent investigations was manual and
+          inconsistent. Cases were tracked in spreadsheets, chat threads and
+          ticket systems. The business needed a native investigation workflow
+          inside Elastic. The constraint: fit existing analyst habits without
+          forcing a new toolchain.
+        </p>
+        <div class="media-placeholder">Cases Overview — screenshot placeholder</div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>How We Understood the Problem</h2>
+        <div class="phase-grid">
+          <article class="phase-card">
+            <p class="phase-card-num">01</p>
+            <h3>Understand Business</h3>
+            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Business context</div>
+            <ul class="phase-bullets">
+              <li>Positioned Cases as the investigation hub within Elastic.</li>
+              <li>Aligned security and ops teams on shared case lifecycle.</li>
+              <li>Scoped MVP to create, enrich and close — not full SOAR.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Cases succeed when they reduce context-switching, not add process.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">02</p>
+            <h3>Learn from Users</h3>
+            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">User research</div>
+            <ul class="phase-bullets">
+              <li>Analysts rebuilt context manually every time they switched tools.</li>
+              <li>Similar past cases were the most valued — and hardest to find.</li>
+              <li>Collaboration happened in side channels, invisible to the case.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Investigations are memory problems before they're data problems.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">03</p>
+            <h3>Shape the Experience</h3>
+            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Experience design</div>
+            <ul class="phase-bullets">
+              <li>One case aggregates alerts, events and analyst notes.</li>
+              <li>Timeline view shows investigation progression clearly.</li>
+              <li>Similar cases surfaced proactively during investigation.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              A case is a container for context — not a ticket with a title.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">04</p>
+            <h3>Validate</h3>
+            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Validation</div>
+            <ul class="phase-bullets">
+              <li>Playback sessions showed faster case creation from alerts.</li>
+              <li>Analysts trusted the timeline over external note-taking.</li>
+              <li>Pilot teams reduced tool-switching during investigations.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Adoption followed when Cases lived where analysts already worked.
+            </p>
+          </article>
+        </div>
+
+        <details class="deep-dive">
+          <summary>Read more — research &amp; validation details</summary>
+          <div class="deep-dive-content">
+            <p>
+              Activity tracking showed analysts averaged 14 context switches per
+              investigation. Interviews revealed "similar cases" were found
+              through memory and Slack — not search. Storyboard sessions
+              validated that timeline-first layout matched how analysts
+              narrate incidents to colleagues.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Design Process</h2>
+        <div class="process-flow">
+          <div class="process-step">
+            <h4>Business</h4>
+            <p>Defined Cases as Elastic's native investigation workflow.</p>
+          </div>
+          <div class="process-step">
+            <h4>Research</h4>
+            <p>Mapped investigation patterns across security and ops teams.</p>
+          </div>
+          <div class="process-step">
+            <h4>Design</h4>
+            <p>Designed case container with timeline and signal aggregation.</p>
+          </div>
+          <div class="process-step">
+            <h4>Validate</h4>
+            <p>Ran playback and pilot with enterprise analyst teams.</p>
+          </div>
+          <div class="process-step">
+            <h4>Launch</h4>
+            <p>Released as core Cases experience in Elastic Security.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Solution</h2>
+        <div class="solution-grid">
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Reduced context-switching.</p>
+              <p class="solution-desc">
+                Alerts, events and notes live in one case — no rebuilding
+                context across tools.
+              </p>
+            </div>
+            <div class="media-placeholder" style="min-height: 200px">Unified case view</div>
+          </article>
+
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Better discoverability of past work.</p>
+              <p class="solution-desc">
+                Similar cases surface during investigation — institutional
+                memory becomes searchable.
+              </p>
+            </div>
+            <div class="media-placeholder" style="min-height: 200px">Similar cases</div>
+          </article>
+
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Clearer investigation narrative.</p>
+              <p class="solution-desc">
+                Timeline view makes the investigation story legible to the
+                analyst and their team.
+              </p>
+            </div>
+            <div class="media-placeholder" style="min-height: 200px">Investigation timeline</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Key Design Decisions</h2>
+        <div class="decisions-grid">
+          <article class="decision-card">
+            <h3>Timeline-first over list-first</h3>
+            <dl>
+              <div class="decision-row">
+                <dt>Alternatives</dt>
+                <dd>Tabbed interface with separate alert, event and note panels.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Tradeoffs</dt>
+                <dd>Less flexible for power users who prefer raw lists.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Decision</dt>
+                <dd>Timeline as primary view — matches how analysts tell the story.</dd>
+              </div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Impact</h2>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <strong>Enterprise adoption</strong>
+            <span>Adopted by security teams within Elastic customer base.</span>
+          </div>
+          <div class="impact-item">
+            <strong>Engineering impact</strong>
+            <span>Unified investigation model across Elastic Security modules.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Reflection</h2>
+        <p class="reflection-text">
+          Analysts didn't want a new tool — they wanted less fragmentation.
+          Today I'd push harder on collaborative features earlier, since
+          investigations are team sports even when they look individual.
+        </p>
+      </section>
+
+      <section class="case-nav container case-nav-footer">
+        <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
+      </section>
+    </main>
+
+    <script type="module" src="../main.js"></script>
+  </body>
+</html>

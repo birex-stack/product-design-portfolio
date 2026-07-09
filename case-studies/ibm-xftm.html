@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="IBM XFTM — Helping Threat Analysts investigate incidents faster."
+    />
+    <title>IBM XFTM — Maciej Forc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav container" aria-label="Case study navigation">
+        <a class="logo" href="../index.html">Maciej Forc</a>
+        <a class="case-back" href="../index.html#challenges">← All challenges</a>
+      </nav>
+    </header>
+
+    <main>
+      <header class="case-hero container">
+        <p class="label">Enterprise Security · IBM XFTM</p>
+        <h1>Helping Threat Analysts investigate incidents faster.</h1>
+        <div class="case-hero-meta">
+          <span>Role: Product Designer</span>
+          <span>User: Triage Analyst</span>
+        </div>
+      </header>
+
+      <section class="case-block container reveal">
+        <h2>The Problem</h2>
+        <p class="case-problem-text">
+          Security teams were drowning in alerts. Triage analysts had access to
+          vast amounts of data but lacked a clear path from signal to decision.
+          The business needed faster disposition — close false positives or
+          escalate real threats — without sacrificing auditability. The
+          constraint: enterprise-grade complexity, analyst-grade speed.
+        </p>
+        <div class="case-hero-media">
+          <img
+            class="zoomable"
+            src="../images/ibm-xftm-cases.png"
+            alt="IBM XFTM Cases queue with severity filtering"
+            loading="eager"
+          />
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>How We Understood the Problem</h2>
+        <div class="phase-grid">
+          <article class="phase-card">
+            <p class="phase-card-num">01</p>
+            <h3>Understand Business</h3>
+            <div class="phase-card-image">
+              <img src="../images/ibm-xftm-cases.png" alt="Cases overview" loading="lazy" />
+            </div>
+            <ul class="phase-bullets">
+              <li>Aligned goals across security, support and product teams.</li>
+              <li>Scoped the product to triage decisions — close or escalate.</li>
+              <li>Defined success as time-to-disposition, not feature count.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              The product wins when analysts decide — not when they investigate.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">02</p>
+            <h3>Learn from Users</h3>
+            <div class="phase-card-image phase-card-image--contain">
+              <img src="../images/ibm-xftm-detail.png" alt="Case detail view" loading="lazy" />
+            </div>
+            <ul class="phase-bullets">
+              <li>Analysts spent more time collecting data than making decisions.</li>
+              <li>Most disposition calls happened in a narrow time window.</li>
+              <li>Contextual data mattered more than comprehensive data.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Speed comes from the right context upfront — not more tabs.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">03</p>
+            <h3>Shape the Experience</h3>
+            <div class="phase-card-image">
+              <img src="../images/ibm-xftm-cases.png" alt="Prioritized case queue" loading="lazy" />
+            </div>
+            <ul class="phase-bullets">
+              <li>Two-view model: scan the queue, then commit to a case.</li>
+              <li>Risk signals unified in one disposition flow.</li>
+              <li>Escalation as a single deliberate action.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Every screen must earn its place in the decision chain.
+            </p>
+          </article>
+
+          <article class="phase-card">
+            <p class="phase-card-num">04</p>
+            <h3>Validate</h3>
+            <div class="phase-card-image phase-card-image--contain">
+              <img src="../images/ibm-xftm-detail.png" alt="Validated case detail" loading="lazy" />
+            </div>
+            <ul class="phase-bullets">
+              <li>Prototypes confirmed risk-led layout reduced hesitation.</li>
+              <li>Analysts closed false positives with more confidence.</li>
+              <li>Carbon Design System alignment accelerated delivery.</li>
+            </ul>
+            <p class="phase-insight">
+              <span>Key insight</span>
+              Validation proved the model — not individual UI components.
+            </p>
+          </article>
+        </div>
+
+        <details class="deep-dive">
+          <summary>Read more — research &amp; validation details</summary>
+          <div class="deep-dive-content">
+            <p>
+              Shadowing sessions revealed analysts switching between six tools
+              before making a single disposition call. Interviews with Tier 1
+              and Tier 2 teams surfaced different mental models of "done."
+              Activity tracking showed the highest drop-off happened between
+              queue scan and case open — not inside the investigation itself.
+            </p>
+            <p>
+              Pilot playback sessions with three client groups validated that
+              progressive disclosure of IP intelligence outperformed showing
+              everything at once.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Design Process</h2>
+        <div class="process-flow">
+          <div class="process-step">
+            <h4>Business</h4>
+            <p>Aligned triage goals with security operations leadership.</p>
+          </div>
+          <div class="process-step">
+            <h4>Research</h4>
+            <p>Mapped analyst workflows from alert to disposition.</p>
+          </div>
+          <div class="process-step">
+            <h4>Design</h4>
+            <p>Structured two views around one decision model.</p>
+          </div>
+          <div class="process-step">
+            <h4>Validate</h4>
+            <p>Tested prototypes with triage analysts across client groups.</p>
+          </div>
+          <div class="process-step">
+            <h4>Launch</h4>
+            <p>Rolled out within IBM Security enterprise portfolio.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Solution</h2>
+        <div class="solution-grid">
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Reduced cognitive load in the queue.</p>
+              <p class="solution-desc">
+                Severity, assignment and client group visible at a glance —
+                analysts scan without parsing raw event data.
+              </p>
+            </div>
+            <div class="solution-media">
+              <img
+                class="zoomable"
+                src="../images/ibm-xftm-cases.png"
+                alt="Cases list reducing cognitive load"
+                loading="lazy"
+              />
+            </div>
+          </article>
+
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Improved prioritization under pressure.</p>
+              <p class="solution-desc">
+                Filters and summary metrics surface what needs attention now,
+                not everything that happened today.
+              </p>
+            </div>
+            <div class="solution-media">
+              <img
+                class="zoomable"
+                src="../images/ibm-xftm-cases.png"
+                alt="Prioritization filters"
+                loading="lazy"
+              />
+            </div>
+          </article>
+
+          <article class="solution-item">
+            <div>
+              <p class="solution-outcome">Faster investigations with full context.</p>
+              <p class="solution-desc">
+                Case detail unifies risk metrics, IP intelligence and similar
+                cases — one screen, one decision.
+              </p>
+            </div>
+            <div class="solution-media">
+              <img
+                class="zoomable"
+                src="../images/ibm-xftm-detail.png"
+                alt="Unified case investigation view"
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Key Design Decisions</h2>
+        <div class="decisions-grid">
+          <article class="decision-card">
+            <h3>Two views instead of one dashboard</h3>
+            <dl>
+              <div class="decision-row">
+                <dt>Alternatives</dt>
+                <dd>Single unified dashboard with drill-down panels.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Tradeoffs</dt>
+                <dd>More navigation steps, but clearer mental model per task.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Decision</dt>
+                <dd>Separate queue scanning from case investigation — matching how analysts actually work.</dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="decision-card">
+            <h3>Risk-led layout over data-led layout</h3>
+            <dl>
+              <div class="decision-row">
+                <dt>Alternatives</dt>
+                <dd>Chronological event stream as the primary view.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Tradeoffs</dt>
+                <dd>Less raw data visible upfront, but faster disposition calls.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Decision</dt>
+                <dd>Lead with risk assessment — raw data available on demand, not by default.</dd>
+              </div>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Impact</h2>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <strong>Enterprise adoption</strong>
+            <span>Deployed across IBM Security client environments globally.</span>
+          </div>
+          <div class="impact-item">
+            <strong>Positive customer feedback</strong>
+            <span>Analysts reported faster orientation on incoming incidents.</span>
+          </div>
+          <div class="impact-item">
+            <strong>Engineering impact</strong>
+            <span>Carbon Design System alignment reduced cross-team friction.</span>
+          </div>
+          <div class="impact-item">
+            <strong>Business impact</strong>
+            <span>Supported IBM Security's triage analyst workflow at scale.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-block container reveal">
+        <h2>Reflection</h2>
+        <p class="reflection-text">
+          I was surprised how much time analysts spent on orientation, not
+          analysis. If I started today, I'd involve Tier 2 investigators
+          earlier — their escalation criteria shaped better triage defaults than
+          any workshop could.
+        </p>
+      </section>
+
+      <section class="case-nav container case-nav-footer">
+        <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
+      </section>
+    </main>
+
+    <script type="module" src="../main.js"></script>
+  </body>
+</html>
