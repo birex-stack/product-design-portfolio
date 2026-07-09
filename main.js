@@ -23,22 +23,41 @@ if (navToggle && navMenu) {
   });
 }
 
-function updateHeader() {
-  if (!header) return;
-  header.classList.toggle('is-scrolled', window.scrollY > 12);
-  scrollTicking = false;
+function getSectionBehindHeader() {
+  if (!header) return null;
+  const probeY = header.offsetHeight + 1;
+  const sections = document.querySelectorAll('.story-band');
+
+  for (const section of sections) {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= probeY && rect.bottom > probeY) {
+      return section;
+    }
+  }
+
+  return null;
 }
 
-const heroBand = document.querySelector('.story-band--hero');
-
-if (heroBand && header) {
-  const heroObserver = new IntersectionObserver(
-    ([entry]) => {
-      header.classList.toggle('is-on-hero', entry.isIntersecting);
-    },
-    { threshold: 0.15 }
+function isDarkSection(section) {
+  if (!section) return false;
+  return (
+    section.classList.contains('story-band--hero') ||
+    section.classList.contains('story-band--g100')
   );
-  heroObserver.observe(heroBand);
+}
+
+function updateHeader() {
+  if (!header) return;
+
+  header.classList.toggle('is-scrolled', window.scrollY > 12);
+
+  const activeSection = getSectionBehindHeader();
+  const onDark = isDarkSection(activeSection);
+
+  header.classList.toggle('is-on-dark', onDark);
+  header.classList.toggle('is-on-light', !onDark);
+
+  scrollTicking = false;
 }
 
 let scrollTicking = false;
@@ -53,6 +72,8 @@ window.addEventListener(
   },
   { passive: true }
 );
+
+window.addEventListener('resize', updateHeader, { passive: true });
 
 updateHeader();
 
