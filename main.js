@@ -2,6 +2,10 @@ const header = document.querySelector('.site-header');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
+const prefersReducedMotion = window.matchMedia(
+  '(prefers-reduced-motion: reduce)'
+).matches;
+
 function closeMenu() {
   if (!navToggle || !navMenu) return;
   navToggle.setAttribute('aria-expanded', 'false');
@@ -19,11 +23,26 @@ if (navToggle && navMenu) {
   });
 }
 
-window.addEventListener('scroll', () => {
-  if (header) {
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
-  }
-});
+let scrollTicking = false;
+
+function updateHeader() {
+  if (!header) return;
+  header.classList.toggle('is-scrolled', window.scrollY > 12);
+  scrollTicking = false;
+}
+
+window.addEventListener(
+  'scroll',
+  () => {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      requestAnimationFrame(updateHeader);
+    }
+  },
+  { passive: true }
+);
+
+updateHeader();
 
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener('click', (event) => {
@@ -34,29 +53,42 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     if (!target) return;
 
     event.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth' });
+    target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     history.pushState(null, '', targetId);
   });
 });
 
-const revealElements = document.querySelectorAll('.reveal');
-if (revealElements.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+function revealElement(el) {
+  el.classList.add('is-visible');
+}
+
+function initRevealAnimations() {
+  const revealTargets = document.querySelectorAll(
+    '.reveal, .reveal-heading, .reveal-text, .reveal-image, .reveal-stagger'
+  );
+
+  if (!revealTargets.length) return;
+
+  if (prefersReducedMotion) {
+    revealTargets.forEach(revealElement);
+    return;
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        revealElement(entry.target);
+        observer.unobserve(entry.target);
       });
     },
-    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
   );
 
-  revealElements.forEach((el) => observer.observe(el));
-} else {
-  revealElements.forEach((el) => el.classList.add('is-visible'));
+  revealTargets.forEach((el) => observer.observe(el));
 }
+
+initRevealAnimations();
 
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
