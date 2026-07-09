@@ -6,6 +6,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'index.html',
+        karmen: 'case-studies/karmen.html',
         ibmXftm: 'case-studies/ibm-xftm.html',
         elasticSlo: 'case-studies/elastic-slo.html',
         elasticCases: 'case-studies/elastic-cases.html',

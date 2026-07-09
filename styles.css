@@ -462,6 +462,31 @@ p {
   color: var(--text-tertiary);
 }
 
+.case-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-top: 16px;
+  max-width: 48ch;
+  line-height: 1.5;
+}
+
+.case-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.case-badge {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
 .case-block {
   padding-block: 64px;
   border-top: 1px solid var(--border);
