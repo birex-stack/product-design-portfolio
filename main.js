@@ -23,13 +23,25 @@ if (navToggle && navMenu) {
   });
 }
 
-let scrollTicking = false;
-
 function updateHeader() {
   if (!header) return;
   header.classList.toggle('is-scrolled', window.scrollY > 12);
   scrollTicking = false;
 }
+
+const heroBand = document.querySelector('.story-band--hero');
+
+if (heroBand && header) {
+  const heroObserver = new IntersectionObserver(
+    ([entry]) => {
+      header.classList.toggle('is-on-hero', entry.isIntersecting);
+    },
+    { threshold: 0.15 }
+  );
+  heroObserver.observe(heroBand);
+}
+
+let scrollTicking = false;
 
 window.addEventListener(
   'scroll',
