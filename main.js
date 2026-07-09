@@ -1,3 +1,16 @@
+import './styles.css';
+
+const assetBase = import.meta.env.BASE_URL;
+
+document.documentElement.style.setProperty(
+  '--hero-bg',
+  `url("${assetBase}images/hero-aurora-background.png")`
+);
+document.documentElement.style.setProperty(
+  '--footer-bg',
+  `url("${assetBase}images/footer-background.png")`
+);
+
 const header = document.querySelector('.site-header');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
@@ -41,21 +54,25 @@ function getSectionBehindHeader() {
 function isDarkSection(section) {
   if (!section) return false;
   return (
-    section.classList.contains('story-band--hero') ||
-    section.classList.contains('story-band--g100')
+    section.classList.contains('story-band--g100') ||
+    section.classList.contains('story-band--footer')
   );
 }
 
 function updateHeader() {
   if (!header) return;
 
-  header.classList.toggle('is-scrolled', window.scrollY > 12);
-
   const activeSection = getSectionBehindHeader();
   const onDark = isDarkSection(activeSection);
+  const isHero =
+    activeSection?.id === 'top' ||
+    activeSection?.classList.contains('story-band--hero');
+  const isAtTop = window.scrollY <= 12 && isHero;
 
-  header.classList.toggle('is-on-dark', onDark);
-  header.classList.toggle('is-on-light', !onDark);
+  header.classList.toggle('is-scrolled', window.scrollY > 12);
+  header.classList.toggle('is-at-top', isAtTop);
+  header.classList.toggle('is-on-dark', onDark && !isAtTop);
+  header.classList.toggle('is-on-light', !onDark && !isAtTop);
 
   scrollTicking = false;
 }

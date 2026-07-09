@@ -14,7 +14,6 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -42,7 +41,7 @@
     </header>
 
     <main id="main">
-      <section class="story-band story-band--hero" id="about">
+      <section class="story-band story-band--hero" id="top">
         <div class="hero container">
           <h1 class="reveal reveal-heading">Maciej Forc</h1>
           <p class="hero-role reveal reveal-heading" style="--reveal-delay: 80ms">
@@ -51,11 +50,11 @@
           <p class="hero-lead reveal reveal-heading" style="--reveal-delay: 120ms">
             Designing intuitive products for real people.
           </p>
-          <p class="hero-sublead reveal reveal-text" style="--reveal-delay: 160ms">
-            Helping teams transform complex workflows into products people enjoy
-            using.
-          </p>
-          <p class="about-text reveal reveal-text" style="--reveal-delay: 200ms">
+          <p
+            class="hero-sublead reveal reveal-text"
+            id="about"
+            style="--reveal-delay: 160ms"
+          >
             I focus on making complex products easier to understand and use. I
             work closely with Product, Engineering and Research to turn real user
             problems into clear, practical product experiences.
@@ -258,7 +257,7 @@
       </section>
     </main>
 
-    <footer class="site-footer story-band story-band--g100">
+    <footer class="site-footer story-band story-band--footer">
       <div class="container footer-inner">
         <p>© 2026 Maciej Forc</p>
         <a href="#top">Back to top ↑</a>
