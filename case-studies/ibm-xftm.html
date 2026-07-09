@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="IBM XFTM — Helping Threat Analysts investigate incidents faster."
+      content="IBM XFTM — AI-powered threat disposition with ATDS. Helping Threat Analysts investigate incidents faster."
     />
     <title>IBM XFTM — Maciej Forc</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,22 +17,32 @@
   </head>
   <body>
     <header class="site-header">
-      <nav class="nav container" aria-label="Case study navigation">
-        <a class="logo" href="../index.html">Maciej Forc</a>
+      <nav class="nav container nav--case" aria-label="Case study navigation">
         <a class="case-back" href="../index.html#challenges">← All challenges</a>
+        <span class="case-nav-title">IBM XFTM</span>
       </nav>
     </header>
 
     <main>
       <section class="story-band story-band--white">
         <header class="case-hero container">
-          <p class="label reveal reveal-text">Enterprise Security · IBM XFTM</p>
+          <p class="label reveal reveal-text">Enterprise Security · AI · IBM XFTM</p>
           <h1 class="reveal reveal-heading">
             Helping Threat Analysts make better decisions during investigations.
           </h1>
           <p class="case-hero-lead reveal reveal-text">
-            A triage workflow that turns alert overload into clear disposition
-            calls — close or escalate, with confidence.
+            A triage workflow built around ATDS — IBM's Advanced Threat
+            Disposition System — turning trusted AI/ML scoring into actionable
+            alerts analysts can close, escalate or automate with confidence.
+          </p>
+          <p class="case-source reveal reveal-text">
+            <a
+              href="https://mediacenter.ibm.com/media/IBM+Security+AI-enhanced+triage++detection+for+AWS/1_sedfppci"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              IBM Security — AI-enhanced triage &amp; detection →
+            </a>
           </p>
           <div class="case-hero-media reveal reveal-image">
             <img
@@ -51,9 +61,16 @@
           <p class="case-problem-text reveal reveal-text">
             Security teams were drowning in alerts. Triage analysts had access to
             vast amounts of data but lacked a clear path from signal to decision.
+            Behind the scenes, ATDS — IBM's AI/ML disposition engine — could
+            analyze alerts and recommend actions with automation. The design
+            challenge was making those recommendations trusted, explainable and
+            fast enough for real investigations.
+          </p>
+          <p class="case-problem-text reveal reveal-text">
             The business needed faster disposition — close false positives or
             escalate real threats — without sacrificing auditability. The
-            constraint: enterprise-grade complexity, analyst-grade speed.
+            constraint: enterprise-grade complexity, analyst-grade speed, and AI
+            that analysts would actually rely on.
           </p>
         </section>
       </section>
@@ -70,7 +87,10 @@
             </div>
             <ul class="phase-bullets">
               <li>Aligned goals across security, support and product teams.</li>
-              <li>Scoped the product to triage decisions — close or escalate.</li>
+              <li>
+                Scoped the product around ATDS — trusted AI/ML disposition with
+                selectable automation.
+              </li>
               <li>Defined success as time-to-disposition, not feature count.</li>
             </ul>
             <p class="phase-insight">
@@ -104,8 +124,11 @@
             </div>
             <ul class="phase-bullets">
               <li>Two-view model: scan the queue, then commit to a case.</li>
-              <li>Risk signals unified in one disposition flow.</li>
-              <li>Escalation as a single deliberate action.</li>
+              <li>
+                ATDS confidence scoring and risk signals unified in one
+                disposition flow.
+              </li>
+              <li>Escalation and automation as deliberate, auditable actions.</li>
             </ul>
             <p class="phase-insight">
               <span>Key insight</span>
@@ -203,10 +226,11 @@
 
           <article class="solution-item">
             <div>
-              <p class="solution-outcome">Improved prioritization under pressure.</p>
+              <p class="solution-outcome">Surfaced ATDS-driven prioritization.</p>
               <p class="solution-desc">
-                Filters and summary metrics surface what needs attention now,
-                not everything that happened today.
+                AI/ML scoring from ATDS highlighted which alerts needed attention
+                now — turning automation-ready signals into an actionable queue,
+                not noise.
               </p>
             </div>
             <div class="solution-media reveal reveal-image">
@@ -221,10 +245,11 @@
 
           <article class="solution-item">
             <div>
-              <p class="solution-outcome">Faster investigations with full context.</p>
+              <p class="solution-outcome">Made trusted AI recommendations actionable.</p>
               <p class="solution-desc">
-                Case detail unifies risk metrics, IP intelligence and similar
-                cases — one screen, one decision.
+                Case detail presented ATDS disposition guidance with confidence,
+                risk context and similar cases — so analysts could close,
+                escalate or automate with explainable AI support.
               </p>
             </div>
             <div class="solution-media reveal reveal-image">
@@ -263,6 +288,27 @@
           </article>
 
           <article class="decision-card">
+            <h3>Trusted AI guidance over black-box automation</h3>
+            <dl>
+              <div class="decision-row">
+                <dt>Alternatives</dt>
+                <dd>Auto-close or auto-escalate alerts without analyst-visible reasoning.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Tradeoffs</dt>
+                <dd>More UI space for confidence scoring and disposition context.</dd>
+              </div>
+              <div class="decision-row">
+                <dt>Decision</dt>
+                <dd>
+                  Surface ATDS recommendations with explainability — analysts stay
+                  in control, AI handles the heavy lifting.
+                </dd>
+              </div>
+            </dl>
+          </article>
+
+          <article class="decision-card">
             <h3>Risk-led layout over data-led layout</h3>
             <dl>
               <div class="decision-row">
@@ -290,6 +336,13 @@
           <div class="impact-item">
             <strong>Enterprise adoption</strong>
             <span>Deployed across IBM Security client environments globally.</span>
+          </div>
+          <div class="impact-item">
+            <strong>AI-assisted disposition at scale</strong>
+            <span>
+              ATDS turned trusted ML scoring into actionable alerts — close,
+              escalate or automate with analyst oversight.
+            </span>
           </div>
           <div class="impact-item">
             <strong>Positive customer feedback</strong>

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: process.env.BASE_PATH ?? './',
+  base: process.env.BASE_PATH ?? '/product-design-portfolio/',
   build: {
     rollupOptions: {
       input: {
