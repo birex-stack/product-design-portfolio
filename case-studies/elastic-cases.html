@@ -32,12 +32,14 @@
             Helping teams manage incidents with more context and confidence.
           </h1>
           <p class="case-hero-lead reveal reveal-text">
-            Connected signals in one investigation workflow — so teams decide
-            what matters without rebuilding context from scratch.
+            A native case management experience in Elastic Security that helps
+            analysts and incident responders connect alerts, events and notes into
+            one investigation — without rebuilding context from scratch.
           </p>
-          <div class="case-hero-media reveal reveal-image">
-            <div class="media-placeholder">Cases Overview — screenshot placeholder</div>
-          </div>
+          <p class="case-my-role reveal reveal-text">
+            <span class="case-my-role-label">My role:</span>
+            Design lead
+          </p>
         </header>
       </section>
 
@@ -47,216 +49,158 @@
           <p class="case-problem-text reveal reveal-text">
             Analysts detected anomalies across logs, metrics and alerts — but
             turning isolated signals into coherent investigations was manual and
-            inconsistent. Cases were tracked in spreadsheets, chat threads and
-            ticket systems. The business needed a native investigation workflow
-            inside Elastic. The constraint: fit existing analyst habits without
-            forcing a new toolchain.
+            inconsistent. Cases lived in spreadsheets, chat threads and ticket
+            systems. Teams needed a native workflow inside Elastic that fit how
+            they already worked.
           </p>
         </section>
       </section>
 
       <section class="story-band story-band--white">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">How We Understood the Problem</h2>
-        <div class="phase-grid reveal reveal-stagger">
-          <article class="phase-card">
-            <p class="phase-card-num">01</p>
-            <h3>Understand Business</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Business context</div>
-            <ul class="phase-bullets">
-              <li>Positioned Cases as the investigation hub within Elastic.</li>
-              <li>Aligned security and ops teams on shared case lifecycle.</li>
-              <li>Scoped MVP to create, enrich and close — not full SOAR.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Cases succeed when they reduce context-switching, not add process.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">02</p>
-            <h3>Learn from Users</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">User research</div>
-            <ul class="phase-bullets">
-              <li>Analysts rebuilt context manually every time they switched tools.</li>
-              <li>Similar past cases were the most valued — and hardest to find.</li>
-              <li>Collaboration happened in side channels, invisible to the case.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Investigations are memory problems before they're data problems.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">03</p>
-            <h3>Shape the Experience</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Experience design</div>
-            <ul class="phase-bullets">
-              <li>One case aggregates alerts, events and analyst notes.</li>
-              <li>Timeline view shows investigation progression clearly.</li>
-              <li>Similar cases surfaced proactively during investigation.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              A case is a container for context — not a ticket with a title.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">04</p>
-            <h3>Validate</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Validation</div>
-            <ul class="phase-bullets">
-              <li>Playback sessions showed faster case creation from alerts.</li>
-              <li>Analysts trusted the timeline over external note-taking.</li>
-              <li>Pilot teams reduced tool-switching during investigations.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Adoption followed when Cases lived where analysts already worked.
-            </p>
-          </article>
-        </div>
-
-        <details class="deep-dive">
-          <summary>Read more — research &amp; validation details</summary>
-          <div class="deep-dive-content">
-            <p>
-              Activity tracking showed analysts averaged 14 context switches per
-              investigation. Interviews revealed "similar cases" were found
-              through memory and Slack — not search. Storyboard sessions
-              validated that timeline-first layout matched how analysts
-              narrate incidents to colleagues.
-            </p>
-          </div>
-        </details>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g10">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Design Process</h2>
-        <div class="process-flow reveal reveal-text">
-          <div class="process-step">
-            <h4>Business</h4>
-            <p>Defined Cases as Elastic's native investigation workflow.</p>
-          </div>
-          <div class="process-step">
-            <h4>Research</h4>
-            <p>Mapped investigation patterns across security and ops teams.</p>
-          </div>
-          <div class="process-step">
-            <h4>Design</h4>
-            <p>Designed case container with timeline and signal aggregation.</p>
-          </div>
-          <div class="process-step">
-            <h4>Validate</h4>
-            <p>Ran playback and pilot with enterprise analyst teams.</p>
-          </div>
-          <div class="process-step">
-            <h4>Launch</h4>
-            <p>Released as core Cases experience in Elastic Security.</p>
-          </div>
-        </div>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g100">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Solution</h2>
-        <div class="solution-grid reveal reveal-stagger">
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Reduced context-switching.</p>
-              <p class="solution-desc">
-                Alerts, events and notes live in one case — no rebuilding
-                context across tools.
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">Key Insights</h2>
+          <div class="insights-grid reveal reveal-stagger">
+            <article class="insight-item">
+              <p>
+                Cases succeed when they reduce context-switching — not when they
+                add process on top of existing tools.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">Unified case view</div>
-          </article>
-
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Better discoverability of past work.</p>
-              <p class="solution-desc">
-                Similar cases surface during investigation — institutional
-                memory becomes searchable.
+            </article>
+            <article class="insight-item">
+              <p>
+                Investigations are memory problems before they're data problems —
+                similar past cases were the most valued and hardest to find.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">Similar cases</div>
-          </article>
-
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Clearer investigation narrative.</p>
-              <p class="solution-desc">
-                Timeline view makes the investigation story legible to the
-                analyst and their team.
+            </article>
+            <article class="insight-item">
+              <p>
+                A case is a container for context — not a ticket with a title and
+                a status field.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">Investigation timeline</div>
-          </article>
-        </div>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g10">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Key Design Decisions</h2>
-        <div class="decisions-grid reveal reveal-stagger">
-          <article class="decision-card">
-            <h3>Timeline-first over list-first</h3>
-            <dl>
-              <div class="decision-row">
-                <dt>Alternatives</dt>
-                <dd>Tabbed interface with separate alert, event and note panels.</dd>
-              </div>
-              <div class="decision-row">
-                <dt>Tradeoffs</dt>
-                <dd>Less flexible for power users who prefer raw lists.</dd>
-              </div>
-              <div class="decision-row">
-                <dt>Decision</dt>
-                <dd>Timeline as primary view — matches how analysts tell the story.</dd>
-              </div>
-            </dl>
-          </article>
-        </div>
-      </section>
+            </article>
+            <article class="insight-item">
+              <p>
+                Adoption followed when Cases lived where analysts already worked,
+                not in a separate toolchain.
+              </p>
+            </article>
+          </div>
+        </section>
       </section>
 
       <section class="story-band story-band--white">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Impact</h2>
-        <div class="impact-grid reveal reveal-stagger">
-          <div class="impact-item">
-            <strong>Enterprise adoption</strong>
-            <span>Adopted by security teams within Elastic customer base.</span>
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">Solution</h2>
+          <div class="analyst-experience-grid reveal reveal-stagger">
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">
+                  Investigate with full context in one place.
+                </p>
+                <p class="analyst-experience-desc">
+                  Case detail brings activity, attachments and similar cases
+                  together — with severity, assignees and classification always
+                  visible while analysts work through the incident.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-cases/case-details.png"
+                  alt="Elastic Cases detail — threat incident with activity timeline, comments, and attributes sidebar"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">
+                  Prioritize what needs attention now.
+                </p>
+                <p class="analyst-experience-desc">
+                  The cases overview surfaces open workload, status and severity
+                  at a glance — so teams filter, assign and jump into the right
+                  investigation without losing momentum.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-cases/case-list.png"
+                  alt="Elastic Cases list — overview with filters, workload metrics, and incident cards"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">
+                  Adapt cases to how your team works.
+                </p>
+                <p class="analyst-experience-desc">
+                  A template editor pairs schema definition with a live fields
+                  preview — teams configure severity, classification and
+                  conditional fields without leaving the product.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-cases/case-template-editor.png"
+                  alt="Elastic Cases template editor — YAML schema with live fields preview and conditional rules"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
           </div>
-          <div class="impact-item">
-            <strong>Engineering impact</strong>
-            <span>Unified investigation model across Elastic Security modules.</span>
-          </div>
-        </div>
+        </section>
       </section>
 
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Reflection</h2>
-        <p class="reflection-text reveal reveal-text">
-          Analysts didn't want a new tool — they wanted less fragmentation.
-          Today I'd push harder on collaborative features earlier, since
-          investigations are team sports even when they look individual.
-        </p>
-      </section>
+      <section class="story-band story-band--white">
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">User outcomes / impact</h2>
+          <div class="impact-grid reveal reveal-stagger">
+            <div class="impact-item">
+              <strong>Less context-switching</strong>
+              <span>
+                Pilot teams reduced tool-switching during investigations by
+                keeping signals and notes in one workflow.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Faster case creation</strong>
+              <span>
+                Playback sessions showed analysts creating cases from alerts more
+                quickly than with external tools.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Enterprise adoption</strong>
+              <span>
+                Adopted by security teams within the Elastic customer base as
+                their primary investigation hub.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Unified investigation model</strong>
+              <span>
+                Established a shared case lifecycle across Elastic Security
+                modules for engineering and design.
+              </span>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section class="story-band story-band--g100">
-      <section class="case-nav container case-nav-footer">
-        <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
-      </section>
+        <section class="case-nav container case-nav-footer">
+          <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
+        </section>
       </section>
     </main>
 

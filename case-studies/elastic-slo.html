@@ -32,12 +32,14 @@
             Helping SREs act before users feel the impact.
           </h1>
           <p class="case-hero-lead reveal reveal-text">
-            One place to see SLO status, error budgets, and burn rates across
-            every service.
+            A reliability module in Elastic Observability that gives SRE teams and
+            on-call engineers one view of which services are healthy, at risk, or
+            breached — so they act on error budgets before users notice.
           </p>
-          <div class="case-hero-media reveal reveal-image">
-            <div class="media-placeholder">SLO Overview — screenshot placeholder</div>
-          </div>
+          <p class="case-my-role reveal reveal-text">
+            <span class="case-my-role-label">My role:</span>
+            Design lead
+          </p>
         </header>
       </section>
 
@@ -46,216 +48,169 @@
           <h2 class="reveal reveal-heading">The Problem</h2>
           <p class="case-problem-text reveal reveal-text">
             SRE teams tracked dozens of services but couldn't answer a simple
-            question: are we meeting our reliability commitments? SLO data existed
+            question: are we meeting our reliability commitments? SLO data lived
             across dashboards, alerts and spreadsheets — disconnected from daily
-            decisions. The business needed a single source of truth for service
-            health. The constraint: integrate with existing Elastic Observability
-            workflows without adding configuration overhead.
+            decisions. On-call engineers spent minutes assembling context that
+            should take seconds.
           </p>
         </section>
       </section>
 
       <section class="story-band story-band--white">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">How We Understood the Problem</h2>
-        <div class="phase-grid reveal reveal-stagger">
-          <article class="phase-card">
-            <p class="phase-card-num">01</p>
-            <h3>Understand Business</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Business context</div>
-            <ul class="phase-bullets">
-              <li>Aligned product and engineering on SLO as a reliability contract.</li>
-              <li>Reduced scope to actionable SLO states — healthy, at risk, breached.</li>
-              <li>Connected design goals to error budget consumption metrics.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              SLOs only matter when they change what teams do Monday morning.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">02</p>
-            <h3>Learn from Users</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">User research</div>
-            <ul class="phase-bullets">
-              <li>SREs configured SLOs but rarely returned to check them.</li>
-              <li>On-call engineers needed status in seconds, not minutes.</li>
-              <li>Error budget burn rate was the signal that drove action.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Monitoring isn't the problem — knowing when to act is.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">03</p>
-            <h3>Shape the Experience</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Experience design</div>
-            <ul class="phase-bullets">
-              <li>Service-level overview replaced fragmented per-metric views.</li>
-              <li>Burn rate visualization made budget depletion intuitive.</li>
-              <li>Drill-down preserved context from overview to root cause.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Show the health story first — let engineers choose the depth.
-            </p>
-          </article>
-
-          <article class="phase-card">
-            <p class="phase-card-num">04</p>
-            <h3>Validate</h3>
-            <div class="media-placeholder" style="min-height: 160px; margin-bottom: 24px">Validation</div>
-            <ul class="phase-bullets">
-              <li>Prototype testing cut time-to-assessment by half in lab sessions.</li>
-              <li>SREs preferred status-at-a-glance over detailed charts upfront.</li>
-              <li>Pilot customers adopted SLO overview as daily starting point.</li>
-            </ul>
-            <p class="phase-insight">
-              <span>Key insight</span>
-              Validation confirmed: less data upfront, faster decisions.
-            </p>
-          </article>
-        </div>
-
-        <details class="deep-dive">
-          <summary>Read more — research &amp; validation details</summary>
-          <div class="deep-dive-content">
-            <p>
-              Shadowing on-call rotations revealed engineers opening five
-              different views before assessing service health. Interviews
-              surfaced that SLO configuration was seen as "set and forget" —
-              the real need was ongoing budget awareness, not setup wizards.
-            </p>
-          </div>
-        </details>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g10">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Design Process</h2>
-        <div class="process-flow reveal reveal-text">
-          <div class="process-step">
-            <h4>Business</h4>
-            <p>Defined SLO as the reliability contract for platform teams.</p>
-          </div>
-          <div class="process-step">
-            <h4>Research</h4>
-            <p>Shadowed on-call workflows and SLO configuration patterns.</p>
-          </div>
-          <div class="process-step">
-            <h4>Design</h4>
-            <p>Built service health overview with progressive drill-down.</p>
-          </div>
-          <div class="process-step">
-            <h4>Validate</h4>
-            <p>Tested with SRE teams using real production scenarios.</p>
-          </div>
-          <div class="process-step">
-            <h4>Launch</h4>
-            <p>Shipped as core SLO experience in Elastic Observability.</p>
-          </div>
-        </div>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g100">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Solution</h2>
-        <div class="solution-grid reveal reveal-stagger">
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Improved service health visibility.</p>
-              <p class="solution-desc">
-                One overview shows which services are healthy, at risk, or
-                breached — replacing scattered metric checks.
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">Key Insights</h2>
+          <div class="insights-grid reveal reveal-stagger">
+            <article class="insight-item">
+              <p>
+                SLOs only matter when they change what teams do Monday morning —
+                not when they're configured once and forgotten.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">SLO status overview</div>
-          </article>
-
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Faster error budget assessment.</p>
-              <p class="solution-desc">
-                Burn rate visualization answers "how fast are we consuming
-                budget?" without manual calculation.
+            </article>
+            <article class="insight-item">
+              <p>
+                Monitoring isn't the problem — knowing when to act on error
+                budget burn rate is.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">Burn rate view</div>
-          </article>
-
-          <article class="solution-item">
-            <div>
-              <p class="solution-outcome">Better on-call orientation.</p>
-              <p class="solution-desc">
-                On-call engineers start shifts with a clear reliability
-                picture — not a blank dashboard.
+            </article>
+            <article class="insight-item">
+              <p>
+                SREs preferred status-at-a-glance over detailed charts upfront —
+                depth on demand, not by default.
               </p>
-            </div>
-            <div class="media-placeholder" style="min-height: 200px">On-call overview</div>
-          </article>
-        </div>
-      </section>
-      </section>
-
-      <section class="story-band story-band--g10">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Key Design Decisions</h2>
-        <div class="decisions-grid reveal reveal-stagger">
-          <article class="decision-card">
-            <h3>Status-first over metrics-first</h3>
-            <dl>
-              <div class="decision-row">
-                <dt>Alternatives</dt>
-                <dd>Traditional metrics dashboard with SLO as one panel.</dd>
-              </div>
-              <div class="decision-row">
-                <dt>Tradeoffs</dt>
-                <dd>Less granular data visible initially.</dd>
-              </div>
-              <div class="decision-row">
-                <dt>Decision</dt>
-                <dd>Lead with SLO health status — metrics available on drill-down.</dd>
-              </div>
-            </dl>
-          </article>
-        </div>
-      </section>
+            </article>
+            <article class="insight-item">
+              <p>
+                Show the health story first — let engineers choose how deep to
+                drill into root cause.
+              </p>
+            </article>
+          </div>
+        </section>
       </section>
 
       <section class="story-band story-band--white">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Impact</h2>
-        <div class="impact-grid reveal reveal-stagger">
-          <div class="impact-item">
-            <strong>Global rollout</strong>
-            <span>Shipped to Elastic Observability customers worldwide.</span>
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">Solution</h2>
+          <div class="analyst-experience-grid reveal reveal-stagger">
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">See service health at a glance.</p>
+                <p class="analyst-experience-desc">
+                  One SLO overview shows which services are healthy or violated —
+                  replacing scattered metric checks across dashboards and alerts.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-slo/slo-list.png"
+                  alt="Elastic SLO overview — grid of service health cards with healthy and violated status"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">Assess error budgets faster.</p>
+                <p class="analyst-experience-desc">
+                  Burn rate, budget remaining and SLI trends answer "how fast are
+                  we consuming budget?" — without manual calculation or exports.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-slo/slo-details.png"
+                  alt="Elastic SLO detail — SLI values, budget burn rate, and budget remaining forecast"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">Create SLOs where engineers already work.</p>
+                <p class="analyst-experience-desc">
+                  SLO creation lives in APM service actions — engineers define
+                  reliability targets from the service context they monitor daily.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-slo/slo-apm-actions.png"
+                  alt="Elastic APM service actions menu with Create an SLO option"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+
+            <article class="analyst-experience-item reveal reveal-image">
+              <div>
+                <p class="analyst-experience-outcome">Embed SLO health in any dashboard.</p>
+                <p class="analyst-experience-desc">
+                  Reusable SLO widgets — from compact dependency lists to full cards
+                  — bring reliability status into the views teams already use.
+                </p>
+              </div>
+              <div class="analyst-experience-media">
+                <img
+                  src="../images/elastic-slo/slo-dashboards.png"
+                  alt="Elastic SLO dashboard widgets — card sizes and compact embeddable dependency list"
+                  width="1024"
+                  height="576"
+                  loading="lazy"
+                />
+              </div>
+            </article>
           </div>
-          <div class="impact-item">
-            <strong>Positive customer feedback</strong>
-            <span>SRE teams adopted SLO overview as daily reliability check.</span>
-          </div>
-        </div>
+        </section>
       </section>
 
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">Reflection</h2>
-        <p class="reflection-text reveal reveal-text">
-          The biggest surprise was how little SREs cared about SLO setup — they
-          wanted ongoing awareness. I'd invest more in alert-to-SLO linking
-          earlier, since that's where action actually happens.
-        </p>
-      </section>
+      <section class="story-band story-band--white">
+        <section class="case-block container">
+          <h2 class="reveal reveal-heading">User outcomes / impact</h2>
+          <div class="impact-grid reveal reveal-stagger">
+            <div class="impact-item">
+              <strong>Faster time-to-assessment</strong>
+              <span>
+                Prototype testing cut time-to-assessment by half in lab sessions
+                with SRE teams.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Daily reliability check</strong>
+              <span>
+                Pilot customers adopted the SLO overview as their starting point
+                for every shift.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Global rollout</strong>
+              <span>
+                Shipped as core SLO experience in Elastic Observability for
+                customers worldwide.
+              </span>
+            </div>
+            <div class="impact-item">
+              <strong>Positive customer feedback</strong>
+              <span>
+                SRE teams valued status-first design over metrics-heavy
+                dashboards they had to interpret.
+              </span>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section class="story-band story-band--g100">
-      <section class="case-nav container case-nav-footer">
-        <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
-      </section>
+        <section class="case-nav container case-nav-footer">
+          <a class="case-back" href="../index.html#challenges">← Back to all challenges</a>
+        </section>
       </section>
     </main>
 

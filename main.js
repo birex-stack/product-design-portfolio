@@ -3,10 +3,6 @@ import './styles.css';
 const assetBase = import.meta.env.BASE_URL;
 
 document.documentElement.style.setProperty(
-  '--karmen-teaser-bg',
-  `url("${assetBase}images/karmen-teaser-bg.png")`
-);
-document.documentElement.style.setProperty(
   '--ibm-teaser-bg',
   `url("${assetBase}images/ibm-xftm-teaser-bg.png")`
 );
@@ -177,33 +173,64 @@ function initGridSpotlight() {
 
 initGridSpotlight();
 
-const lightbox = document.createElement('div');
-lightbox.className = 'lightbox';
-lightbox.innerHTML = '<button class="lightbox-close" aria-label="Close">×</button>';
-document.body.appendChild(lightbox);
+const CHALLENGE_CHAIN = [
+  { file: 'ibm-xftm.html', title: 'IBM XFTM' },
+  { file: 'elastic-cases.html', title: 'Elastic Cases' },
+  { file: 'karmen.html', title: 'KARMEN' },
+  { file: 'elastic-slo.html', title: 'Elastic SLO' },
+  { file: 'otomoto.html', title: 'Otomoto' },
+];
 
-const lightboxImg = document.createElement('img');
-lightbox.appendChild(lightboxImg);
+const CONTACT_LINK = 'https://linkedin.com/in/twoj-profil';
 
-function closeLightbox() {
-  lightbox.classList.remove('is-open');
-  document.body.style.overflow = '';
+function initCaseNavFooter() {
+  const footer = document.querySelector('.case-nav-footer');
+  if (!footer || footer.dataset.navInit) return;
+  footer.dataset.navInit = 'true';
+
+  const pageName = window.location.pathname.split('/').pop();
+  const currentIndex = CHALLENGE_CHAIN.findIndex(
+    (challenge) => challenge.file === pageName
+  );
+  if (currentIndex === -1) return;
+
+  const isLast = currentIndex === CHALLENGE_CHAIN.length - 1;
+
+  if (isLast) {
+    const footerBand = footer.closest('.story-band');
+    if (!footerBand) return;
+
+    const contactSection = document.createElement('section');
+    contactSection.className =
+      'story-band story-band--contact story-band--grid case-contact-closing';
+    contactSection.innerHTML = `
+      <div class="container story-chapter contact">
+        <div class="contact-block project-card-copy">
+          <h3>Have a product challenge?</h3>
+          <a
+            class="contact-cta"
+            href="${CONTACT_LINK}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Reach me on LinkedIn →
+          </a>
+        </div>
+      </div>
+    `;
+
+    footerBand.before(contactSection);
+    return;
+  }
+
+  const next = CHALLENGE_CHAIN[currentIndex + 1];
+  const link = document.createElement('a');
+  link.className = 'contact-cta case-nav-next';
+  link.href = next.file;
+  link.textContent = 'Next challenge →';
+  link.setAttribute('aria-label', `Next challenge: ${next.title}`);
+
+  footer.appendChild(link);
 }
 
-lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', (event) => {
-  if (event.target === lightbox) closeLightbox();
-});
-
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape') closeLightbox();
-});
-
-document.querySelectorAll('.zoomable').forEach((img) => {
-  img.addEventListener('click', () => {
-    lightboxImg.src = img.src;
-    lightboxImg.alt = img.alt;
-    lightbox.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  });
-});
+initCaseNavFooter();
