@@ -2,21 +2,6 @@ import './styles.css';
 
 const assetBase = import.meta.env.BASE_URL;
 
-// Hero background — change filename to switch:
-//   hero-borealis-mesh-background-hq.png  (current, upscaled)
-//   hero-borealis-mesh-background.png     (previous, compressed)
-//   hero-borealis-background.png          (earlier)
-//   hero-aurora-background.png            (original)
-const heroBackground = 'images/hero-borealis-mesh-background-hq.png';
-
-document.documentElement.style.setProperty(
-  '--hero-bg',
-  `url("${assetBase}${heroBackground}")`
-);
-document.documentElement.style.setProperty(
-  '--footer-bg',
-  `url("${assetBase}images/footer-background.png")`
-);
 document.documentElement.style.setProperty(
   '--karmen-teaser-bg',
   `url("${assetBase}images/karmen-teaser-bg.png")`
@@ -70,6 +55,7 @@ function isDarkSection(section) {
   if (!section) return false;
   return (
     section.classList.contains('story-band--g100') ||
+    section.classList.contains('story-band--contact') ||
     section.classList.contains('story-band--footer')
   );
 }
