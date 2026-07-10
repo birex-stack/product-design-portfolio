@@ -144,6 +144,9 @@ function initGridSpotlight() {
     const spotlight = document.createElement('div');
     spotlight.className = 'grid-pixel-spotlight';
     spotlight.setAttribute('aria-hidden', 'true');
+    const offsetX = Math.floor(Math.random() * 8) * 8;
+    const offsetY = Math.floor(Math.random() * 8) * 8;
+    spotlight.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
     section.insertBefore(spotlight, section.firstChild);
 
     section.addEventListener(

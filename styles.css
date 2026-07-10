@@ -455,7 +455,10 @@ p {
 }
 
 .story-band--grid {
-  --grid-pixel-fill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect x='32' y='0' width='32' height='32' fill='rgba(22,22,22,0.04)'/%3E%3Crect x='96' y='32' width='32' height='32' fill='rgba(22,22,22,0.065)'/%3E%3Crect x='0' y='64' width='32' height='32' fill='rgba(22,22,22,0.03)'/%3E%3Crect x='64' y='96' width='32' height='32' fill='rgba(22,22,22,0.055)'/%3E%3Crect x='96' y='0' width='32' height='32' fill='rgba(22,22,22,0.025)'/%3E%3Crect x='32' y='64' width='32' height='32' fill='rgba(22,22,22,0.045)'/%3E%3C/svg%3E");
+  --grid-cell: 8px;
+  --grid-pixel-tile: calc(var(--grid-cell) * 64);
+  --grid-spot-radius: 160px;
+  --grid-pixel-fill: url("./grid-pixel-fill-light.svg");
   --grid-dot-color: rgba(22, 22, 22, 0.08);
   --grid-line-color: rgba(22, 22, 22, 0.08);
 }
@@ -465,7 +468,7 @@ p {
 .story-project--karmen.story-band--grid,
 .story-band--hero.story-band--grid,
 .story-band--contact.story-band--grid {
-  --grid-pixel-fill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect x='32' y='0' width='32' height='32' fill='rgba(255,255,255,0.09)'/%3E%3Crect x='96' y='32' width='32' height='32' fill='rgba(255,255,255,0.14)'/%3E%3Crect x='0' y='64' width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3Crect x='64' y='96' width='32' height='32' fill='rgba(255,255,255,0.12)'/%3E%3Crect x='96' y='0' width='32' height='32' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='32' y='64' width='32' height='32' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E");
+  --grid-pixel-fill: url("./grid-pixel-fill-dark.svg");
   --grid-dot-color: rgba(255, 255, 255, 0.14);
   --grid-line-color: rgba(255, 255, 255, 0.17);
 }
@@ -491,7 +494,7 @@ p {
   z-index: 0;
   pointer-events: none;
   background-image: radial-gradient(circle, var(--grid-dot-color) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-size: var(--grid-cell) var(--grid-cell);
   -webkit-mask-image: linear-gradient(
     128deg,
     rgb(0 0 0 / 0.8) 0%,
@@ -520,7 +523,7 @@ p {
   background-image:
     linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
     linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-size: var(--grid-cell) var(--grid-cell);
   -webkit-mask-image: linear-gradient(
     128deg,
     transparent 38%,
@@ -544,15 +547,16 @@ p {
   pointer-events: none;
   opacity: 0;
   background-image: var(--grid-pixel-fill);
-  background-size: 128px 128px;
+  background-size: var(--grid-pixel-tile) var(--grid-pixel-tile);
+  background-position: 0 0;
   -webkit-mask-image: radial-gradient(
-    circle 280px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
+    circle var(--grid-spot-radius) at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
     rgb(0 0 0 / 1) 0%,
     rgb(0 0 0 / 0.55) 42%,
     transparent 72%
   );
   mask-image: radial-gradient(
-    circle 280px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
+    circle var(--grid-spot-radius) at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
     rgb(0 0 0 / 1) 0%,
     rgb(0 0 0 / 0.55) 42%,
     transparent 72%
