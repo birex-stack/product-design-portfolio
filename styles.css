@@ -590,10 +590,14 @@ p {
   margin: 0;
 }
 
+.project-card-copy .project-tags {
+  margin-top: 24px;
+}
+
 .project-card-stage-link {
   position: relative;
   display: block;
-  margin-top: 4px;
+  margin-top: 32px;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -716,25 +720,13 @@ p {
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 24px;
   padding: 14px 18px;
   background: var(--card-footer-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid var(--card-footer-border);
-}
-
-.project-card-footer .project-tags {
-  flex: 1;
-  min-width: 0;
-  margin: 0;
-  gap: 6px;
-}
-
-.project-card-footer .project-tags li {
-  padding: 4px 8px;
-  font-size: 0.625rem;
 }
 
 .project-card-stage-link:hover .challenge-link,
@@ -2324,13 +2316,15 @@ p {
 }
 
 .analyst-experience-media {
-  overflow: visible;
+  overflow: hidden;
+  background: #ffffff;
 }
 
 .analyst-experience-media img {
   display: block;
   width: 100%;
   height: auto;
+  background: #ffffff;
 }
 
 /* Key design decisions */
