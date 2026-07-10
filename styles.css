@@ -42,6 +42,7 @@
     #a8a8a8 68%,
     #d4d4d4 100%
   );
+  --accent-gradient: linear-gradient(90deg, #0043ce 0%, #4589ff 100%);
   --link-active: #0f62fe;
   --link-active-on-dark: #78a9ff;
   --cta-blue-light: #4589ff;
@@ -70,6 +71,8 @@
   --reveal-ease: ease;
   --reveal-duration: 520ms;
   --stagger-step: 60ms;
+  --section-padding-top: clamp(72px, 10vh, 120px);
+  --section-padding-bottom: clamp(144px, 20vh, 240px);
 }
 
 *,
@@ -357,12 +360,13 @@ p {
   background: var(--project-dark-bg);
   color: #f4f4f4;
   overflow: hidden;
-  min-height: min(88vh, 820px);
 }
 
 .story-band--hero .hero {
   position: relative;
   z-index: 1;
+  padding-block: var(--section-padding-top) var(--section-padding-bottom);
+  justify-content: flex-start;
 }
 
 .story-band--hero .hero h1 {
@@ -387,7 +391,7 @@ p {
 }
 
 .story-band--hero .hero-lead-accent {
-  background-image: linear-gradient(90deg, #0043ce 0%, #4589ff 100%);
+  background-image: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -404,7 +408,7 @@ p {
   font-size: 1rem;
   line-height: 1.625;
   max-width: 52ch;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 }
 
 .story-band--hero .hero-tags li {
@@ -465,8 +469,8 @@ p {
 .story-band--hero.story-band--grid::after,
 .story-band--contact.story-band--grid::after {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
 }
 
 .story-project--ibm.story-band--g100,
@@ -485,11 +489,7 @@ p {
 }
 
 .story-chapter {
-  padding-block: clamp(80px, 12vh, 140px);
-}
-
-.story-project .story-chapter {
-  padding-block: clamp(72px, 10vh, 120px) clamp(80px, 10vh, 112px);
+  padding-block: var(--section-padding-top) var(--section-padding-bottom);
 }
 
 /* Project cards — visual-first */
@@ -524,6 +524,14 @@ p {
   line-height: 1.25;
   margin: 0 0 14px;
   background-image: var(--headline-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-accent {
+  background-image: var(--accent-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1943,7 +1951,6 @@ p {
   }
 
   .hero {
-    padding-block: 100px 32px;
     min-height: auto;
   }
 
