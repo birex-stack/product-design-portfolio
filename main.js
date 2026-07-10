@@ -141,6 +141,42 @@ function initRevealAnimations() {
 
 initRevealAnimations();
 
+function initGridSpotlight() {
+  if (prefersReducedMotion) return;
+
+  document.querySelectorAll('.story-band--grid').forEach((section) => {
+    section.addEventListener(
+      'mouseenter',
+      () => {
+        section.classList.add('is-grid-hover');
+      },
+      { passive: true }
+    );
+
+    section.addEventListener(
+      'mouseleave',
+      () => {
+        section.classList.remove('is-grid-hover');
+      },
+      { passive: true }
+    );
+
+    section.addEventListener(
+      'mousemove',
+      (event) => {
+        const rect = section.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        section.style.setProperty('--grid-spot-x', `${x}%`);
+        section.style.setProperty('--grid-spot-y', `${y}%`);
+      },
+      { passive: true }
+    );
+  });
+}
+
+initGridSpotlight();
+
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 lightbox.innerHTML = '<button class="lightbox-close" aria-label="Close">×</button>';
