@@ -454,71 +454,122 @@ p {
   background: #000000;
 }
 
+.story-band--grid {
+  --grid-pixel-fill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect x='32' y='0' width='32' height='32' fill='rgba(22,22,22,0.04)'/%3E%3Crect x='96' y='32' width='32' height='32' fill='rgba(22,22,22,0.065)'/%3E%3Crect x='0' y='64' width='32' height='32' fill='rgba(22,22,22,0.03)'/%3E%3Crect x='64' y='96' width='32' height='32' fill='rgba(22,22,22,0.055)'/%3E%3Crect x='96' y='0' width='32' height='32' fill='rgba(22,22,22,0.025)'/%3E%3Crect x='32' y='64' width='32' height='32' fill='rgba(22,22,22,0.045)'/%3E%3C/svg%3E");
+  --grid-dot-color: rgba(22, 22, 22, 0.08);
+  --grid-line-color: rgba(22, 22, 22, 0.08);
+}
+
+.story-band--g100.story-band--grid,
+.story-project--ibm.story-band--grid,
+.story-project--karmen.story-band--grid,
+.story-band--hero.story-band--grid,
+.story-band--contact.story-band--grid {
+  --grid-pixel-fill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect x='32' y='0' width='32' height='32' fill='rgba(255,255,255,0.09)'/%3E%3Crect x='96' y='32' width='32' height='32' fill='rgba(255,255,255,0.14)'/%3E%3Crect x='0' y='64' width='32' height='32' fill='rgba(255,255,255,0.07)'/%3E%3Crect x='64' y='96' width='32' height='32' fill='rgba(255,255,255,0.12)'/%3E%3Crect x='96' y='0' width='32' height='32' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='32' y='64' width='32' height='32' fill='rgba(255,255,255,0.1)'/%3E%3C/svg%3E");
+  --grid-dot-color: rgba(255, 255, 255, 0.14);
+  --grid-line-color: rgba(255, 255, 255, 0.17);
+}
+
+.story-band--g100.story-band--grid::before,
+.story-band--g100.story-band--grid::after,
+.story-project--ibm.story-band--grid::before,
+.story-project--ibm.story-band--grid::after,
+.story-project--karmen.story-band--grid::before,
+.story-project--karmen.story-band--grid::after,
+.story-band--hero.story-band--grid::before,
+.story-band--hero.story-band--grid::after,
+.story-band--contact.story-band--grid::before,
+.story-band--contact.story-band--grid::after {
+  mix-blend-mode: screen;
+}
+
+/* Dots — bottom-left half, always on */
+.story-band--grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--grid-dot-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(
+    128deg,
+    rgb(0 0 0 / 0.8) 0%,
+    rgb(0 0 0 / 0.5) 36%,
+    rgb(0 0 0 / 0.22) 50%,
+    transparent 62%
+  );
+  mask-image: linear-gradient(
+    128deg,
+    rgb(0 0 0 / 0.8) 0%,
+    rgb(0 0 0 / 0.5) 36%,
+    rgb(0 0 0 / 0.22) 50%,
+    transparent 62%
+  );
+  transition: background-image 0.45s ease;
+}
+
+/* Lines — top-right half, always on */
 .story-band--grid::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0;
+  opacity: 1;
   background-image:
-    linear-gradient(to right, rgba(22, 22, 22, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22, 22, 22, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line-color) 1px, transparent 1px);
   background-size: 32px 32px;
+  -webkit-mask-image: linear-gradient(
+    128deg,
+    transparent 38%,
+    rgb(0 0 0 / 0.28) 50%,
+    rgb(0 0 0 / 0.75) 100%
+  );
+  mask-image: linear-gradient(
+    128deg,
+    transparent 38%,
+    rgb(0 0 0 / 0.28) 50%,
+    rgb(0 0 0 / 0.75) 100%
+  );
+  transition: opacity 0.45s ease;
+}
+
+/* Pixel spotlight — own layer, cursor-local only */
+.grid-pixel-spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background-image: var(--grid-pixel-fill);
+  background-size: 128px 128px;
   -webkit-mask-image: radial-gradient(
-    circle 240px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
+    circle 280px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
     rgb(0 0 0 / 1) 0%,
-    rgb(0 0 0 / 0.5) 42%,
+    rgb(0 0 0 / 0.55) 42%,
     transparent 72%
   );
   mask-image: radial-gradient(
-    circle 240px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
+    circle 280px at var(--grid-spot-x, 50%) var(--grid-spot-y, 50%),
     rgb(0 0 0 / 1) 0%,
-    rgb(0 0 0 / 0.5) 42%,
+    rgb(0 0 0 / 0.55) 42%,
     transparent 72%
   );
   transition: opacity 0.45s ease;
 }
 
-.story-band--grid.is-grid-hover::before {
+.story-band--grid.is-grid-hover .grid-pixel-spotlight {
   opacity: 1;
 }
 
-.story-band--grid::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image:
-    linear-gradient(to right, rgba(22, 22, 22, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(22, 22, 22, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-}
-
-.story-band--g100.story-band--grid::after {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-}
-
-.story-band--g100.story-band--grid::before,
-.story-project--ibm.story-band--grid::before,
-.story-project--karmen.story-band--grid::before,
-.story-band--hero.story-band--grid::before,
-.story-band--contact.story-band--grid::before {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
-}
-
-.story-project--ibm.story-band--grid::after,
-.story-project--karmen.story-band--grid::after,
-.story-band--hero.story-band--grid::after,
-.story-band--contact.story-band--grid::after {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+.story-band--g100.story-band--grid .grid-pixel-spotlight,
+.story-project--ibm.story-band--grid .grid-pixel-spotlight,
+.story-project--karmen.story-band--grid .grid-pixel-spotlight,
+.story-band--hero.story-band--grid .grid-pixel-spotlight,
+.story-band--contact.story-band--grid .grid-pixel-spotlight {
+  mix-blend-mode: screen;
 }
 
 .story-project--ibm.story-band--g100,
@@ -601,7 +652,7 @@ p {
 .project-card-stage-link {
   position: relative;
   display: block;
-  width: 60%;
+  width: 70%;
   margin-top: 32px;
   margin-inline: auto;
   text-decoration: none;
@@ -1500,14 +1551,6 @@ p {
 
 .story-band--g100 .analyst-experience-item + .analyst-experience-item {
   border-top-color: var(--border-on-dark);
-}
-
-.story-band--g100 .analyst-experience-media--portrait {
-  background: #000;
-}
-
-.story-band--g100 .analyst-experience-media--portrait img {
-  background: #000;
 }
 
 .story-band--black .analyst-experience-media--portrait img {
@@ -2872,7 +2915,8 @@ p {
   }
 
   .story-band--grid::before {
-    display: none;
+    opacity: 0.55;
+    transition: none;
   }
 
   .site-header,

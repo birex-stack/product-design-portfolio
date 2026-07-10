@@ -141,6 +141,11 @@ function initGridSpotlight() {
   if (prefersReducedMotion) return;
 
   document.querySelectorAll('.story-band--grid').forEach((section) => {
+    const spotlight = document.createElement('div');
+    spotlight.className = 'grid-pixel-spotlight';
+    spotlight.setAttribute('aria-hidden', 'true');
+    section.insertBefore(spotlight, section.firstChild);
+
     section.addEventListener(
       'mouseenter',
       () => {
