@@ -278,6 +278,10 @@ p {
   height: 100%;
 }
 
+.nav.nav--case {
+  justify-content: space-between;
+}
+
 .logo {
   font-size: 0.875rem;
   font-weight: 600;
@@ -641,12 +645,64 @@ p {
     0 10px 24px -12px rgba(0, 0, 0, 0.1);
 }
 
+.project-card-teaser-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.project-card-teaser-veil-top,
+.project-card-teaser-veil-bottom {
+  position: absolute;
+  inset: 0;
+}
+
+.project-card-teaser-veil-top {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0) 65%
+  );
+  opacity: 1;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.project-card-teaser-veil-bottom {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 22%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+.project-card-stage-link:hover .project-card-teaser-veil-top,
+.project-card-stage-link:focus-visible .project-card-teaser-veil-top {
+  opacity: 0;
+}
+
+.story-band--white .project-card-teaser-veil-top,
+.story-band--g10 .project-card-teaser-veil-top {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 65%
+  );
+}
+
+.story-band--white .project-card-teaser-veil-bottom,
+.story-band--g10 .project-card-teaser-veil-bottom {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 22%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
 .project-card-teaser img,
 .project-card-teaser .ui-teaser {
   width: 100%;
   display: block;
-  transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: center top;
 }
 
 .project-card-teaser img {
@@ -657,18 +713,6 @@ p {
   position: relative;
   height: var(--teaser-image-height);
   overflow: hidden;
-  transform-origin: center center;
-}
-
-.project-card-stage-link:hover .project-card-teaser img,
-.project-card-stage-link:focus-visible .project-card-teaser img,
-.project-card-stage-link:hover .project-card-teaser .ui-teaser,
-.project-card-stage-link:focus-visible .project-card-teaser .ui-teaser,
-.project-card-stage-link:hover .project-card-teaser--ibm::after,
-.project-card-stage-link:focus-visible .project-card-teaser--ibm::after,
-.project-card-stage-link:hover .project-card-teaser--karmen::after,
-.project-card-stage-link:focus-visible .project-card-teaser--karmen::after {
-  transform: scale(1.06);
 }
 
 .project-card-footer {
@@ -720,8 +764,6 @@ p {
   background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
-  transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: center top;
 }
 
 .project-card-teaser--karmen {
@@ -737,8 +779,6 @@ p {
   background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
-  transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  transform-origin: center top;
 }
 
 /* Section themes */
@@ -1956,17 +1996,6 @@ p {
     --teaser-image-height: clamp(132px, 34vw, 188px);
   }
 
-  .project-card-stage-link:hover .project-card-teaser img,
-  .project-card-stage-link:focus-visible .project-card-teaser img,
-  .project-card-stage-link:hover .project-card-teaser .ui-teaser,
-  .project-card-stage-link:focus-visible .project-card-teaser .ui-teaser,
-  .project-card-stage-link:hover .project-card-teaser--ibm::after,
-  .project-card-stage-link:focus-visible .project-card-teaser--ibm::after,
-  .project-card-stage-link:hover .project-card-teaser--karmen::after,
-  .project-card-stage-link:focus-visible .project-card-teaser--karmen::after {
-    transform: none;
-  }
-
   .process-step:not(:last-child)::after {
     display: none;
   }
@@ -2070,22 +2099,11 @@ p {
   .principle-card:hover,
   .challenge-link:hover,
   .contact-cta:hover,
-  .hero-tags li:hover,
-  .project-card-stage-link:hover .project-card-teaser img,
-  .project-card-stage-link:focus-visible .project-card-teaser img,
-  .project-card-stage-link:hover .project-card-teaser .ui-teaser,
-  .project-card-stage-link:focus-visible .project-card-teaser .ui-teaser,
-  .project-card-stage-link:hover .project-card-teaser--ibm::after,
-  .project-card-stage-link:focus-visible .project-card-teaser--ibm::after,
-  .project-card-stage-link:hover .project-card-teaser--karmen::after,
-  .project-card-stage-link:focus-visible .project-card-teaser--karmen::after {
+  .hero-tags li:hover {
     transform: none;
   }
 
-  .project-card-teaser img,
-  .project-card-teaser .ui-teaser,
-  .project-card-teaser--ibm::after,
-  .project-card-teaser--karmen::after {
+  .project-card-teaser-veil-top {
     transition: none;
   }
 
