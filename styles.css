@@ -28,9 +28,10 @@
   --border-subtle: #e8e8e8;
   --border-on-dark: #393939;
   --surface: var(--carbon-g10);
-  --bg-insights: #edf5ff;
-  --bg-impact: #defbe6;
-  --bg-problem: #fff1f1;
+  --bg-decisions: #f0f3f8;
+  --bg-insights: var(--bg-decisions);
+  --bg-impact: #f0f2e8;
+  --bg-problem: #faf8ef;
   --headline-gradient: linear-gradient(
     125deg,
     #2e2e2e 0%,
@@ -61,6 +62,7 @@
   --cta-gradient-loop-end: 54.5455%;
   --shadow: 0 1px 2px rgba(22, 22, 22, 0.06);
   --shadow-hover: 0 2px 6px rgba(22, 22, 22, 0.08);
+  --screen-shadow: 0 6px 20px rgba(22, 22, 22, 0.07), 0 1px 4px rgba(22, 22, 22, 0.04);
 
   --font: "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -455,6 +457,11 @@ p {
 
 .story-band--insights {
   background: var(--bg-insights);
+  color: var(--text);
+}
+
+.story-band--decisions {
+  background: var(--bg-decisions);
   color: var(--text);
 }
 
@@ -2526,6 +2533,12 @@ p {
   background: #ffffff;
 }
 
+.analyst-experience-media:not(.analyst-experience-media--device):not(
+    .analyst-experience-media--portrait
+  ) {
+  box-shadow: var(--screen-shadow);
+}
+
 .analyst-experience-media:not(.analyst-experience-media--device) img {
   display: block;
   width: 100%;
@@ -2543,6 +2556,7 @@ p {
   width: auto;
   max-width: min(100%, 320px);
   background: transparent;
+  box-shadow: var(--screen-shadow);
 }
 
 .analyst-experience-media.analyst-experience-media--device {
@@ -2669,7 +2683,7 @@ p {
 }
 
 .story-band--insights .insights-list li {
-  border-top-color: rgba(15, 98, 254, 0.14);
+  border-top-color: rgba(88, 100, 118, 0.12);
 }
 
 /* Impact */
@@ -2726,7 +2740,7 @@ p {
 }
 
 .story-band--impact .impact-list li {
-  border-top-color: rgba(25, 128, 56, 0.14);
+  border-top-color: rgba(82, 92, 68, 0.12);
 }
 
 /* Reflection */
