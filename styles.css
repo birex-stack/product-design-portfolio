@@ -32,6 +32,7 @@
   --bg-insights: var(--bg-decisions);
   --bg-impact: #f0f2e8;
   --bg-problem: #faf8ef;
+  --ibm-project-bg: #252525;
   --headline-gradient: linear-gradient(
     125deg,
     #2e2e2e 0%,
@@ -377,6 +378,15 @@ p {
 }
 
 .story-band--hero .hero h1 {
+  font-size: clamp(2.5rem, 5.5vw, 3.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-on-dark);
+  margin-bottom: 32px;
+}
+
+.story-band--hero .hero h2 {
   font-size: clamp(1.375rem, 2.8vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -387,15 +397,6 @@ p {
   color: transparent;
   -webkit-text-fill-color: transparent;
   margin-bottom: 12px;
-}
-
-.story-band--hero .hero-lead {
-  font-size: clamp(1.375rem, 2.8vw, 2rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-  color: var(--text-on-dark);
-  margin-bottom: 32px;
 }
 
 .story-band--hero .hero-lead-accent {
@@ -601,7 +602,10 @@ p {
   mix-blend-mode: screen;
 }
 
-.story-project--ibm.story-band--g100,
+.story-project--ibm.story-band--g100 {
+  background: var(--ibm-project-bg);
+}
+
 .story-project--karmen.story-band--g100 {
   background: var(--project-dark-bg);
 }
@@ -638,18 +642,31 @@ p {
 .project-card-title {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-tertiary);
   margin: 0 0 14px;
 }
 
-.project-card h3 {
+.project-card h2 {
   font-size: clamp(1.375rem, 2.8vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.25;
+  margin: 0 0 32px;
+  background-image: var(--headline-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.project-card h3 {
+  font-size: clamp(1.125rem, 2.2vw, 1.625rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
   margin: 0 0 32px;
   background-image: var(--headline-gradient);
   -webkit-background-clip: text;
@@ -676,6 +693,36 @@ p {
 
 .project-card-copy .project-tags {
   margin-top: 24px;
+}
+
+.challenge-jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.challenge-jump-link {
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--bg);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.challenge-jump-link:hover,
+.challenge-jump-link:focus-visible {
+  border-color: var(--link-active);
+  color: var(--text);
 }
 
 .project-card-stage-link {
@@ -726,7 +773,7 @@ p {
 }
 
 .project-card-teaser {
-  --teaser-image-height: clamp(89px, 12vw, 137px);
+  --teaser-image-height: clamp(107px, 14.4vw, 164px);
   position: relative;
   height: calc(var(--teaser-image-height) * 2);
   overflow: hidden;
@@ -825,7 +872,7 @@ p {
 /* Per-project teaser backgrounds */
 
 .project-card-teaser--ibm {
-  background-color: var(--teaser-bg-dark);
+  background-color: var(--ibm-project-bg);
 }
 
 .project-card-teaser--karmen {
@@ -859,9 +906,25 @@ p {
 /* Section themes */
 
 .story-project--ibm {
-  --card-fade-color: var(--project-dark-bg);
-  --card-footer-bg: var(--teaser-footer-bg-dark);
+  --card-fade-color: var(--ibm-project-bg);
+  --card-footer-bg: rgba(37, 37, 37, 0.72);
   --card-footer-border: rgba(255, 255, 255, 0.1);
+}
+
+.story-project--ibm .project-card-teaser-veil-top {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(37, 37, 37, 0.7) 0%,
+    rgba(37, 37, 37, 0) 65%
+  );
+}
+
+.story-project--ibm .project-card-teaser-veil-bottom {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(37, 37, 37, 0) 22%,
+    #252525 100%
+  );
 }
 
 .story-project--ibm .project-card-title {
@@ -1520,7 +1583,7 @@ p {
 }
 
 .case-my-role-value {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
@@ -1620,12 +1683,6 @@ p {
 
 .story-band--black .analyst-experience-media--portrait img {
   max-width: min(100%, 160px);
-}
-
-.story-project--karmen .analyst-experience-media--portrait img {
-  width: auto;
-  max-width: 100%;
-  height: auto;
 }
 
 .story-band--g100 .case-source a {
@@ -2180,12 +2237,13 @@ p {
   z-index: 1;
 }
 
-.process-phase-body h3 {
+.process-phase-body > h3 {
   font-size: 1.0625rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.3;
   margin: 0 0 10px;
+  color: var(--link-active);
 }
 
 .process-phase-body > p {
@@ -2545,7 +2603,9 @@ p {
   box-shadow: var(--screen-shadow);
 }
 
-.analyst-experience-media:not(.analyst-experience-media--device) img {
+.analyst-experience-media:not(.analyst-experience-media--device):not(
+    .analyst-experience-media--portrait
+  ) img {
   display: block;
   width: 100%;
   height: auto;
@@ -2559,10 +2619,20 @@ p {
 }
 
 .analyst-experience-media--portrait img {
+  display: block;
   width: auto;
   max-width: min(100%, 320px);
+  height: auto;
   background: transparent;
   box-shadow: var(--screen-shadow);
+}
+
+.story-project--karmen .analyst-experience-item {
+  align-items: start;
+}
+
+.story-project--karmen .analyst-experience-media--portrait img {
+  max-width: min(100%, 522px);
 }
 
 .analyst-experience-media.analyst-experience-media--device {
@@ -2939,7 +3009,7 @@ p {
   }
 
   .project-card-teaser {
-    --teaser-image-height: clamp(79px, 20.4vw, 113px);
+    --teaser-image-height: clamp(95px, 24.48vw, 136px);
   }
 
   .process-step:not(:last-child)::after {
