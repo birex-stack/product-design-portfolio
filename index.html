@@ -118,6 +118,16 @@
                 role="img"
                 aria-label="IBM XFTM Case Overview dashboard preview"
               >
+                <img
+                  class="project-card-teaser-img"
+                  src="./images/ibm-xftm/analyst-case-overview.jpg"
+                  alt=""
+                  width="1361"
+                  height="611"
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
                 <span class="project-card-teaser-veil" aria-hidden="true">
                   <span class="project-card-teaser-veil-top"></span>
                   <span class="project-card-teaser-veil-bottom"></span>
@@ -161,7 +171,7 @@
               >
                 <img
                   class="project-card-teaser-img"
-                  src="./images/elastic-cases/case-details.png"
+                  src="./images/elastic-cases/case-details.jpg"
                   alt=""
                   width="1024"
                   height="576"
@@ -317,11 +327,11 @@
               <div
                 class="project-card-teaser project-card-teaser--otomoto"
                 role="img"
-                aria-label="Otomoto homepage — search, listings, and vehicle discovery"
+                aria-label="Otomoto offer details — photo gallery, vehicle specs, and contact"
               >
                 <img
                   class="project-card-teaser-img"
-                  src="./images/otomoto-teaser.png"
+                  src="./images/otomoto/otomoto-details.jpg"
                   alt=""
                   width="1024"
                   height="482"
@@ -351,94 +361,158 @@
           </article>
 
           <div class="principles-grid reveal reveal-stagger">
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/understanding.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Start with understanding.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/research.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Research before solutions.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/clarity.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Design for clarity.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/cognitive-load.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Reduce cognitive load.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/collaborate.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Collaborate early.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/validate.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Validate continuously.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/simplify.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Simplify complexity.</p>
-            </div>
-            <div class="principle-card">
-              <img
-                class="principle-icon"
-                src="./images/principles/measure.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                aria-hidden="true"
-              />
-              <p>Measure impact.</p>
-            </div>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/understanding.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Start with understanding.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Map users, goals, and constraints before touching the
+                  interface — clarity upfront saves rework later.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/research.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Research before solutions.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Interviews, data, and observed behavior ground decisions —
+                  not assumptions or the loudest opinion in the room.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/clarity.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Design for clarity.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Each screen answers one primary question. Hierarchy and
+                  language do the heavy lifting.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/cognitive-load.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Reduce cognitive load.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Group related information, surface what matters now, and hide
+                  depth until it's needed.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/collaborate.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Collaborate early.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Bring engineering and product in while ideas are still sketches
+                  — alignment is cheaper than rework.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/validate.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Validate continuously.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Prototype and test throughout the process. Learn early, when
+                  changes cost less.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/simplify.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Simplify complexity.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Enterprise products can feel lightweight. Strip away steps,
+                  jargon, and visual noise.
+                </p>
+              </span>
+            </button>
+            <button class="principle-card" type="button" aria-expanded="false">
+              <span class="principle-card-face principle-card-front">
+                <img
+                  class="principle-icon"
+                  src="./images/principles/measure.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+                <p>Measure impact.</p>
+              </span>
+              <span class="principle-card-face principle-card-back">
+                <p>
+                  Design for outcomes — faster workflows, higher confidence, real
+                  adoption — not deliverables alone.
+                </p>
+              </span>
+            </button>
           </div>
         </div>
       </section>

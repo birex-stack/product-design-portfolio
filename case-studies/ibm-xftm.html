@@ -16,7 +16,7 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body class="case-study case-study--ibm-xftm">
     <header class="site-header">
       <nav class="nav container nav--case" aria-label="Case study navigation">
         <a class="case-back" href="../index.html#challenges">← All challenges</a>
@@ -43,7 +43,7 @@
         </header>
       </section>
 
-      <section class="story-band story-band--g10 story-band--grid">
+      <section class="story-band story-band--problem story-band--grid">
         <section class="case-block container">
           <h2 class="reveal reveal-heading">The Problem</h2>
           <p class="case-problem-text reveal reveal-text">
@@ -99,34 +99,31 @@
                 between queue scan and case open, not inside the investigation
                 itself.
               </p>
-              <dl class="research-methods">
-                <div class="research-method">
-                  <dt>Shadowing sessions in SOC</dt>
-                  <dd>
-                    To understand their day-to-day work, jobs to be done.
-                  </dd>
-                </div>
-                <div class="research-method">
-                  <dt>Interviews with analysts</dt>
-                  <dd>
-                    To understand pain points and potential improvements.
-                  </dd>
-                </div>
-                <div class="research-method">
-                  <dt>Activity tracking</dt>
-                  <dd>
-                    To analyze their usage of current toolset — reality check.
-                  </dd>
-                </div>
-              </dl>
-              <div class="process-phase-media">
+              <figure class="analyst-persona-card analyst-persona-card--research reveal reveal-image">
                 <img
-                  src="../images/ibm-xftm/soc.png"
+                  src="../images/ibm-xftm/soc.jpg"
                   alt="IBM Security Operations Center — analysts at workstations with threat monitoring dashboards"
                   loading="lazy"
                   decoding="async"
                 />
-              </div>
+                <figcaption>
+                  <p class="research-methods-title">Research methodology</p>
+                  <ul class="research-methods-list">
+                    <li>
+                      Shadowing sessions in SOC, to understand their day-to-day
+                      work, jobs to be done.
+                    </li>
+                    <li>
+                      Interviews with analysts, to understand pain points and
+                      potential improvements.
+                    </li>
+                    <li>
+                      Activity tracking, to analyze their usage of current
+                      toolset — reality check.
+                    </li>
+                  </ul>
+                </figcaption>
+              </figure>
             </div>
           </li>
 
@@ -178,7 +175,7 @@
               </dl>
               <figure class="analyst-persona-card reveal reveal-image">
                 <img
-                  src="../images/ibm-xftm/personas/raphael.png"
+                  src="../images/ibm-xftm/personas/raphael.jpg"
                   alt="Raphael — composite archetype, Threat Analyst Main Hill"
                   width="400"
                   height="400"
@@ -215,7 +212,7 @@
               </p>
               <div class="process-phase-media">
                 <img
-                  src="../images/ibm-xftm/mid-fi-flow.png"
+                  src="../images/ibm-xftm/mid-fi-flow.jpg"
                   alt="Mid-fidelity flow — login, alert queue, triage drill-in, and associate, escalate or dismiss disposition"
                   loading="lazy"
                   decoding="async"
@@ -274,6 +271,7 @@
           faster disposition without sacrificing auditability, the right context
           before commitment, and ATDS guidance trusted enough to act on.
         </p>
+        <hr class="case-analyst-rule" aria-hidden="true" />
 
         <div class="analyst-experience-grid reveal reveal-stagger">
           <article class="analyst-experience-item reveal reveal-image">
@@ -287,7 +285,7 @@
             </div>
             <div class="analyst-experience-media">
               <img
-                src="../images/ibm-xftm/analyst-cases-queue.png"
+                src="../images/ibm-xftm/analyst-cases-queue.jpg"
                 alt="IBM TMX — cases queue with severity, client groups, and offense filtering"
                 width="1024"
                 height="349"
@@ -307,10 +305,10 @@
             </div>
             <div class="analyst-experience-media">
               <img
-                src="../images/ibm-xftm/analyst-case-overview.png"
+                src="../images/ibm-xftm/analyst-case-overview.jpg"
                 alt="IBM TMX — Exploit case overview with magnitude, rules, and IP intelligence"
-                width="1024"
-                height="491"
+                width="1361"
+                height="611"
                 loading="eager"
                 decoding="sync"
               />
@@ -327,7 +325,7 @@
             </div>
             <div class="analyst-experience-media">
               <img
-                src="../images/ibm-xftm/analyst-correlation.png"
+                src="../images/ibm-xftm/analyst-correlation.jpg"
                 alt="IBM TMX — correlated alerts with merge-into-case action"
                 width="1024"
                 height="353"
@@ -357,7 +355,7 @@
             </div>
             <div class="analyst-experience-media">
               <img
-                src="../images/ibm-xftm/analyst-atds-disposition.png"
+                src="../images/ibm-xftm/analyst-atds-disposition.jpg"
                 alt="IBM TMX — ATDS analysis with risk level and disposition actions"
                 width="1024"
                 height="495"
@@ -367,69 +365,6 @@
             </div>
           </article>
         </div>
-      </section>
-      </section>
-
-      <section class="story-band story-band--white story-band--grid">
-      <section class="case-block container">
-        <h2 class="reveal reveal-heading">A CISO&rsquo;s Journey</h2>
-        <p class="case-ciso-lead reveal reveal-text">
-          I also designed the customer-facing mobile app — the client-side
-          counterpart to the analyst console. Clients get transparent visibility
-          into security posture, active threats and IBM&rsquo;s response, without
-          chasing status calls.
-        </p>
-        <p class="case-ciso-lead reveal reveal-text">
-          Bob and Linda — the client personas below — shaped what each
-          stakeholder needed from the app.
-        </p>
-
-        <div class="ciso-personas-grid reveal reveal-stagger">
-          <figure class="ciso-persona-card">
-            <img
-              src="../images/ibm-xftm/personas/bob.png"
-              alt="Bob — Senior Analyst, Client"
-              width="400"
-              height="400"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>
-              <p>
-                Needs operational clarity — which offenses need action, what the
-                SOC detected, and how response is progressing without opening a
-                ticket.
-              </p>
-            </figcaption>
-          </figure>
-          <figure class="ciso-persona-card">
-            <img
-              src="../images/ibm-xftm/personas/linda.png"
-              alt="Linda — Security Director, Client"
-              width="400"
-              height="400"
-              loading="lazy"
-              decoding="async"
-            />
-            <figcaption>
-              <p>
-                Needs strategic transparency — security posture, threat
-                landscape and incident outcomes she can trust when briefing
-                leadership.
-              </p>
-            </figcaption>
-          </figure>
-        </div>
-
-        <p class="case-source reveal reveal-text">
-          <a
-            href="https://www.ibm.com/security/resources/security-threat-management/#top"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            IBM Security — A CISO&rsquo;s Journey: app screens &amp; narrative →
-          </a>
-        </p>
       </section>
       </section>
 
@@ -458,39 +393,102 @@
 
       <section class="story-band story-band--white story-band--grid">
       <section class="case-block container">
+        <h2 class="reveal reveal-heading">A CISO&rsquo;s Journey</h2>
+        <p class="case-ciso-lead reveal reveal-text">
+          I also designed the customer-facing mobile app — the client-side
+          counterpart to the analyst console. Clients get transparent visibility
+          into security posture, active threats and IBM&rsquo;s response, without
+          chasing status calls.
+        </p>
+        <p class="case-ciso-lead reveal reveal-text">
+          Bob and Linda — the client personas below — shaped what each
+          stakeholder needed from the app.
+        </p>
+
+        <div class="ciso-personas-grid reveal reveal-stagger">
+          <figure class="ciso-persona-card">
+            <img
+              src="../images/ibm-xftm/personas/bob.jpg"
+              alt="Bob — Senior Analyst, Client"
+              width="400"
+              height="400"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <p>
+                Needs operational clarity — which offenses need action, what the
+                SOC detected, and how response is progressing without opening a
+                ticket.
+              </p>
+            </figcaption>
+          </figure>
+          <figure class="ciso-persona-card">
+            <img
+              src="../images/ibm-xftm/personas/linda.jpg"
+              alt="Linda — Security Director, Client"
+              width="400"
+              height="400"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <p>
+                Needs strategic transparency — security posture, threat
+                landscape and incident outcomes she can trust when briefing
+                leadership.
+              </p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <p class="case-source reveal reveal-text">
+          <a
+            href="https://www.ibm.com/security/resources/security-threat-management/#top"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            IBM Security — A CISO&rsquo;s Journey: app screens &amp; narrative →
+          </a>
+        </p>
+      </section>
+      </section>
+
+      <section class="story-band story-band--impact story-band--grid">
+      <section class="case-block container">
         <h2 class="reveal reveal-heading">User outcomes / impact</h2>
-        <div class="impact-grid reveal reveal-stagger">
-          <div class="impact-item">
+        <ul class="impact-list reveal reveal-stagger">
+          <li>
             <strong>Enterprise adoption</strong>
             <span>Deployed across IBM Security client environments globally.</span>
-          </div>
-          <div class="impact-item">
+          </li>
+          <li>
             <strong>AI-assisted disposition at scale</strong>
             <span>
               ATDS turned trusted ML scoring into actionable alerts — close,
               escalate or automate with analyst oversight.
             </span>
-          </div>
-          <div class="impact-item">
+          </li>
+          <li>
             <strong>Stronger ATDS over time</strong>
             <span>
               Real analyst dispositions in XFTM fed back into the engine — ATDS
               improved with every investigation, not offline training alone.
             </span>
-          </div>
-          <div class="impact-item">
+          </li>
+          <li>
             <strong>Positive customer feedback</strong>
             <span>Analysts reported faster orientation on incoming incidents.</span>
-          </div>
-          <div class="impact-item">
+          </li>
+          <li>
             <strong>Engineering impact</strong>
             <span>Carbon Design System alignment reduced cross-team friction.</span>
-          </div>
-          <div class="impact-item">
+          </li>
+          <li>
             <strong>Business impact</strong>
             <span>Supported IBM Security's triage analyst workflow at scale.</span>
-          </div>
-        </div>
+          </li>
+        </ul>
       </section>
       </section>
 

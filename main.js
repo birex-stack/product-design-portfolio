@@ -1,12 +1,5 @@
 import './styles.css';
 
-const assetBase = import.meta.env.BASE_URL;
-
-document.documentElement.style.setProperty(
-  '--ibm-teaser-bg',
-  `url("${assetBase}images/ibm-xftm-teaser-bg.png")`
-);
-
 const header = document.querySelector('.site-header');
 const navToggle = document.querySelector('.nav-toggle');
 const navMenu = document.querySelector('.nav-menu');
@@ -180,6 +173,43 @@ function initGridSpotlight() {
 }
 
 initGridSpotlight();
+
+function initPrincipleCards() {
+  const cards = document.querySelectorAll('.principle-card');
+  if (!cards.length) return;
+
+  function setFlipped(card, flipped) {
+    if (flipped) {
+      card.style.minHeight = `${card.offsetHeight}px`;
+      card.classList.add('is-flipped');
+      card.setAttribute('aria-expanded', 'true');
+      return;
+    }
+
+    card.classList.remove('is-flipped');
+    card.style.minHeight = '';
+    card.setAttribute('aria-expanded', 'false');
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      if (card.classList.contains('is-flipped')) {
+        setFlipped(card, false);
+        return;
+      }
+
+      cards.forEach((otherCard) => {
+        if (otherCard !== card) {
+          setFlipped(otherCard, false);
+        }
+      });
+
+      setFlipped(card, true);
+    });
+  });
+}
+
+initPrincipleCards();
 
 const CHALLENGE_CHAIN = [
   { file: 'ibm-xftm.html', title: 'IBM XFTM' },
