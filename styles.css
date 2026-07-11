@@ -2595,8 +2595,8 @@ p {
 }
 
 .case-study--ibm-xftm {
-  --screen-shadow-on-dark: 0 12px 36px rgba(0, 0, 0, 0.55),
-    0 4px 12px rgba(0, 0, 0, 0.4);
+  --screen-shadow-on-dark: 0 8px 24px rgba(0, 0, 0, 0.32),
+    0 2px 8px rgba(0, 0, 0, 0.22);
 }
 
 .case-study--ibm-xftm .story-band--g100
