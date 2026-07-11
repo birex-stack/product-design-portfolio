@@ -228,7 +228,7 @@ const CHALLENGE_CHAIN = [
   { file: 'otomoto.html', title: 'Otomoto' },
 ];
 
-const CONTACT_LINK = 'https://linkedin.com/in/twoj-profil';
+const CONTACT_LINK = 'https://linkedin.com/in/maciejforc/';
 
 function initCaseNavFooter() {
   const footer = document.querySelector('.case-nav-footer');
