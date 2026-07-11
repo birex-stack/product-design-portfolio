@@ -377,6 +377,32 @@ p {
   justify-content: flex-start;
 }
 
+.story-band--hero .hero-name-row {
+  position: relative;
+}
+
+.story-band--hero .hero-wolf-pixel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: calc(var(--grid-cell) * 32);
+  height: calc(var(--grid-cell) * 32);
+  background-image: url("./hero-wolf-pixel.svg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: top right;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.45s ease;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.story-band--hero .hero-wolf-pixel:hover,
+.story-band--hero .hero-wolf-pixel:focus-visible {
+  opacity: 0.82;
+}
+
 .story-band--hero .hero h1 {
   font-size: clamp(2.5rem, 5.5vw, 3.75rem);
   font-weight: 600;
@@ -1283,7 +1309,7 @@ p {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  align-items: start;
+  align-items: stretch;
 }
 
 #principles .project-card + .principles-grid {
@@ -1292,11 +1318,12 @@ p {
 
 .principle-card {
   display: grid;
-  grid-template-rows: 64px auto;
-  gap: 16px;
+  grid-template-areas: "stack";
+  align-items: stretch;
   align-content: start;
   justify-items: start;
   width: 100%;
+  height: 100%;
   margin: 0;
   padding: 24px;
   border: 1px solid var(--border);
@@ -1306,15 +1333,13 @@ p {
   text-align: left;
   cursor: pointer;
   appearance: none;
-  transition: border-color var(--transition), background-color var(--transition);
-}
-
-.principle-card:not(.is-flipped) .principle-card-front {
-  display: contents;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
 }
 
 .principle-card:not(.is-flipped) .principle-card-back {
-  display: none;
+  visibility: hidden;
 }
 
 .principle-card:not(.is-flipped):hover {
@@ -1327,7 +1352,6 @@ p {
 }
 
 .principle-card.is-flipped {
-  display: block;
   background: var(--link-active);
   border-color: var(--link-active);
 }
@@ -1337,15 +1361,23 @@ p {
 }
 
 .principle-card.is-flipped .principle-card-front {
-  display: none;
-}
-
-.principle-card.is-flipped .principle-card-back {
-  display: block;
+  visibility: hidden;
 }
 
 .principle-card-face {
+  grid-area: stack;
   width: 100%;
+}
+
+.principle-card-front {
+  display: grid;
+  grid-template-rows: 64px auto;
+  gap: 16px;
+  align-content: start;
+}
+
+.principle-card-back {
+  display: block;
 }
 
 .principle-icon {
@@ -1362,7 +1394,6 @@ p {
 }
 
 .principle-card-front > p {
-  grid-row: 2;
   align-self: start;
 }
 
@@ -3003,6 +3034,10 @@ p {
 /* Responsive */
 
 @media (max-width: 960px) {
+  .story-band--hero .hero-wolf-pixel {
+    display: none;
+  }
+
   .principles-grid {
     grid-template-columns: repeat(2, 1fr);
   }

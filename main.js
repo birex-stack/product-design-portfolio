@@ -178,17 +178,22 @@ function initPrincipleCards() {
   const cards = document.querySelectorAll('.principle-card');
   if (!cards.length) return;
 
-  function setFlipped(card, flipped) {
-    if (flipped) {
-      card.style.minHeight = `${card.offsetHeight}px`;
-      card.classList.add('is-flipped');
-      card.setAttribute('aria-expanded', 'true');
-      return;
-    }
+  function syncPrincipleCardHeights() {
+    cards.forEach((card) => {
+      card.style.minHeight = '';
+    });
 
-    card.classList.remove('is-flipped');
-    card.style.minHeight = '';
-    card.setAttribute('aria-expanded', 'false');
+    if (!window.matchMedia('(max-width: 640px)').matches) return;
+
+    const maxHeight = Math.max(...[...cards].map((card) => card.offsetHeight));
+    cards.forEach((card) => {
+      card.style.minHeight = `${maxHeight}px`;
+    });
+  }
+
+  function setFlipped(card, flipped) {
+    card.classList.toggle('is-flipped', flipped);
+    card.setAttribute('aria-expanded', flipped ? 'true' : 'false');
   }
 
   cards.forEach((card) => {
@@ -207,6 +212,10 @@ function initPrincipleCards() {
       setFlipped(card, true);
     });
   });
+
+  syncPrincipleCardHeights();
+  window.addEventListener('resize', syncPrincipleCardHeights);
+  window.addEventListener('load', syncPrincipleCardHeights);
 }
 
 initPrincipleCards();
