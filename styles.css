@@ -421,13 +421,15 @@ p {
 }
 
 .story-band--hero .hero-tags li {
-  color: var(--text-on-dark-secondary);
-  border-color: var(--border-on-dark);
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-on-dark-tertiary);
+}
+
+.story-band--hero .hero-tags li + li::before {
+  color: var(--border-on-dark);
 }
 
 .story-band--hero .hero-tags li:hover {
-  border-color: var(--carbon-g50);
+  color: var(--text-on-dark-secondary);
 }
 
 .story-band--white {
@@ -704,11 +706,12 @@ p {
 
 .challenge-jump-link {
   display: inline-flex;
+  align-items: center;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.04em;
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: 1px solid var(--border);
   color: var(--text-secondary);
   background: var(--bg);
@@ -716,13 +719,15 @@ p {
   white-space: nowrap;
   transition:
     border-color var(--transition),
-    color var(--transition);
+    color var(--transition),
+    background-color var(--transition);
 }
 
 .challenge-jump-link:hover,
 .challenge-jump-link:focus-visible {
   border-color: var(--link-active);
   color: var(--text);
+  background: var(--bg);
 }
 
 .project-card-stage-link {
@@ -944,9 +949,11 @@ p {
 }
 
 .story-project--ibm .project-tags li {
-  color: var(--text-on-dark-secondary);
-  border-color: var(--border-on-dark);
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-on-dark-tertiary);
+}
+
+.story-project--ibm .project-tags li + li::before {
+  color: var(--border-on-dark);
 }
 
 .story-project--ibm .challenge-link {
@@ -994,9 +1001,11 @@ p {
 }
 
 .story-project--karmen .project-tags li {
-  color: var(--text-on-dark-secondary);
-  border-color: var(--border-on-dark);
-  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-on-dark-tertiary);
+}
+
+.story-project--karmen .project-tags li + li::before {
+  color: var(--border-on-dark);
 }
 
 .story-project--karmen .challenge-link {
@@ -1154,7 +1163,9 @@ p {
 .hero-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  align-items: center;
+  gap: 0;
+  row-gap: 6px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1164,23 +1175,28 @@ p {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  background: var(--bg);
-  transition: border-color var(--transition);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  transition: color var(--transition);
+}
+
+.hero-tags li + li::before {
+  content: "·";
+  margin-inline: 0.65em;
+  color: var(--border);
+  font-weight: 400;
 }
 
 .hero-tags li:hover {
-  border-color: var(--carbon-g50);
+  color: var(--text-secondary);
 }
 
 .project-tags {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  gap: 8px;
+  gap: 0;
+  row-gap: 6px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1192,12 +1208,16 @@ p {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  background: var(--bg);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
   white-space: nowrap;
+}
+
+.project-tags li + li::before {
+  content: "·";
+  margin-inline: 0.65em;
+  color: var(--border);
+  font-weight: 400;
 }
 
 .challenge-tag {
@@ -1597,16 +1617,11 @@ p {
   font-weight: 500;
   letter-spacing: 0.04em;
   color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 2px;
-  transition:
-    color var(--transition),
-    border-color var(--transition);
+  transition: color var(--transition);
 }
 
 .case-source a:hover {
   color: var(--text);
-  border-color: var(--text);
 }
 
 .case-subtitle {
@@ -1620,7 +1635,9 @@ p {
 .case-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  align-items: center;
+  gap: 0;
+  row-gap: 6px;
   margin-top: 24px;
   margin-bottom: 8px;
 }
@@ -1634,11 +1651,15 @@ p {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  background: var(--surface);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.case-badge + .case-badge::before {
+  content: "·";
+  margin-inline: 0.65em;
+  color: var(--border);
+  font-weight: 400;
 }
 
 .case-block {
@@ -1687,12 +1708,10 @@ p {
 
 .story-band--g100 .case-source a {
   color: var(--text-on-dark-secondary);
-  border-color: var(--border-on-dark);
 }
 
 .story-band--g100 .case-source a:hover {
   color: var(--text-on-dark);
-  border-color: var(--text-on-dark-secondary);
 }
 
 .story-band--g100 .case-back {
@@ -1865,6 +1884,10 @@ p {
   line-height: 1.6;
   color: var(--text-secondary);
   padding-left: 0.25rem;
+}
+
+.analyst-persona-card figcaption .research-methods-list + p {
+  margin-top: 12px;
 }
 
 .ciso-journey-grid {
@@ -2569,6 +2592,29 @@ p {
 .case-study--elastic-cases .analyst-experience-item:nth-child(even),
 .case-study--ibm-xftm .analyst-experience-item:nth-child(even) {
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+}
+
+.case-study--ibm-xftm {
+  --screen-shadow-on-dark: 0 12px 36px rgba(0, 0, 0, 0.55),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.case-study--ibm-xftm .story-band--g100
+  .analyst-experience-media:not(.analyst-experience-media--device):not(
+    .analyst-experience-media--portrait
+  ) {
+  box-shadow: var(--screen-shadow-on-dark);
+}
+
+.case-study--ibm-xftm .process-phase-media {
+  box-shadow: var(--screen-shadow);
+}
+
+.case-study--ibm-xftm
+  .process-phase-body
+  .analyst-persona-card--research
+  img {
+  box-shadow: var(--screen-shadow);
 }
 
 .analyst-experience-outcome {
