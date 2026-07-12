@@ -2893,6 +2893,19 @@ p {
   line-height: 1.65;
 }
 
+.impact-list li span a {
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.impact-list li span a:hover {
+  border-color: var(--text);
+}
+
 .story-band--impact .impact-list li {
   border-top-color: rgba(82, 92, 68, 0.12);
 }
