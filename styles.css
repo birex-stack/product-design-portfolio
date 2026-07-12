@@ -403,16 +403,17 @@ p {
   opacity: 0.82;
 }
 
-.story-band--hero .hero h1 {
+.story-band--hero .hero h2.hero-lead {
   font-size: clamp(2.5rem, 5.5vw, 3.75rem);
   font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.25;
   color: var(--text-on-dark);
   margin-bottom: 32px;
+  overflow: visible;
 }
 
-.story-band--hero .hero h2 {
+.story-band--hero .hero-name-row h2 {
   font-size: clamp(1.375rem, 2.8vw, 2rem);
   font-weight: 600;
   letter-spacing: -0.02em;
