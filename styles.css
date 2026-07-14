@@ -933,19 +933,24 @@ p {
   position: absolute;
   inset: 0;
   z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  padding-inline: clamp(12px, 2vw, 24px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: center;
+  gap: clamp(8px, 2.5vw, 30px);
+  padding: clamp(8px, 1.5vw, 16px) clamp(12px, 2vw, 24px);
 }
 
 .project-card-teaser--games .project-card-teaser-strip img {
-  flex: 1 1 0;
-  min-width: 0;
-  height: calc(100% - 32px);
-  object-fit: cover;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 494 / 1024;
+  object-fit: contain;
   object-position: center top;
+  justify-self: center;
+  align-self: center;
 }
 
 .project-card-teaser--elastic {
@@ -3199,6 +3204,16 @@ p {
 
   .project-card-teaser {
     --teaser-image-height: clamp(95px, 24.48vw, 136px);
+  }
+
+  .project-card-teaser--cases .project-card-teaser-img {
+    object-fit: contain;
+    object-position: center top;
+  }
+
+  .project-card-teaser--games .project-card-teaser-strip {
+    gap: clamp(6px, 1.6vw, 12px);
+    padding: clamp(6px, 1.5vw, 12px) clamp(8px, 2vw, 16px);
   }
 
   .process-step:not(:last-child)::after {
