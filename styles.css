@@ -521,6 +521,7 @@ p {
 .story-band--g100.story-band--grid,
 .story-project--ibm.story-band--grid,
 .story-project--karmen.story-band--grid,
+.story-project--games.story-band--grid,
 .story-band--hero.story-band--grid,
 .story-band--contact.story-band--grid {
   --grid-pixel-fill: url("./grid-pixel-fill-dark.svg");
@@ -534,6 +535,8 @@ p {
 .story-project--ibm.story-band--grid::after,
 .story-project--karmen.story-band--grid::before,
 .story-project--karmen.story-band--grid::after,
+.story-project--games.story-band--grid::before,
+.story-project--games.story-band--grid::after,
 .story-band--hero.story-band--grid::before,
 .story-band--hero.story-band--grid::after,
 .story-band--contact.story-band--grid::before,
@@ -626,6 +629,7 @@ p {
 .story-band--g100.story-band--grid .grid-pixel-spotlight,
 .story-project--ibm.story-band--grid .grid-pixel-spotlight,
 .story-project--karmen.story-band--grid .grid-pixel-spotlight,
+.story-project--games.story-band--grid .grid-pixel-spotlight,
 .story-band--hero.story-band--grid .grid-pixel-spotlight,
 .story-band--contact.story-band--grid .grid-pixel-spotlight {
   mix-blend-mode: screen;
@@ -639,6 +643,10 @@ p {
   background: var(--project-dark-bg);
 }
 
+.story-project--games.story-band--g100 {
+  background: var(--project-dark-bg);
+}
+
 .story-band--contact {
   background: var(--project-dark-bg);
   color: var(--text-on-dark);
@@ -647,6 +655,12 @@ p {
 .story-band--grid .container {
   position: relative;
   z-index: 1;
+}
+
+/* Homepage — temporarily hidden projects (restore by removing class) */
+
+.homepage-hidden {
+  display: none !important;
 }
 
 .story-chapter {
@@ -911,6 +925,29 @@ p {
   background-color: #000000;
 }
 
+.project-card-teaser--games {
+  background-color: #000000;
+}
+
+.project-card-teaser--games .project-card-teaser-strip {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding-inline: clamp(12px, 2vw, 24px);
+}
+
+.project-card-teaser--games .project-card-teaser-strip img {
+  flex: 1 1 0;
+  min-width: 0;
+  height: calc(100% - 32px);
+  object-fit: cover;
+  object-position: center top;
+}
+
 .project-card-teaser--elastic {
   background-color: #f4f4f4;
 }
@@ -1041,6 +1078,46 @@ p {
 
 .story-project--karmen .project-card-stage-link:hover .challenge-link,
 .story-project--karmen .project-card-stage-link:focus-visible .challenge-link {
+  color: var(--link-active-on-dark);
+  border-color: var(--link-active-on-dark);
+}
+
+.story-project--games {
+  --card-fade-color: var(--project-dark-bg);
+  --card-footer-bg: var(--teaser-footer-bg-dark);
+  --card-footer-border: rgba(255, 255, 255, 0.1);
+}
+
+.story-project--games .project-card-title {
+  color: var(--text-on-dark-tertiary);
+}
+
+.story-project--games .challenge-link {
+  color: var(--text-on-dark);
+}
+
+.story-project--games .project-card h3 {
+  background-image: var(--headline-gradient-on-dark);
+}
+
+.story-project--games .project-card-desc {
+  color: var(--text-on-dark-secondary);
+}
+
+.story-project--games .project-tags li {
+  color: var(--text-on-dark-tertiary);
+}
+
+.story-project--games .project-tags li + li::before {
+  color: var(--border-on-dark);
+}
+
+.story-project--games .challenge-link {
+  border-color: var(--border-on-dark);
+}
+
+.story-project--games .project-card-stage-link:hover .challenge-link,
+.story-project--games .project-card-stage-link:focus-visible .challenge-link {
   color: var(--link-active-on-dark);
   border-color: var(--link-active-on-dark);
 }
@@ -2074,6 +2151,10 @@ p {
   border-color: var(--text);
 }
 
+.case-video-lead + .insights-list {
+  margin-top: clamp(24px, 4vw, 32px);
+}
+
 .case-video {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -2713,6 +2794,14 @@ p {
   max-width: min(100%, 522px);
 }
 
+.story-project--games .analyst-experience-item {
+  align-items: start;
+}
+
+.story-project--games .analyst-experience-media--portrait img {
+  max-width: min(100%, 295px);
+}
+
 .analyst-experience-media.analyst-experience-media--device {
   overflow: visible;
   background: transparent;
@@ -2834,6 +2923,11 @@ p {
 
 .insights-list li:first-child::before {
   top: 0;
+}
+
+.insights-list li strong {
+  font-weight: 600;
+  color: var(--text);
 }
 
 .story-band--insights .insights-list li {

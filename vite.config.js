@@ -11,6 +11,7 @@ export default defineConfig({
         elasticSlo: 'case-studies/elastic-slo.html',
         elasticCases: 'case-studies/elastic-cases.html',
         otomoto: 'case-studies/otomoto.html',
+        mobileGames: 'case-studies/mobile-games.html',
       },
     },
   },
