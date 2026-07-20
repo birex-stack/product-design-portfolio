@@ -857,35 +857,70 @@ p {
 
 .challenge-jump-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 24px;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 28px;
+  max-width: 62ch;
 }
 
 .challenge-jump-link {
-  display: inline-flex;
-  align-items: center;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 28px;
+  padding: 16px 0 16px 1.75rem;
+  border-top: 1px solid var(--border-subtle);
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition);
+}
+
+.challenge-jump-link:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.challenge-jump-link::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--link-active);
+  transition: transform var(--transition);
+}
+
+.challenge-jump-link:first-child::before {
+  top: 0;
+}
+
+.challenge-jump-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.challenge-jump-tags {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  background: var(--bg);
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    border-color var(--transition),
-    color var(--transition),
-    background-color var(--transition);
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  line-height: 1.4;
 }
 
-.challenge-jump-link:hover,
-.challenge-jump-link:focus-visible {
-  border-color: var(--link-active);
-  color: var(--text);
-  background: var(--bg);
+.challenge-jump-link:hover .challenge-jump-name,
+.challenge-jump-link:focus-visible .challenge-jump-name {
+  color: var(--link-active);
+}
+
+.challenge-jump-link:hover::before,
+.challenge-jump-link:focus-visible::before {
+  transform: translateX(3px);
 }
 
 .project-card-stage-link {
