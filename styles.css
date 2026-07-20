@@ -387,20 +387,137 @@ p {
   right: 0;
   width: calc(var(--grid-cell) * 32);
   height: calc(var(--grid-cell) * 32);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.045) 0,
+      rgba(255, 255, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    url("./hero-wolf-pixel.svg");
+  background-size: 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: top right, top right;
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: saturate(0.65) brightness(0.92);
+  transition: opacity 0.55s ease;
+  pointer-events: auto;
+  z-index: 2;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.story-band--hero .hero-wolf-pixel::before,
+.story-band--hero .hero-wolf-pixel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image: url("./hero-wolf-pixel.svg");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: top right;
   opacity: 0;
+  pointer-events: none;
   mix-blend-mode: screen;
-  transition: opacity 0.45s ease;
-  pointer-events: auto;
-  z-index: 2;
+  transition: opacity 0.55s ease;
 }
 
+.story-band--hero .hero-wolf-pixel::before {
+  transform: translate(-2px, 0);
+  filter: hue-rotate(95deg) saturate(0.45);
+}
+
+.story-band--hero .hero-wolf-pixel::after {
+  transform: translate(2px, 0);
+  filter: hue-rotate(-70deg) saturate(0.35);
+}
+
+.story-band--hero .hero-name-row:hover .hero-wolf-pixel,
 .story-band--hero .hero-wolf-pixel:hover,
 .story-band--hero .hero-wolf-pixel:focus-visible {
-  opacity: 0.82;
+  opacity: 0.28;
+  animation: hero-wolf-signal-flicker 4.2s steps(1, end) infinite;
+}
+
+.story-band--hero .hero-name-row:hover .hero-wolf-pixel::before,
+.story-band--hero .hero-wolf-pixel:hover::before,
+.story-band--hero .hero-wolf-pixel:focus-visible::before,
+.story-band--hero .hero-name-row:hover .hero-wolf-pixel::after,
+.story-band--hero .hero-wolf-pixel:hover::after,
+.story-band--hero .hero-wolf-pixel:focus-visible::after {
+  opacity: 0.14;
+  animation: hero-wolf-glitch-shift 3.4s steps(1, end) infinite;
+}
+
+.story-band--hero .hero-name-row:hover .hero-wolf-pixel::after,
+.story-band--hero .hero-wolf-pixel:hover::after,
+.story-band--hero .hero-wolf-pixel:focus-visible::after {
+  animation-delay: 0.65s;
+}
+
+@keyframes hero-wolf-signal-flicker {
+  0%,
+  100% {
+    opacity: 0.28;
+  }
+
+  7% {
+    opacity: 0.14;
+  }
+
+  8% {
+    opacity: 0.24;
+  }
+
+  41% {
+    opacity: 0.2;
+  }
+
+  42% {
+    opacity: 0.1;
+  }
+
+  43% {
+    opacity: 0.26;
+  }
+
+  78% {
+    opacity: 0.22;
+  }
+
+  79% {
+    opacity: 0.08;
+  }
+
+  80% {
+    opacity: 0.25;
+  }
+}
+
+@keyframes hero-wolf-glitch-shift {
+  0%,
+  91%,
+  100% {
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+
+  92% {
+    transform: translate(-5px, 1px);
+    clip-path: inset(14% 0 48% 0);
+  }
+
+  93% {
+    transform: translate(4px, -1px);
+    clip-path: inset(58% 0 10% 0);
+  }
+
+  94% {
+    transform: translate(-3px, 0);
+    clip-path: inset(32% 0 34% 0);
+  }
 }
 
 .story-band--hero .hero h2.hero-lead {
@@ -3365,6 +3482,18 @@ p {
   .contact-cta:hover,
   .hero-tags li:hover {
     transform: none;
+  }
+
+  .story-band--hero .hero-name-row:hover .hero-wolf-pixel,
+  .story-band--hero .hero-wolf-pixel:hover,
+  .story-band--hero .hero-wolf-pixel:focus-visible,
+  .story-band--hero .hero-name-row:hover .hero-wolf-pixel::before,
+  .story-band--hero .hero-wolf-pixel:hover::before,
+  .story-band--hero .hero-wolf-pixel:focus-visible::before,
+  .story-band--hero .hero-name-row:hover .hero-wolf-pixel::after,
+  .story-band--hero .hero-wolf-pixel:hover::after,
+  .story-band--hero .hero-wolf-pixel:focus-visible::after {
+    animation: none;
   }
 
   .project-card-teaser-veil-top {
