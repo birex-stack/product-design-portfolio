@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift Briefing — XFTM SOC Prototype</title>
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./soc-proto.css" />
+  </head>
+  <body>
+    <div class="soc-proto-banner">
+      <span
+        ><strong>Interactive prototype</strong> — SOC analyst investigation
+        experience</span
+      >
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
+    </div>
+
+    <div class="soc-app">
+      <header class="soc-header">
+        <div class="soc-header-left">
+          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
+          <div class="soc-breadcrumb">
+            <span>Home</span><span>/</span
+            ><span aria-current="page">Shift Briefing</span>
+          </div>
+        </div>
+        <div class="soc-header-right">
+          <button class="soc-header-action" type="button" aria-label="3 notifications">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+              <path
+                d="M28.7 20.3 26 17.6V13a10 10 0 0 0-9-9.95V1h-2v2.05A10 10 0 0 0 6 13v4.6l-2.7 2.7a.91.91 0 0 0-.3.7v3a.94.94 0 0 0 1 1h7.1a5 5 0 0 0 9.8 0H28a.94.94 0 0 0 1-1v-3a.91.91 0 0 0-.3-.7ZM16 28a3 3 0 0 1-2.8-2h5.6A3 3 0 0 1 16 28Zm11-5H5v-1.6l2.7-2.7A.91.91 0 0 0 8 18v-5a8 8 0 0 1 16 0v5a.91.91 0 0 0 .3.7l2.7 2.7Z"
+              />
+            </svg>
+            <span class="soc-bell-badge">3</span>
+          </button>
+          <button class="soc-header-action" type="button" aria-label="User profile">
+            <span class="soc-avatar" aria-hidden="true">A</span>
+          </button>
+        </div>
+      </header>
+
+      <aside class="soc-sidebar" aria-label="Primary">
+        <nav class="soc-nav">
+          <a class="is-active" href="./shift-briefing.html">Briefing</a>
+          <a href="./alerts.html"
+            >Alerts <span class="soc-nav-badge">12</span></a
+          >
+          <a href="./cases.html">Cases</a>
+          <a href="#">Threat intel</a>
+          <a href="#">Reports</a>
+          <a href="#">Dashboards</a>
+        </nav>
+        <div class="soc-nav-footer">
+          <a href="./passdown.html">End of shift</a>
+          <a href="../ibm-xftm.html">Exit prototype</a>
+        </div>
+      </aside>
+
+      <main class="soc-main">
+        <div class="soc-page-head">
+          <div>
+            <h1>Shift Briefing</h1>
+            <p>Your security overview to start the shift.</p>
+          </div>
+        </div>
+
+        <div class="soc-ack">
+          <div class="soc-ack-copy">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="#78a9ff" aria-hidden="true">
+              <path
+                d="M16 2 4 7v9c0 7.1 4.8 13.7 12 15 7.2-1.3 12-7.9 12-15V7Zm10 14c0 5.7-3.7 11-10 12.2C9.7 27 6 21.7 6 16V8.5l10-4.2 10 4.2Z"
+              />
+            </svg>
+            <span>Acknowledge to start your shift and receive the previous passdown.</span>
+          </div>
+          <a class="soc-btn soc-btn--primary" href="./alerts.html"
+            >Acknowledge Passdown</a
+          >
+        </div>
+
+        <div class="soc-grid-2">
+          <section class="soc-card">
+            <div class="soc-card__head">
+              <h2>Security News &amp; Threat Landscape</h2>
+            </div>
+            <div class="soc-card__body">
+              <article class="soc-news-item">
+                <span class="soc-news-time">2h ago</span>
+                <div class="soc-news-body">
+                  <span class="soc-tag soc-tag--high">High</span>
+                  <strong>Critical RCE vulnerability in edge VPN appliances</strong>
+                  <p>
+                    Active exploitation reported against finance verticals.
+                    Watch for anomalous VPN session creation.
+                  </p>
+                </div>
+              </article>
+              <article class="soc-news-item">
+                <span class="soc-news-time">5h ago</span>
+                <div class="soc-news-body">
+                  <span class="soc-tag soc-tag--medium">Medium</span>
+                  <strong>Phishing wave targeting SSO password resets</strong>
+                  <p>
+                    Lookalike domains observed. Correlate with mailbox rules and
+                    impossible-travel alerts.
+                  </p>
+                </div>
+              </article>
+              <article class="soc-news-item">
+                <span class="soc-news-time">11h ago</span>
+                <div class="soc-news-body">
+                  <span class="soc-tag soc-tag--low">Info</span>
+                  <strong>Updated IOC pack for Cobalt Strike beacons</strong>
+                  <p>Threat Intel published 47 new hashes and C2 patterns.</p>
+                </div>
+              </article>
+              <p style="margin-top: 12px">
+                <a href="./shift-briefing.html">Open Threat Intel →</a>
+              </p>
+            </div>
+          </section>
+
+          <section class="soc-card">
+            <div class="soc-card__head">
+              <h2>Previous Shift Summary</h2>
+              <a href="./passdown.html">View full passdown →</a>
+            </div>
+            <div class="soc-card__body">
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--cds-text-helper);
+                  margin-bottom: 14px;
+                "
+              >
+                Shift: May 27, 16:00 – May 28, 08:00 · Analyst: Sam Taylor
+              </p>
+              <div class="soc-grid-4">
+                <div class="soc-metric">
+                  <div class="soc-metric-ring">128</div>
+                  <span>Alerts created</span>
+                  <small class="soc-delta--up">↑ 18%</small>
+                </div>
+                <div class="soc-metric">
+                  <div class="soc-metric-ring soc-metric-ring--warn">7</div>
+                  <span>Incidents created</span>
+                  <small class="soc-delta--up">↑ 40%</small>
+                </div>
+                <div class="soc-metric">
+                  <div class="soc-metric-ring soc-metric-ring--ok">5</div>
+                  <span>Incidents closed</span>
+                  <small class="soc-delta--down">↓ 25%</small>
+                </div>
+                <div class="soc-metric">
+                  <div class="soc-metric-ring soc-metric-ring--error">1h</div>
+                  <span>MTTR</span>
+                  <small class="soc-delta--down">↓ 15%</small>
+                </div>
+              </div>
+              <div
+                class="soc-grid-2"
+                style="margin-top: 20px; margin-bottom: 0; gap: 20px"
+              >
+                <div>
+                  <h3
+                    style="
+                      font-size: 0.8125rem;
+                      margin-bottom: 10px;
+                      font-weight: 600;
+                    "
+                  >
+                    Top incident types
+                  </h3>
+                  <div class="soc-bars">
+                    <div class="soc-bar-row">
+                      <span>Phishing</span>
+                      <div class="soc-bar-track">
+                        <div class="soc-bar-fill" style="width: 100%"></div>
+                      </div>
+                      <span>3</span>
+                    </div>
+                    <div class="soc-bar-row">
+                      <span>Malware</span>
+                      <div class="soc-bar-track">
+                        <div class="soc-bar-fill" style="width: 66%"></div>
+                      </div>
+                      <span>2</span>
+                    </div>
+                    <div class="soc-bar-row">
+                      <span>Unauthorized</span>
+                      <div class="soc-bar-track">
+                        <div class="soc-bar-fill" style="width: 33%"></div>
+                      </div>
+                      <span>1</span>
+                    </div>
+                    <div class="soc-bar-row">
+                      <span>Exfiltration</span>
+                      <div class="soc-bar-track">
+                        <div class="soc-bar-fill" style="width: 33%"></div>
+                      </div>
+                      <span>1</span>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3
+                    style="
+                      font-size: 0.8125rem;
+                      margin-bottom: 10px;
+                      font-weight: 600;
+                    "
+                  >
+                    Key takeaways
+                  </h3>
+                  <ul class="soc-takeaways">
+                    <li>
+                      Increased phishing activity targeting finance users.
+                    </li>
+                    <li>
+                      INC-2025-4821 still open — forensics pending on endpoint
+                      image.
+                    </li>
+                    <li>
+                      Watchlist IP 203.0.113.45 seen across two client tenants.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="soc-card">
+          <div class="soc-card__head">
+            <h2>Passdown Notes</h2>
+          </div>
+          <div class="soc-passdown-grid">
+            <div class="soc-passdown-col">
+              <h4>
+                Ongoing Incidents
+                <span class="soc-tag soc-tag--count">2</span>
+              </h4>
+              <div class="soc-item">
+                <strong
+                  ><span class="soc-dot soc-dot--high"></span
+                  >INC-2025-4821</strong
+                >
+                <span>Suspected ransomware staging · Finance · High</span>
+              </div>
+              <div class="soc-item">
+                <strong
+                  ><span class="soc-dot soc-dot--medium"></span
+                  >INC-2025-4818</strong
+                >
+                <span>Impossible travel · Remote access · Medium</span>
+              </div>
+            </div>
+            <div class="soc-passdown-col">
+              <h4>
+                Watchlist <span class="soc-tag soc-tag--count">3</span>
+              </h4>
+              <div class="soc-item">
+                <strong>203.0.113.45</strong>
+                <span>External IP · Seen in malware sandbox</span>
+              </div>
+              <div class="soc-item">
+                <strong>j.doe@finance.com</strong>
+                <span>User · Multiple phishing clicks</span>
+              </div>
+              <div class="soc-item">
+                <strong>a1b2…f9e8</strong>
+                <span>File hash · Cobalt Strike beacon</span>
+              </div>
+            </div>
+            <div class="soc-passdown-col">
+              <h4>Handover Notes</h4>
+              <p style="font-size: 0.8125rem; color: var(--cds-text-secondary)">
+                “Picked up INC-2025-4821 late shift. Disk image queued for
+                forensics. Do not close until ATDS disposition is reviewed and
+                containment confirmed. Finance CISO briefed at 07:10.”
+                <br /><br />— Sam Taylor
+              </p>
+            </div>
+            <div class="soc-passdown-col">
+              <h4>Important Links</h4>
+              <div class="soc-link-list">
+                <a href="./shift-briefing.html">Threat Intel Portal</a>
+                <a href="./shift-briefing.html">Incident Runbooks</a>
+                <a href="./shift-briefing.html">SOC Playbooks</a>
+                <a href="./shift-briefing.html">Asset Criticality List</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

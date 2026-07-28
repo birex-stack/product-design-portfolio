@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cases — XFTM SOC Prototype</title>
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./soc-proto.css" />
+  </head>
+  <body>
+    <div class="soc-proto-banner">
+      <span
+        ><strong>Interactive prototype</strong> — SOC analyst investigation
+        experience</span
+      >
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
+    </div>
+
+    <div class="soc-app">
+      <header class="soc-header">
+        <div class="soc-header-left">
+          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
+          <div class="soc-breadcrumb">
+            <span>Home</span><span>/</span
+            ><span aria-current="page">Cases</span>
+          </div>
+        </div>
+        <div class="soc-header-right">
+          <button class="soc-header-action" type="button" aria-label="3 notifications">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+              <path
+                d="M28.7 20.3 26 17.6V13a10 10 0 0 0-9-9.95V1h-2v2.05A10 10 0 0 0 6 13v4.6l-2.7 2.7a.91.91 0 0 0-.3.7v3a.94.94 0 0 0 1 1h7.1a5 5 0 0 0 9.8 0H28a.94.94 0 0 0 1-1v-3a.91.91 0 0 0-.3-.7ZM16 28a3 3 0 0 1-2.8-2h5.6A3 3 0 0 1 16 28Zm11-5H5v-1.6l2.7-2.7A.91.91 0 0 0 8 18v-5a8 8 0 0 1 16 0v5a.91.91 0 0 0 .3.7l2.7 2.7Z"
+              />
+            </svg>
+            <span class="soc-bell-badge">3</span>
+          </button>
+          <button class="soc-header-action" type="button" aria-label="User profile">
+            <span class="soc-avatar" aria-hidden="true">A</span>
+          </button>
+        </div>
+      </header>
+
+      <aside class="soc-sidebar" aria-label="Primary">
+        <nav class="soc-nav">
+          <a href="./shift-briefing.html">Briefing</a>
+          <a href="./alerts.html"
+            >Alerts <span class="soc-nav-badge">12</span></a
+          >
+          <a class="is-active" href="./cases.html">Cases</a>
+          <a href="#">Threat intel</a>
+          <a href="#">Reports</a>
+          <a href="#">Dashboards</a>
+        </nav>
+        <div class="soc-nav-footer">
+          <a href="./passdown.html">End of shift</a>
+          <a href="../ibm-xftm.html">Exit prototype</a>
+        </div>
+      </aside>
+
+      <main class="soc-main">
+        <div class="soc-page-head">
+          <div>
+            <h1>Cases</h1>
+            <p>
+              Open investigations · correlated alerts · ATDS recommendations
+            </p>
+          </div>
+          <a class="soc-btn soc-btn--secondary" href="./passdown.html"
+            >End of shift</a
+          >
+        </div>
+
+        <div class="soc-toolbar">
+          <div
+            class="soc-switcher"
+            role="tablist"
+            aria-label="Case assignment filter"
+          >
+            <button
+              type="button"
+              class="is-active"
+              role="tab"
+              aria-selected="true"
+              data-filter="mine"
+            >
+              Assigned to me
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-filter="all"
+            >
+              All
+            </button>
+          </div>
+          <div class="soc-toolbar-tools">
+            <button
+              class="soc-icon-btn"
+              type="button"
+              aria-label="Filter cases"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18 28h-4a2 2 0 0 1-2-2v-7.59L4.59 11A2 2 0 0 1 4 9.59V6a2 2 0 0 1 2-2h20a2 2 0 0 1 2 2v3.59a2 2 0 0 1-.59 1.41L20 18.41V26a2 2 0 0 1-2 2zM6 6v3.59l8 8V26h4v-8.41l8-8V6z"
+                />
+              </svg>
+            </button>
+            <label class="soc-search" aria-label="Search cases">
+              <svg
+                class="soc-search__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
+                />
+              </svg>
+              <input type="search" placeholder="Search cases" />
+            </label>
+          </div>
+        </div>
+
+        <article class="soc-incident-group" data-assignee="me">
+          <a class="soc-incident-group__head" href="./incident.html">
+            <span class="soc-tag soc-tag--high">High</span>
+            <div>
+              <h3>INC-2025-4821 · Suspected ransomware staging</h3>
+              <p>
+                Finance · 5 correlated alerts · Updated 12m ago · Assigned: you
+                · In progress
+              </p>
+            </div>
+            <span class="soc-tag soc-tag--count">5 alerts</span>
+            <span style="color: var(--cds-link); font-size: 0.8125rem"
+              >Open →</span
+            >
+          </a>
+          <table class="soc-alert-table">
+            <thead>
+              <tr>
+                <th>Alert</th>
+                <th>ATDS</th>
+                <th>Source</th>
+                <th>Source IP</th>
+                <th>Country</th>
+                <th>Reputation</th>
+                <th>Last seen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="./incident.html"
+                    >ALT-88421 · Suspicious PowerShell</a
+                  >
+                </td>
+                <td>Close / Associate · 72%</td>
+                <td>endpoint-fin-04</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="10.48.12.104"
+                    data-country="Poland"
+                    data-flag="🇵🇱"
+                    data-score="2"
+                    data-asn="AS5617"
+                    data-org="Acme Finance Corp (internal)"
+                    data-type="Corporate LAN"
+                    data-categories="Internal, Whitelisted"
+                    data-first-seen="2023-02-14"
+                    data-last-seen="2025-05-28"
+                  >
+                    10.48.12.104
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                    >🇵🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                </td>
+                <td>08:41</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./incident.html">ALT-88419 · Encoded command</a>
+                </td>
+                <td>Close / Associate · 68%</td>
+                <td>endpoint-fin-04</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="10.48.12.104"
+                    data-country="Poland"
+                    data-flag="🇵🇱"
+                    data-score="2"
+                    data-asn="AS5617"
+                    data-org="Acme Finance Corp (internal)"
+                    data-type="Corporate LAN"
+                    data-categories="Internal, Whitelisted"
+                    data-first-seen="2023-02-14"
+                    data-last-seen="2025-05-28"
+                  >
+                    10.48.12.104
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                    >🇵🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                </td>
+                <td>08:38</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./incident.html">ALT-88411 · Rare process tree</a>
+                </td>
+                <td>Investigate · 54%</td>
+                <td>endpoint-fin-04</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="10.48.12.104"
+                    data-country="Poland"
+                    data-flag="🇵🇱"
+                    data-score="2"
+                    data-asn="AS5617"
+                    data-org="Acme Finance Corp (internal)"
+                    data-type="Corporate LAN"
+                    data-categories="Internal, Whitelisted"
+                    data-first-seen="2023-02-14"
+                    data-last-seen="2025-05-28"
+                  >
+                    10.48.12.104
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                    >🇵🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                </td>
+                <td>08:22</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="soc-incident-group" data-assignee="me">
+          <a class="soc-incident-group__head" href="./incident.html">
+            <span class="soc-tag soc-tag--medium">Medium</span>
+            <div>
+              <h3>INC-2025-4818 · Impossible travel / remote access</h3>
+              <p>
+                Remote access · 3 correlated alerts · Updated 41m ago ·
+                Assigned: you · In progress
+              </p>
+            </div>
+            <span class="soc-tag soc-tag--count">3 alerts</span>
+            <span style="color: var(--cds-link); font-size: 0.8125rem"
+              >Open →</span
+            >
+          </a>
+          <table class="soc-alert-table">
+            <thead>
+              <tr>
+                <th>Alert</th>
+                <th>ATDS</th>
+                <th>Source</th>
+                <th>Source IP</th>
+                <th>Country</th>
+                <th>Reputation</th>
+                <th>Last seen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="./incident.html">ALT-88390 · Geo velocity</a>
+                </td>
+                <td>Investigate · 71%</td>
+                <td>vpn-gateway</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="91.219.237.144"
+                    data-country="Netherlands"
+                    data-flag="🇳🇱"
+                    data-score="7"
+                    data-asn="AS49981"
+                    data-org="WorldStream B.V."
+                    data-type="Hosting / VPN"
+                    data-categories="VPN, Anonymous proxy"
+                    data-first-seen="2024-08-19"
+                    data-last-seen="2025-05-28"
+                  >
+                    91.219.237.144
+                  </button>
+                </td>
+                <td>
+                  <span
+                    class="soc-ip-flag"
+                    title="Netherlands"
+                    aria-label="Netherlands"
+                    >🇳🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--high">7/10</span>
+                </td>
+                <td>08:11</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./incident.html">ALT-88388 · New device auth</a>
+                </td>
+                <td>Monitor · 54%</td>
+                <td>idp-sso</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="185.220.101.42"
+                    data-country="Germany"
+                    data-flag="🇩🇪"
+                    data-score="9"
+                    data-asn="AS60729"
+                    data-org="Zwiebelfreunde e.V."
+                    data-type="Tor exit node"
+                    data-categories="Tor, Anonymizer, Abuse"
+                    data-first-seen="2024-01-11"
+                    data-last-seen="2025-05-28"
+                  >
+                    185.220.101.42
+                  </button>
+                </td>
+                <td>
+                  <span
+                    class="soc-ip-flag"
+                    title="Germany"
+                    aria-label="Germany"
+                    >🇩🇪</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--critical">9/10</span>
+                </td>
+                <td>08:09</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="soc-incident-group" data-assignee="other" hidden>
+          <a class="soc-incident-group__head" href="./incident.html">
+            <span class="soc-tag soc-tag--medium">Medium</span>
+            <div>
+              <h3>INC-2025-4812 · Phishing click → mailbox rule</h3>
+              <p>
+                Messaging · 4 correlated alerts · Updated 2h ago · Unassigned ·
+                In progress
+              </p>
+            </div>
+            <span class="soc-tag soc-tag--count">4 alerts</span>
+            <span style="color: var(--cds-link); font-size: 0.8125rem"
+              >Open →</span
+            >
+          </a>
+          <table class="soc-alert-table">
+            <thead>
+              <tr>
+                <th>Alert</th>
+                <th>ATDS</th>
+                <th>Source</th>
+                <th>Source IP</th>
+                <th>Country</th>
+                <th>Reputation</th>
+                <th>Last seen</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="./incident.html"
+                    >ALT-88340 · Credential harvest URL</a
+                  >
+                </td>
+                <td>Escalate · 81%</td>
+                <td>mail-gateway</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="45.142.214.88"
+                    data-country="Russia"
+                    data-flag="🇷🇺"
+                    data-score="10"
+                    data-asn="AS210644"
+                    data-org="AEZA International Ltd"
+                    data-type="Malicious hosting"
+                    data-categories="Phishing, Malware C2, Credential theft"
+                    data-first-seen="2025-04-08"
+                    data-last-seen="2025-05-28"
+                  >
+                    45.142.214.88
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Russia" aria-label="Russia"
+                    >🇷🇺</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--critical">10/10</span>
+                </td>
+                <td>06:48</td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="./incident.html"
+                    >ALT-88341 · Inbox forwarding rule</a
+                  >
+                </td>
+                <td>Escalate · 79%</td>
+                <td>m365</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="185.100.87.240"
+                    data-country="Romania"
+                    data-flag="🇷🇴"
+                    data-score="8"
+                    data-asn="AS9009"
+                    data-org="M247 Europe SRL"
+                    data-type="Hosting / bulletproof"
+                    data-categories="Spam, Phishing infrastructure"
+                    data-first-seen="2025-01-20"
+                    data-last-seen="2025-05-28"
+                  >
+                    185.100.87.240
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Romania" aria-label="Romania"
+                    >🇷🇴</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--high">8/10</span>
+                </td>
+                <td>06:51</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article class="soc-incident-group" data-assignee="other" hidden>
+          <div class="soc-incident-group__head" style="cursor: default">
+            <span class="soc-tag soc-tag--low">Closed</span>
+            <div>
+              <h3>SOCJ233244 · IT automation PowerShell script</h3>
+              <p>
+                Finance · Closed May 12 · Benign IT change · Reference for ATDS
+                association
+              </p>
+            </div>
+            <span class="soc-tag soc-tag--count">8 alerts</span>
+            <span style="color: var(--cds-text-helper); font-size: 0.8125rem"
+              >Closed</span
+            >
+          </div>
+          <table class="soc-alert-table">
+            <thead>
+              <tr>
+                <th>Alert</th>
+                <th>Disposition</th>
+                <th>Source</th>
+                <th>Source IP</th>
+                <th>Country</th>
+                <th>Reputation</th>
+                <th>Closed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ALT-79102 · Suspicious PowerShell</td>
+                <td>False positive · IT automation</td>
+                <td>endpoint-fin-04</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="10.48.12.104"
+                    data-country="Poland"
+                    data-flag="🇵🇱"
+                    data-score="2"
+                    data-asn="AS5617"
+                    data-org="Acme Finance Corp (internal)"
+                    data-type="Corporate LAN"
+                    data-categories="Internal, Whitelisted"
+                    data-first-seen="2023-02-14"
+                    data-last-seen="2025-05-12"
+                  >
+                    10.48.12.104
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                    >🇵🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                </td>
+                <td>May 12</td>
+              </tr>
+              <tr>
+                <td>ALT-79100 · Encoded command</td>
+                <td>False positive · CHG approved</td>
+                <td>endpoint-fin-04</td>
+                <td>
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="10.48.12.104"
+                    data-country="Poland"
+                    data-flag="🇵🇱"
+                    data-score="2"
+                    data-asn="AS5617"
+                    data-org="Acme Finance Corp (internal)"
+                    data-type="Corporate LAN"
+                    data-categories="Internal, Whitelisted"
+                    data-first-seen="2023-02-14"
+                    data-last-seen="2025-05-12"
+                  >
+                    10.48.12.104
+                  </button>
+                </td>
+                <td>
+                  <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                    >🇵🇱</span
+                  >
+                </td>
+                <td>
+                  <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                </td>
+                <td>May 12</td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </main>
+    </div>
+
+    <script src="./soc-ip-flyout.js"></script>
+    <script>
+      (function () {
+        var switcher = document.querySelector(".soc-switcher");
+        var cases = document.querySelectorAll(".soc-incident-group[data-assignee]");
+        if (!switcher || !cases.length) return;
+
+        switcher.addEventListener("click", function (event) {
+          var btn = event.target.closest("[data-filter]");
+          if (!btn) return;
+
+          switcher.querySelectorAll("[data-filter]").forEach(function (tab) {
+            var active = tab === btn;
+            tab.classList.toggle("is-active", active);
+            tab.setAttribute("aria-selected", active ? "true" : "false");
+          });
+
+          var filter = btn.getAttribute("data-filter");
+          cases.forEach(function (item) {
+            var mine = item.getAttribute("data-assignee") === "me";
+            item.hidden = filter === "mine" && !mine;
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
