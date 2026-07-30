@@ -2508,12 +2508,14 @@ body.soc-flyout-open {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .soc-summary-stat {
   background: var(--cds-layer);
   border: 1px solid var(--cds-border);
   padding: 14px;
+  min-width: 0;
 }
 
 .soc-summary-stat span {
@@ -2546,9 +2548,12 @@ body.soc-flyout-open {
   .soc-grid-2,
   .soc-detail-layout,
   .soc-passdown-grid,
-  .soc-summary-stats,
   .soc-grid-4 {
     grid-template-columns: 1fr;
+  }
+
+  .soc-summary-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .soc-passdown-col {
@@ -2561,7 +2566,8 @@ body.soc-flyout-open {
 @media (max-width: 560px) {
   .soc-chart-row,
   .soc-chart-row--alerts,
-  .soc-alert-summary {
+  .soc-alert-summary,
+  .soc-summary-stats {
     grid-template-columns: 1fr;
   }
 }

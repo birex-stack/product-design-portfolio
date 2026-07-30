@@ -77,24 +77,41 @@
             </div>
           </div>
 
-          <div class="soc-summary-stats">
-            <div class="soc-summary-stat">
-              <span>Alerts handled</span>
-              <strong>47</strong>
+          <section class="soc-card" style="margin-bottom: 16px">
+            <div class="soc-card__head">
+              <h2>Your shift summary</h2>
             </div>
-            <div class="soc-summary-stat">
-              <span>Incidents closed</span>
-              <strong>3</strong>
+            <div class="soc-card__body">
+              <p class="soc-shift-meta">
+                Shift: May 28, 08:00 – May 28, 16:00 · Analyst: Alex Johnson
+              </p>
+
+              <div class="soc-chart-panel soc-kpi-panel">
+                <div class="soc-kpi-row">
+                  <div class="soc-metric">
+                    <div class="soc-metric-ring">47</div>
+                    <span>Alerts handled</span>
+                    <small class="soc-delta--up">↑ 12%</small>
+                  </div>
+                  <div class="soc-metric">
+                    <div class="soc-metric-ring soc-metric-ring--ok">3</div>
+                    <span>Incidents closed</span>
+                    <small class="soc-delta--up">↑ 50%</small>
+                  </div>
+                  <div class="soc-metric">
+                    <div class="soc-metric-ring soc-metric-ring--warn">2</div>
+                    <span>Still open</span>
+                    <small class="soc-delta--down">↓ 33%</small>
+                  </div>
+                  <div class="soc-metric">
+                    <div class="soc-metric-ring soc-metric-ring--error">18m</div>
+                    <span>Avg. disposition</span>
+                    <small class="soc-delta--down">↓ 10%</small>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="soc-summary-stat">
-              <span>Still open</span>
-              <strong>2</strong>
-            </div>
-            <div class="soc-summary-stat">
-              <span>Avg. disposition</span>
-              <strong>18m</strong>
-            </div>
-          </div>
+          </section>
 
           <div class="soc-grid-2">
             <section class="soc-card">
