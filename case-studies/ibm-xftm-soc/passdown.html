@@ -28,9 +28,8 @@
     <div class="soc-app">
       <header class="soc-header">
         <div class="soc-header-left">
-          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
           <div class="soc-breadcrumb">
-            <span>Home</span><span>/</span
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
             ><span aria-current="page">End of shift · Passdown</span>
           </div>
         </div>
@@ -67,146 +66,209 @@
       </aside>
 
       <main class="soc-main">
-        <div class="soc-page-head">
-          <div>
-            <h1>End of shift · Passdown</h1>
-            <p>
-              Confirm your shift summary for the next SOC analyst. This becomes
-              their briefing.
-            </p>
-          </div>
-        </div>
-
-        <div class="soc-summary-stats">
-          <div class="soc-summary-stat">
-            <span>Alerts handled</span>
-            <strong>47</strong>
-          </div>
-          <div class="soc-summary-stat">
-            <span>Incidents closed</span>
-            <strong>3</strong>
-          </div>
-          <div class="soc-summary-stat">
-            <span>Still open</span>
-            <strong>2</strong>
-          </div>
-          <div class="soc-summary-stat">
-            <span>Avg. disposition</span>
-            <strong>18m</strong>
-          </div>
-        </div>
-
-        <div class="soc-grid-2">
-          <section class="soc-card">
-            <div class="soc-card__head">
-              <h2>Create / confirm passdown</h2>
+        <div id="passdown-work">
+          <div class="soc-page-head">
+            <div>
+              <h1>End of shift · Passdown</h1>
+              <p>
+                Confirm your shift summary for the next SOC analyst. This becomes
+                their briefing.
+              </p>
             </div>
-            <div class="soc-card__body">
-              <form class="soc-form-stack" id="passdown-form">
-                <div class="soc-field">
-                  <label for="ongoing">Ongoing incidents</label>
-                  <textarea id="ongoing">
+          </div>
+
+          <div class="soc-summary-stats">
+            <div class="soc-summary-stat">
+              <span>Alerts handled</span>
+              <strong>47</strong>
+            </div>
+            <div class="soc-summary-stat">
+              <span>Incidents closed</span>
+              <strong>3</strong>
+            </div>
+            <div class="soc-summary-stat">
+              <span>Still open</span>
+              <strong>2</strong>
+            </div>
+            <div class="soc-summary-stat">
+              <span>Avg. disposition</span>
+              <strong>18m</strong>
+            </div>
+          </div>
+
+          <div class="soc-grid-2">
+            <section class="soc-card">
+              <div class="soc-card__head">
+                <h2>Create / confirm passdown</h2>
+              </div>
+              <div class="soc-card__body">
+                <form class="soc-form-stack" id="passdown-form">
+                  <div class="soc-field">
+                    <label for="ongoing">Ongoing incidents</label>
+                    <textarea id="ongoing">
 INC-2025-4818 — Impossible travel still open. Waiting on user confirmation from travel desk.
 INC-2025-4812 — Phishing → mailbox rule. User contacted; rule removed; monitoring for 24h.</textarea
-                  >
-                </div>
-                <div class="soc-field">
-                  <label for="watchlist">Watchlist updates</label>
-                  <textarea id="watchlist">
+                    >
+                  </div>
+                  <div class="soc-field">
+                    <label for="watchlist">Watchlist updates</label>
+                    <textarea id="watchlist">
 Keep 203.0.113.45 blocked. New hash from INC-2025-4821 escalation package shared with IR.</textarea
-                  >
-                </div>
-                <div class="soc-field">
-                  <label for="notes">Handover notes for next analyst</label>
-                  <textarea id="notes">
+                    >
+                  </div>
+                  <div class="soc-field">
+                    <label for="notes">Handover notes for next analyst</label>
+                    <textarea id="notes">
 Escalated INC-2025-4821 to IR after accepting ATDS guidance. Host isolated, IOC blocked, forensics image retained. Finance CISO informed. Next analyst: prioritize INC-2025-4818 if travel desk responds.</textarea
-                  >
-                </div>
-                <div class="soc-field">
-                  <label for="next-analyst">Hand off to</label>
-                  <select id="next-analyst">
-                    <option>Jordan Lee · incoming shift</option>
-                    <option>Sam Taylor · swing shift</option>
-                    <option>Unassigned queue</option>
-                  </select>
-                </div>
-              </form>
-            </div>
-          </section>
+                    >
+                  </div>
+                  <div class="soc-field">
+                    <label for="next-analyst">Hand off to</label>
+                    <select id="next-analyst">
+                      <option>Jordan Lee · incoming shift</option>
+                      <option>Sam Taylor · swing shift</option>
+                      <option>Unassigned queue</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+            </section>
 
-          <section class="soc-card">
-            <div class="soc-card__head">
-              <h2>Shift summary preview</h2>
-            </div>
-            <div class="soc-card__body">
-              <p
-                style="
-                  font-size: 0.75rem;
-                  color: var(--cds-text-helper);
-                  margin-bottom: 14px;
-                "
+            <section class="soc-card">
+              <div class="soc-card__head">
+                <h2>Shift summary preview</h2>
+              </div>
+              <div class="soc-card__body">
+                <p
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--cds-text-helper);
+                    margin-bottom: 14px;
+                  "
+                >
+                  What the next analyst will see in briefing
+                </p>
+                <div class="soc-item">
+                  <strong
+                    ><span class="soc-dot soc-dot--high"></span
+                    >INC-2025-4821 · Escalated</strong
+                  >
+                  <span>Ransomware staging · IR owns containment</span>
+                </div>
+                <div class="soc-item">
+                  <strong
+                    ><span class="soc-dot soc-dot--medium"></span
+                    >INC-2025-4818 · Open</strong
+                  >
+                  <span>Impossible travel · awaiting travel desk</span>
+                </div>
+                <div class="soc-item">
+                  <strong
+                    ><span class="soc-dot soc-dot--medium"></span
+                    >INC-2025-4812 · Monitoring</strong
+                  >
+                  <span>Phishing · forwarding rule removed</span>
+                </div>
+                <p
+                  style="
+                    margin-top: 16px;
+                    font-size: 0.8125rem;
+                    color: var(--cds-text-secondary);
+                  "
+                >
+                  Key takeaway: phishing volume elevated in finance; one high
+                  severity escalation completed with ATDS accept.
+                </p>
+              </div>
+            </section>
+          </div>
+
+          <div class="soc-flow-actions">
+            <div class="soc-btn-row">
+              <button
+                class="soc-btn soc-btn--primary"
+                type="submit"
+                form="passdown-form"
               >
-                What the next analyst will see in briefing
-              </p>
-              <div class="soc-item">
-                <strong
-                  ><span class="soc-dot soc-dot--high"></span
-                  >INC-2025-4821 · Escalated</strong
-                >
-                <span>Ransomware staging · IR owns containment</span>
-              </div>
-              <div class="soc-item">
-                <strong
-                  ><span class="soc-dot soc-dot--medium"></span
-                  >INC-2025-4818 · Open</strong
-                >
-                <span>Impossible travel · awaiting travel desk</span>
-              </div>
-              <div class="soc-item">
-                <strong
-                  ><span class="soc-dot soc-dot--medium"></span
-                  >INC-2025-4812 · Monitoring</strong
-                >
-                <span>Phishing · forwarding rule removed</span>
-              </div>
-              <p
-                style="
-                  margin-top: 16px;
-                  font-size: 0.8125rem;
-                  color: var(--cds-text-secondary);
-                "
+                Confirm passdown &amp; end shift
+              </button>
+              <a class="soc-btn soc-btn--secondary" href="./alerts.html"
+                >Back to queue</a
               >
-                Key takeaway: phishing volume elevated in finance; one high
-                severity escalation completed with ATDS accept.
-              </p>
             </div>
-          </section>
+          </div>
         </div>
 
-        <div class="soc-flow-actions">
-          <div class="soc-btn-row">
-            <button
-              class="soc-btn soc-btn--primary"
-              type="submit"
-              form="passdown-form"
-            >
-              Confirm passdown &amp; end shift
-            </button>
-            <a class="soc-btn soc-btn--secondary" href="./alerts.html"
-              >Back to queue</a
-            >
+        <div id="passdown-done" class="soc-card soc-complete-panel soc-shift-end" hidden>
+          <div class="soc-check" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="currentColor">
+              <path d="m13 24-9-9 1.4-1.4L13 21.2 26.6 7.6 28 9z" />
+            </svg>
           </div>
-          <div
-            class="soc-success-toast"
-            id="passdown-success"
-            role="status"
-          >
-            Passdown confirmed. Next analyst will see this summary on Shift
-            Briefing.
-            <a
-              href="./shift-briefing.html"
-              style="color: #ffffff; margin-left: 8px"
-              >View as next analyst →</a
+          <h1>Shift complete</h1>
+          <p>
+            Passdown handed to <strong>Jordan Lee</strong>. Your shift summary is
+            locked for the next briefing.
+          </p>
+
+          <div class="soc-shift-score" aria-label="Shift performance score">
+            <div class="soc-shift-score__points">
+              <span class="soc-shift-score__label">Shift score</span>
+              <strong class="soc-shift-score__value">145</strong>
+              <span class="soc-shift-score__hint">points earned this shift</span>
+            </div>
+            <div class="soc-shift-score__rank">
+              <span class="soc-tag soc-tag--draft">Sharp triage</span>
+              <span class="soc-shift-score__rank-text"
+                >Top 12% of analysts this week</span
+              >
+            </div>
+          </div>
+
+          <section class="soc-card soc-shift-recap" aria-label="Shift summary">
+            <div class="soc-card__body">
+              <h2 class="soc-shift-recap__title">Shift recap</h2>
+              <div class="soc-shift-metrics">
+                <div class="soc-shift-metric">
+                  <span>Alerts handled</span>
+                  <strong>47</strong>
+                </div>
+                <div class="soc-shift-metric">
+                  <span>Avg. alert analysis</span>
+                  <strong>42s</strong>
+                </div>
+                <div class="soc-shift-metric">
+                  <span>Cases closed</span>
+                  <strong>3</strong>
+                </div>
+                <div class="soc-shift-metric">
+                  <span>ATDS accept rate</span>
+                  <strong>86%</strong>
+                </div>
+                <div class="soc-shift-metric">
+                  <span>False-positive catches</span>
+                  <strong>11</strong>
+                </div>
+                <div class="soc-shift-metric">
+                  <span>Escalations to IR</span>
+                  <strong>1</strong>
+                </div>
+              </div>
+              <ul class="soc-shift-bonuses">
+                <li>
+                  <span>+40</span> High-severity escalation handled with ATDS
+                </li>
+                <li><span>+25</span> Sub-60s median triage streak (8 alerts)</li>
+                <li><span>+20</span> Clean passdown · no follow-up gaps</li>
+                <li><span>+60</span> Base shift completion</li>
+              </ul>
+            </div>
+          </section>
+
+          <div class="soc-btn-row" style="justify-content: center">
+            <a class="soc-btn soc-btn--primary" href="../ibm-xftm.html">Log out</a>
+            <a class="soc-btn soc-btn--secondary" href="./alerts.html"
+              >Back to alerts</a
             >
           </div>
         </div>
@@ -215,10 +277,17 @@ Escalated INC-2025-4821 to IR after accepting ATDS guidance. Host isolated, IOC 
 
     <script>
       const form = document.getElementById("passdown-form");
-      const success = document.getElementById("passdown-success");
+      const work = document.getElementById("passdown-work");
+      const done = document.getElementById("passdown-done");
       form?.addEventListener("submit", (event) => {
         event.preventDefault();
-        success?.classList.add("is-visible");
+        work?.setAttribute("hidden", "");
+        done?.removeAttribute("hidden");
+        const crumb = document.querySelector(
+          '.soc-breadcrumb span[aria-current="page"]'
+        );
+        if (crumb) crumb.textContent = "Shift complete";
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
     </script>
   </body>

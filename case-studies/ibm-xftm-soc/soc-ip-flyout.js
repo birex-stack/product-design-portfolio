@@ -271,6 +271,7 @@
     var backdrop = document.querySelector("[data-soc-ip-backdrop]");
     var body = panel.querySelector("[data-soc-ip-body]");
     var title = panel.querySelector("#soc-ip-flyout-title");
+    var label = panel.querySelector(".soc-flyout__label");
 
     var ip = btn.getAttribute("data-ip") || btn.textContent.trim();
     var country = btn.getAttribute("data-country") || "Unknown";
@@ -290,6 +291,7 @@
     var xfTier = scoreTier(vendors.xforce);
     var comments = seedComments(ip, score, notes);
 
+    if (label) label.textContent = "IP reputation";
     title.textContent = ip;
 
     body.innerHTML =
@@ -411,12 +413,112 @@
     panel.querySelector(".soc-flyout__close").focus();
   }
 
+  function openEntityFlyout(btn) {
+    var panel = ensureFlyout();
+    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
+    var body = panel.querySelector("[data-soc-ip-body]");
+    var title = panel.querySelector("#soc-ip-flyout-title");
+    var label = panel.querySelector(".soc-flyout__label");
+
+    var entityType = btn.getAttribute("data-entity-type") || "entity";
+    var value = btn.getAttribute("data-value") || "";
+    var display = btn.getAttribute("data-display") || value;
+    var entityLabel = btn.getAttribute("data-label") || "Watchlist entity";
+    var risk = btn.getAttribute("data-risk") || "—";
+    var score = btn.getAttribute("data-score") || "5";
+    var notes = btn.getAttribute("data-notes") || "";
+    var related = btn.getAttribute("data-related") || "—";
+    var tier = scoreTier(score);
+    var comments = seedComments(value, score, notes);
+
+    var rows = "";
+    if (entityType === "user") {
+      rows =
+        "<div><dt>Department</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-dept") || "—") +
+        "</dd></div>" +
+        "<div><dt>Role</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-role") || "—") +
+        "</dd></div>" +
+        "<div><dt>Last activity</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-last-activity") || "—") +
+        "</dd></div>";
+    } else if (entityType === "hash") {
+      rows =
+        "<div><dt>Full hash</dt><dd class=\"soc-mono\">" +
+        escapeHtml(value) +
+        "</dd></div>" +
+        "<div><dt>Malware family</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-family") || "—") +
+        "</dd></div>" +
+        "<div><dt>First seen</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-first-seen") || "—") +
+        "</dd></div>" +
+        "<div><dt>Last seen</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-last-seen") || "—") +
+        "</dd></div>";
+    }
+
+    if (label) label.textContent = "Watchlist · " + entityLabel;
+    title.textContent = display;
+
+    body.innerHTML =
+      '<div class="soc-flyout__score-row">' +
+      '<span class="soc-ip-score soc-ip-score--' +
+      tier +
+      '">' +
+      escapeHtml(score) +
+      "/10</span>" +
+      '<span class="soc-flyout__score-label">' +
+      escapeHtml(risk) +
+      " · watchlist priority</span>" +
+      "</div>" +
+      '<dl class="soc-kv soc-flyout__kv">' +
+      "<div><dt>Type</dt><dd>" +
+      escapeHtml(entityLabel) +
+      "</dd></div>" +
+      rows +
+      "<div><dt>Related cases</dt><dd>" +
+      escapeHtml(related) +
+      "</dd></div>" +
+      "</dl>" +
+      '<section class="soc-flyout__comments" aria-label="Analyst comments">' +
+      "<h3>Analyst comments</h3>" +
+      '<div data-soc-ip-comments>' +
+      renderComments(comments) +
+      "</div>" +
+      '<form class="soc-ip-comment-form" data-soc-ip-comment-form>' +
+      '<label class="soc-ip-comment-form__label" for="soc-ip-comment-input">Add comment</label>' +
+      '<textarea id="soc-ip-comment-input" data-soc-ip-comment-input rows="3" placeholder="Share context for other analysts…" required></textarea>' +
+      '<button type="submit" class="soc-btn soc-btn--primary">Post comment</button>' +
+      "</form>" +
+      "</section>" +
+      '<p class="soc-flyout__hint">Watchlist entities are carried across shifts until cleared or escalated into an open case.</p>';
+
+    bindCommentForm(panel, value);
+
+    backdrop.hidden = false;
+    panel.hidden = false;
+    backdrop.classList.add("is-open");
+    panel.classList.add("is-open");
+    document.body.classList.add("soc-flyout-open");
+    panel.querySelector(".soc-flyout__close").focus();
+  }
+
   document.addEventListener("click", function (event) {
-    var btn = event.target.closest(".soc-ip-link");
-    if (!btn) return;
+    var ipBtn = event.target.closest(".soc-ip-link");
+    if (ipBtn) {
+      event.preventDefault();
+      event.stopPropagation();
+      openFlyout(ipBtn);
+      return;
+    }
+
+    var watchBtn = event.target.closest(".soc-watch-link");
+    if (!watchBtn) return;
     event.preventDefault();
     event.stopPropagation();
-    openFlyout(btn);
+    openEntityFlyout(watchBtn);
   });
 
   document.addEventListener("keydown", function (event) {

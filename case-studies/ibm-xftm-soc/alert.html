@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alert details — XFTM SOC Prototype</title>
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./soc-proto.css" />
+  </head>
+  <body>
+    <div class="soc-proto-banner">
+      <span
+        ><strong>Interactive prototype</strong> — SOC analyst investigation
+        experience</span
+      >
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
+    </div>
+
+    <div class="soc-app">
+      <header class="soc-header">
+        <div class="soc-header-left">
+          <div class="soc-breadcrumb">
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
+            ><a href="./alerts.html">Alerts</a><span>/</span
+            ><span aria-current="page" id="alert-crumb">ALT-88421</span>
+          </div>
+        </div>
+        <div class="soc-header-right">
+          <button class="soc-header-action" type="button" aria-label="3 notifications">
+            <svg width="20" height="20" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+              <path
+                d="M28.7 20.3 26 17.6V13a10 10 0 0 0-9-9.95V1h-2v2.05A10 10 0 0 0 6 13v4.6l-2.7 2.7a.91.91 0 0 0-.3.7v3a.94.94 0 0 0 1 1h7.1a5 5 0 0 0 9.8 0H28a.94.94 0 0 0 1-1v-3a.91.91 0 0 0-.3-.7ZM16 28a3 3 0 0 1-2.8-2h5.6A3 3 0 0 1 16 28Zm11-5H5v-1.6l2.7-2.7A.91.91 0 0 0 8 18v-5a8 8 0 0 1 16 0v5a.91.91 0 0 0 .3.7l2.7 2.7Z"
+              />
+            </svg>
+            <span class="soc-bell-badge">3</span>
+          </button>
+          <button class="soc-header-action" type="button" aria-label="User profile">
+            <span class="soc-avatar" aria-hidden="true">A</span>
+          </button>
+        </div>
+      </header>
+
+      <aside class="soc-sidebar" aria-label="Primary">
+        <nav class="soc-nav">
+          <a href="./shift-briefing.html">Briefing</a>
+          <a class="is-active" href="./alerts.html"
+            >Alerts <span class="soc-nav-badge">12</span></a
+          >
+          <a href="./cases.html">Cases</a>
+          <a href="#">Threat intel</a>
+          <a href="#">Reports</a>
+          <a href="#">Dashboards</a>
+        </nav>
+        <div class="soc-nav-footer">
+          <a href="./passdown.html">End of shift</a>
+          <a href="../ibm-xftm.html">Exit prototype</a>
+        </div>
+      </aside>
+
+      <main class="soc-main">
+        <div class="soc-page-head">
+          <div>
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 0.75rem;
+                color: var(--cds-text-helper);
+                margin-bottom: 6px;
+              "
+            >
+              <a href="./alerts.html">← Back to alerts</a>
+            </p>
+            <h1>
+              <span
+                class="soc-tag"
+                id="alert-severity"
+                style="margin-right: 8px"
+                >High</span
+              >
+              <span id="alert-id">ALT-88421</span>
+            </h1>
+            <p id="alert-title">Suspicious PowerShell</p>
+          </div>
+        </div>
+
+        <div class="soc-detail-layout">
+          <div>
+            <section class="soc-card" style="margin-bottom: 16px">
+              <div class="soc-card__head">
+                <h2>Alert details</h2>
+              </div>
+              <div class="soc-card__body">
+                <dl class="soc-kv">
+                  <dt>Rule name</dt>
+                  <dd id="alert-rule">Suspicious PowerShell</dd>
+                  <dt>Status</dt>
+                  <dd>Open · unassigned</dd>
+                  <dt>Related case</dt>
+                  <dd>
+                    <a href="./incident.html" id="alert-case-link"
+                      >INC-2025-4821</a
+                    >
+                  </dd>
+                  <dt>Source host</dt>
+                  <dd id="alert-source">endpoint-fin-04</dd>
+                  <dt>Source IP</dt>
+                  <dd id="alert-ip-cell">
+                    <button
+                      type="button"
+                      class="soc-ip-link"
+                      id="alert-ip-btn"
+                      data-ip="10.48.12.104"
+                      data-country="Poland"
+                      data-flag="🇵🇱"
+                      data-score="2"
+                      data-asn="AS5617"
+                      data-org="Acme Finance Corp (internal)"
+                      data-type="Corporate LAN"
+                      data-categories="Internal, Whitelisted"
+                      data-first-seen="2023-02-14"
+                      data-last-seen="2025-05-28"
+                      data-notes="Host endpoint-fin-04 · matches closed case SOCJ233244 pattern."
+                    >
+                      10.48.12.104
+                    </button>
+                  </dd>
+                  <dt>Country / reputation</dt>
+                  <dd id="alert-rep">🇵🇱 Poland · 2/10</dd>
+                  <dt>First seen</dt>
+                  <dd id="alert-first">May 28, 2025 · 08:41 UTC</dd>
+                  <dt>Last seen</dt>
+                  <dd id="alert-last">May 28, 2025 · 08:41 UTC</dd>
+                  <dt>ATDS recommendation</dt>
+                  <dd id="alert-atds">Close / Associate · 72% FP confidence</dd>
+                </dl>
+              </div>
+            </section>
+
+            <section class="soc-card" style="margin-bottom: 16px">
+              <div class="soc-card__head">
+                <h2>Event summary</h2>
+              </div>
+              <div class="soc-card__body">
+                <ul class="soc-takeaways" id="alert-summary">
+                  <li>
+                    Encoded PowerShell launched from explorer.exe on
+                    endpoint-fin-04.
+                  </li>
+                  <li>
+                    Command line overlaps closed case SOCJ233244 (IT automation).
+                  </li>
+                  <li>
+                    User j.doe@finance.com has approved change ticket CHG-9921.
+                  </li>
+                  <li>No outbound C2 confirmed for this host in last 24h.</li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="soc-card">
+              <div class="soc-card__head">
+                <h2>Activity</h2>
+              </div>
+              <div class="soc-card__body">
+                <div class="soc-timeline" id="alert-activity">
+                  <div class="soc-timeline-item">
+                    <time>08:41 · System</time>
+                    <p>Alert ALT-88421 created and scored by ATDS.</p>
+                  </div>
+                  <div class="soc-timeline-item">
+                    <time>08:41 · ATDS</time>
+                    <p>
+                      Historical match suggests false positive — recommend
+                      associate with closed case SOCJ233244.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <section class="soc-atds-panel" aria-labelledby="atds-heading">
+          <div class="soc-atds-panel__head">
+            <h2 id="atds-heading">ATDS analysis</h2>
+            <button
+              class="soc-atds-panel__toggle"
+              type="button"
+              aria-label="Collapse ATDS analysis"
+              aria-expanded="true"
+            >
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+                <path d="m16 10 10 12H6z" />
+              </svg>
+            </button>
+          </div>
+          <div class="soc-atds-panel__body">
+            <p class="soc-atds-panel__lead" id="alert-atds-lead">
+              Basing on analytics of
+              <a href="./cases.html">145 correlated historical alerts</a>, ATDS
+              recommends closing the alert, because there is
+              <strong>72% confidence level</strong> of being false-positive.
+            </p>
+
+            <div
+              class="soc-risk"
+              id="alert-risk"
+              style="--risk: 28"
+              role="img"
+              aria-label="Risk level 28 percent."
+            >
+              <div class="soc-risk-top">
+                <span class="soc-risk-top-label soc-risk-top-label--auto-close"
+                  >Auto<br />Close</span
+                >
+                <span class="soc-risk-guide soc-risk-guide--10" aria-hidden="true"></span>
+                <span class="soc-risk-top-label soc-risk-top-label--close"
+                  >Close</span
+                >
+                <span class="soc-risk-top-label soc-risk-top-label--escalate"
+                  >Escalate</span
+                >
+                <span class="soc-risk-guide soc-risk-guide--90" aria-hidden="true"></span>
+                <span class="soc-risk-top-label soc-risk-top-label--auto-escalate"
+                  >Auto<br />Escalate</span
+                >
+              </div>
+              <div class="soc-risk-track">
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"
+                  ><span class="soc-risk-seg-arrow" aria-hidden="true"
+                    >←</span
+                  ></span
+                >
+                <span class="soc-risk-seg"
+                  ><span class="soc-risk-seg-arrow" aria-hidden="true"
+                    >→</span
+                  ></span
+                >
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <span class="soc-risk-seg"></span>
+                <div class="soc-risk-marker" aria-hidden="true">
+                  <span class="soc-risk-marker-line"></span>
+                  <p class="soc-risk-value">
+                    <span class="soc-risk-value-row">
+                      <span class="soc-risk-value-num" id="alert-risk-num"
+                        >28</span
+                      >
+                      <span class="soc-risk-pct">%</span>
+                    </span>
+                    <small>Risk level</small>
+                  </p>
+                </div>
+              </div>
+              <div class="soc-risk-ticks" aria-hidden="true">
+                <span>0%</span>
+                <span>10%</span>
+                <span>20%</span>
+                <span>30%</span>
+                <span>40%</span>
+                <span>50%</span>
+                <span>60%</span>
+                <span>70%</span>
+                <span>80%</span>
+                <span>90%</span>
+                <span>100%</span>
+              </div>
+              <div class="soc-risk-spacer" aria-hidden="true"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="soc-flow-actions">
+          <p class="soc-atds-rec" id="alert-rec">
+            Recommendation: ATDS suggests to associate with other closed case,
+            id:
+            <a href="./cases.html">SOCJ233244</a>.
+          </p>
+
+          <div class="soc-atds-actions" data-atds-action="associate">
+            <a
+              class="soc-btn soc-btn--secondary"
+              id="alert-close"
+              href="./complete.html?case=INC-2025-4821"
+              >Close Alert</a
+            >
+            <a
+              class="soc-btn soc-btn--secondary"
+              id="alert-escalate"
+              href="./complete.html?case=INC-2025-4821"
+              >Escalate as new case</a
+            >
+            <a
+              class="soc-btn soc-btn--primary"
+              id="alert-associate"
+              href="./complete.html?case=INC-2025-4821"
+              >Associate with other case</a
+            >
+          </div>
+
+          <label class="soc-checkbox">
+            <input type="checkbox" checked />
+            <span>Include this investigation in ATDS learning program.</span>
+          </label>
+        </div>
+      </main>
+    </div>
+    <script src="./soc-ip-flyout.js"></script>
+    <script>
+      (function () {
+        var alerts = {
+          "ALT-88421": {
+            title: "Suspicious PowerShell",
+            severity: "High",
+            severityClass: "soc-tag--high",
+            caseId: "INC-2025-4821",
+            source: "endpoint-fin-04",
+            atds: "Close / Associate · 72% FP confidence",
+            risk: 28,
+            fp: 72,
+            first: "May 28, 2025 · 08:41 UTC",
+            last: "May 28, 2025 · 08:41 UTC",
+            rep: "🇵🇱 Poland · 2/10",
+            ip: {
+              ip: "10.48.12.104",
+              country: "Poland",
+              flag: "🇵🇱",
+              score: "2",
+              asn: "AS5617",
+              org: "Acme Finance Corp (internal)",
+              type: "Corporate LAN",
+              categories: "Internal, Whitelisted",
+              firstSeen: "2023-02-14",
+              lastSeen: "2025-05-28",
+              notes: "Host endpoint-fin-04 · matches closed case SOCJ233244 pattern.",
+            },
+            summary: [
+              "Encoded PowerShell launched from explorer.exe on endpoint-fin-04.",
+              "Command line overlaps closed case SOCJ233244 (IT automation).",
+              "User j.doe@finance.com has approved change ticket CHG-9921.",
+              "No outbound C2 confirmed for this host in last 24h.",
+            ],
+            recHtml:
+              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+          },
+          "ALT-88419": {
+            title: "Encoded command",
+            severity: "High",
+            severityClass: "soc-tag--high",
+            caseId: "INC-2025-4821",
+            source: "endpoint-fin-04",
+            atds: "Close / Associate · 68% FP confidence",
+            risk: 32,
+            fp: 68,
+            first: "May 28, 2025 · 08:38 UTC",
+            last: "May 28, 2025 · 08:38 UTC",
+            rep: "🇵🇱 Poland · 2/10",
+            ip: {
+              ip: "10.48.12.104",
+              country: "Poland",
+              flag: "🇵🇱",
+              score: "2",
+              asn: "AS5617",
+              org: "Acme Finance Corp (internal)",
+              type: "Corporate LAN",
+              categories: "Internal, Whitelisted",
+              firstSeen: "2023-02-14",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Base64-encoded PowerShell arguments observed on endpoint-fin-04.",
+              "Same parent process chain as ALT-88421.",
+              "Aligned with approved automation ticket CHG-9921.",
+            ],
+            recHtml:
+              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+          },
+          "ALT-88411": {
+            title: "Rare process tree",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4821",
+            source: "endpoint-fin-04",
+            atds: "Investigate · 54% FP confidence",
+            risk: 46,
+            fp: 54,
+            first: "May 28, 2025 · 08:22 UTC",
+            last: "May 28, 2025 · 08:22 UTC",
+            rep: "🇵🇱 Poland · 2/10",
+            ip: {
+              ip: "10.48.12.104",
+              country: "Poland",
+              flag: "🇵🇱",
+              score: "2",
+              asn: "AS5617",
+              org: "Acme Finance Corp (internal)",
+              type: "Corporate LAN",
+              categories: "Internal, Whitelisted",
+              firstSeen: "2023-02-14",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Unusual process ancestry involving powershell.exe and cmd.exe.",
+              "Low volume of prior sightings for this host.",
+              "Correlate with PowerShell alerts before closing.",
+            ],
+            recHtml:
+              "Recommendation: ATDS suggests further investigation before disposition.",
+          },
+          "ALT-88405": {
+            title: "Unusual SMB shares",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4821",
+            source: "endpoint-fin-04",
+            atds: "Monitor · 41% FP confidence",
+            risk: 59,
+            fp: 41,
+            first: "May 28, 2025 · 08:18 UTC",
+            last: "May 28, 2025 · 08:18 UTC",
+            rep: "🇵🇱 Poland · 3/10",
+            ip: {
+              ip: "10.48.8.22",
+              country: "Poland",
+              flag: "🇵🇱",
+              score: "3",
+              asn: "AS5617",
+              org: "Acme Finance Corp (file server)",
+              type: "Corporate LAN",
+              categories: "Internal",
+              firstSeen: "2022-09-01",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Host accessed uncommon SMB shares on the finance file server.",
+              "May be staging activity — verify against ransomware playbook.",
+            ],
+            recHtml: "Recommendation: ATDS suggests monitor while correlating sibling alerts.",
+          },
+          "ALT-88398": {
+            title: "Scheduled task update",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4821",
+            source: "endpoint-fin-04",
+            atds: "Close / Associate · 70% FP confidence",
+            risk: 30,
+            fp: 70,
+            first: "May 28, 2025 · 08:15 UTC",
+            last: "May 28, 2025 · 08:15 UTC",
+            rep: "🇵🇱 Poland · 2/10",
+            ip: {
+              ip: "10.48.12.104",
+              country: "Poland",
+              flag: "🇵🇱",
+              score: "2",
+              asn: "AS5617",
+              org: "Acme Finance Corp (internal)",
+              type: "Corporate LAN",
+              categories: "Internal, Whitelisted",
+              firstSeen: "2023-02-14",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Scheduled task modified shortly before PowerShell activity.",
+              "Matches historical FP pattern for IT automation tooling.",
+            ],
+            recHtml:
+              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+          },
+          "ALT-88390": {
+            title: "Geo velocity",
+            severity: "High",
+            severityClass: "soc-tag--high",
+            caseId: "INC-2025-4818",
+            source: "vpn-gateway",
+            atds: "Investigate · 71% confidence",
+            risk: 62,
+            fp: 29,
+            first: "May 28, 2025 · 08:11 UTC",
+            last: "May 28, 2025 · 08:11 UTC",
+            rep: "🇳🇱 Netherlands · 7/10",
+            ip: {
+              ip: "91.219.237.144",
+              country: "Netherlands",
+              flag: "🇳🇱",
+              score: "7",
+              asn: "AS49981",
+              org: "WorldStream B.V.",
+              type: "Hosting / VPN",
+              categories: "VPN, Anonymous proxy",
+              firstSeen: "2024-08-19",
+              lastSeen: "2025-05-28",
+              notes: "Impossible-travel distance from prior US login.",
+            },
+            summary: [
+              "Impossible-travel distance from prior United States login.",
+              "Session originated from hosting / VPN ASN.",
+              "Awaiting travel desk confirmation for the user.",
+            ],
+            recHtml:
+              "Recommendation: ATDS suggests investigate — confirm travel or escalate.",
+          },
+          "ALT-88388": {
+            title: "New device auth",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4818",
+            source: "idp-sso",
+            atds: "Monitor · 54% FP confidence",
+            risk: 46,
+            fp: 54,
+            first: "May 28, 2025 · 08:09 UTC",
+            last: "May 28, 2025 · 08:09 UTC",
+            rep: "🇩🇪 Germany · 9/10",
+            ip: {
+              ip: "185.220.101.42",
+              country: "Germany",
+              flag: "🇩🇪",
+              score: "9",
+              asn: "AS60729",
+              org: "Zwiebelfreunde e.V.",
+              type: "Tor exit node",
+              categories: "Tor, Anonymizer, Abuse",
+              firstSeen: "2024-01-11",
+              lastSeen: "2025-05-28",
+              notes: "Known Tor exit · elevated auth risk.",
+            },
+            summary: [
+              "New device authentication via identity provider.",
+              "Source IP is a known Tor exit node.",
+              "Correlate with geo-velocity alert ALT-88390.",
+            ],
+            recHtml: "Recommendation: ATDS suggests monitor pending travel desk response.",
+          },
+          "ALT-88385": {
+            title: "Concurrent sessions",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4818",
+            source: "vpn-gateway",
+            atds: "Investigate · 62% confidence",
+            risk: 55,
+            fp: 38,
+            first: "May 28, 2025 · 08:07 UTC",
+            last: "May 28, 2025 · 08:07 UTC",
+            rep: "🇺🇸 United States · 5/10",
+            ip: {
+              ip: "45.33.32.156",
+              country: "United States",
+              flag: "🇺🇸",
+              score: "5",
+              asn: "AS63949",
+              org: "Akamai Connected Cloud",
+              type: "Cloud hosting",
+              categories: "Hosting, Mixed reputation",
+              firstSeen: "2025-03-02",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Overlapping VPN sessions from geographically distant IPs.",
+              "May indicate account sharing or credential theft.",
+            ],
+            recHtml: "Recommendation: ATDS suggests investigate session ownership.",
+          },
+          "ALT-88341": {
+            title: "Inbox forwarding rule",
+            severity: "High",
+            severityClass: "soc-tag--high",
+            caseId: "INC-2025-4812",
+            source: "m365",
+            atds: "Escalate · 79% confidence",
+            risk: 72,
+            fp: 21,
+            first: "May 28, 2025 · 06:51 UTC",
+            last: "May 28, 2025 · 06:51 UTC",
+            rep: "🇷🇴 Romania · 8/10",
+            ip: {
+              ip: "185.100.87.240",
+              country: "Romania",
+              flag: "🇷🇴",
+              score: "8",
+              asn: "AS9009",
+              org: "M247 Europe SRL",
+              type: "Hosting / bulletproof",
+              categories: "Spam, Phishing infrastructure",
+              firstSeen: "2025-01-20",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Mailbox forwarding rule created after phishing click.",
+              "Destination aligns with known phishing infrastructure.",
+              "User contacted; rule removed — continue monitoring 24h.",
+            ],
+            recHtml: "Recommendation: ATDS suggests escalate as mailbox compromise case.",
+          },
+          "ALT-88340": {
+            title: "Credential harvest URL",
+            severity: "High",
+            severityClass: "soc-tag--high",
+            caseId: "INC-2025-4812",
+            source: "mail-gateway",
+            atds: "Escalate · 81% confidence",
+            risk: 78,
+            fp: 19,
+            first: "May 28, 2025 · 06:48 UTC",
+            last: "May 28, 2025 · 06:48 UTC",
+            rep: "🇷🇺 Russia · 10/10",
+            ip: {
+              ip: "45.142.214.88",
+              country: "Russia",
+              flag: "🇷🇺",
+              score: "10",
+              asn: "AS210644",
+              org: "AEZA International Ltd",
+              type: "Malicious hosting",
+              categories: "Phishing, Malware C2, Credential theft",
+              firstSeen: "2025-04-08",
+              lastSeen: "2025-05-28",
+              notes: "Active phishing kit hosting · block recommended.",
+            },
+            summary: [
+              "User clicked credential-harvest URL delivered by email.",
+              "Hosting IP linked to active phishing kit.",
+              "Block IOC and continue mailbox monitoring.",
+            ],
+            recHtml: "Recommendation: ATDS suggests escalate — phishing lead-in to mailbox rule.",
+          },
+          "ALT-88338": {
+            title: "Suspicious reply-all",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4812",
+            source: "m365",
+            atds: "Monitor · 48% FP confidence",
+            risk: 52,
+            fp: 48,
+            first: "May 28, 2025 · 06:44 UTC",
+            last: "May 28, 2025 · 06:44 UTC",
+            rep: "🇺🇸 United States · 3/10",
+            ip: {
+              ip: "104.21.32.11",
+              country: "United States",
+              flag: "🇺🇸",
+              score: "3",
+              asn: "AS13335",
+              org: "Cloudflare, Inc.",
+              type: "CDN / shared",
+              categories: "CDN, Mixed tenants",
+              firstSeen: "2024-12-01",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "Unusual reply-all pattern after phishing interaction.",
+              "May be user noise — keep under watch with sibling alerts.",
+            ],
+            recHtml: "Recommendation: ATDS suggests monitor within the phishing case.",
+          },
+          "ALT-88335": {
+            title: "Lookalike domain click",
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            caseId: "INC-2025-4812",
+            source: "proxy",
+            atds: "Investigate · 66% confidence",
+            risk: 58,
+            fp: 34,
+            first: "May 28, 2025 · 06:40 UTC",
+            last: "May 28, 2025 · 06:40 UTC",
+            rep: "🇫🇷 France · 8/10",
+            ip: {
+              ip: "193.32.216.55",
+              country: "France",
+              flag: "🇫🇷",
+              score: "8",
+              asn: "AS211252",
+              org: "Delis LLC",
+              type: "Hosting",
+              categories: "Phishing, Lookalike domains",
+              firstSeen: "2025-05-10",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              "User navigated to lookalike finance domain via proxy.",
+              "Domain hosting associated with phishing infrastructure.",
+            ],
+            recHtml: "Recommendation: ATDS suggests investigate as part of phishing chain.",
+          },
+        };
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get("id") || "ALT-88421";
+        var data = alerts[id] || alerts["ALT-88421"];
+        id = alerts[id] ? id : "ALT-88421";
+
+        document.title = id + " — XFTM SOC Prototype";
+        document.getElementById("alert-crumb").textContent = id;
+        document.getElementById("alert-id").textContent = id;
+        document.getElementById("alert-title").textContent = data.title;
+        document.getElementById("alert-rule").textContent = data.title;
+
+        var sev = document.getElementById("alert-severity");
+        sev.className = "soc-tag " + data.severityClass;
+        sev.style.marginRight = "8px";
+        sev.textContent = data.severity;
+
+        var caseLink = document.getElementById("alert-case-link");
+        caseLink.textContent = data.caseId;
+        caseLink.href = "./incident.html?case=" + encodeURIComponent(data.caseId);
+
+        document.getElementById("alert-source").textContent = data.source;
+        document.getElementById("alert-rep").textContent = data.rep;
+        document.getElementById("alert-first").textContent = data.first;
+        document.getElementById("alert-last").textContent = data.last;
+        document.getElementById("alert-atds").textContent = data.atds;
+
+        var btn = document.getElementById("alert-ip-btn");
+        var ip = data.ip;
+        btn.textContent = ip.ip;
+        btn.dataset.ip = ip.ip;
+        btn.dataset.country = ip.country;
+        btn.dataset.flag = ip.flag;
+        btn.dataset.score = ip.score;
+        btn.dataset.asn = ip.asn;
+        btn.dataset.org = ip.org;
+        btn.dataset.type = ip.type;
+        btn.dataset.categories = ip.categories;
+        btn.dataset.firstSeen = ip.firstSeen;
+        btn.dataset.lastSeen = ip.lastSeen;
+        if (ip.notes) btn.dataset.notes = ip.notes;
+        else delete btn.dataset.notes;
+
+        var summary = document.getElementById("alert-summary");
+        summary.innerHTML = data.summary
+          .map(function (item) {
+            return "<li>" + item + "</li>";
+          })
+          .join("");
+
+        document.getElementById("alert-activity").innerHTML =
+          '<div class="soc-timeline-item"><time>' +
+          data.last.split(" · ")[1].replace(" UTC", "") +
+          " · System</time><p>Alert " +
+          id +
+          " created and scored by ATDS.</p></div>" +
+          '<div class="soc-timeline-item"><time>' +
+          data.last.split(" · ")[1].replace(" UTC", "") +
+          " · ATDS</time><p>" +
+          data.atds +
+          "</p></div>";
+
+        document.getElementById("alert-atds-lead").innerHTML =
+          "Basing on analytics of <a href=\"./cases.html\">145 correlated historical alerts</a>, ATDS recommends action with <strong>" +
+          data.fp +
+          "% confidence</strong> for this disposition path.";
+
+        var risk = document.getElementById("alert-risk");
+        risk.style.setProperty("--risk", String(data.risk));
+        risk.setAttribute("aria-label", "Risk level " + data.risk + " percent.");
+        document.getElementById("alert-risk-num").textContent = String(data.risk);
+
+        document.getElementById("alert-rec").innerHTML = data.recHtml;
+
+        var complete = "./complete.html?case=" + encodeURIComponent(data.caseId);
+        document.getElementById("alert-close").href = complete;
+        document.getElementById("alert-escalate").href = complete;
+        document.getElementById("alert-associate").href = complete;
+      })();
+    </script>
+  </body>
+</html>

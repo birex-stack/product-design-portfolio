@@ -2869,6 +2869,47 @@ p {
     0 2px 8px rgba(0, 0, 0, 0.22);
 }
 
+.case-proto-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 16px;
+  background: #0f62fe;
+  color: #ffffff;
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.16px;
+  line-height: 1.29;
+  text-decoration: none;
+  border: none;
+  transition: background-color 0.11s cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+.case-proto-btn:hover {
+  background: #0353e9;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.case-proto-btn:focus-visible {
+  outline: 2px solid #0f62fe;
+  outline-offset: 2px;
+}
+
+.case-source .case-proto-btn {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.16px;
+  color: #ffffff;
+}
+
+.case-source .case-proto-btn:hover {
+  color: #ffffff;
+}
+
 .case-study--ibm-xftm .story-band--g100
   .analyst-experience-media:not(.analyst-experience-media--device):not(
     .analyst-experience-media--portrait
