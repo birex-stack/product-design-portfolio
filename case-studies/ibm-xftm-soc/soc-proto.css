@@ -763,12 +763,11 @@ body:has(.soc-ack) .soc-main {
 
 .soc-chart {
   width: 100%;
-  height: 120px;
 }
 
 .soc-chart-svg {
   width: 100%;
-  height: 100%;
+  height: auto;
   display: block;
 }
 
@@ -898,6 +897,17 @@ body:has(.soc-ack) .soc-main {
 
 .soc-chart-row .soc-donut-wrap {
   flex-wrap: nowrap;
+  justify-content: center;
+  gap: 24px;
+  min-height: 168px;
+}
+
+.soc-chart-row .soc-donut-center-value {
+  font-size: 20px;
+}
+
+.soc-chart-row .soc-donut-center-label {
+  font-size: 10px;
 }
 
 .soc-donut {
@@ -1134,6 +1144,7 @@ button.soc-item.soc-watch-link {
   display: block;
   width: 100%;
   margin: 0;
+  padding: 12px 16px;
   border: none;
   border-top: 1px solid var(--cds-border);
   background: transparent;
@@ -1142,11 +1153,11 @@ button.soc-item.soc-watch-link {
   cursor: pointer;
   font: inherit;
   border-radius: 0;
+  box-sizing: border-box;
 }
 
 button.soc-item.soc-watch-link:first-of-type {
   border-top: none;
-  padding-top: 0;
 }
 
 button.soc-item.soc-watch-link:hover {
@@ -1159,8 +1170,19 @@ button.soc-item.soc-watch-link:focus-visible {
 }
 
 button.soc-item.soc-watch-link strong {
+  display: block;
   color: var(--cds-link);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
   text-decoration: none;
+  margin-bottom: 2px;
+}
+
+button.soc-item.soc-watch-link span {
+  display: block;
+  color: var(--cds-text-helper);
+  font-size: 0.75rem;
 }
 
 .soc-mono {
@@ -1557,6 +1579,12 @@ button.soc-item.soc-watch-link.soc-ip-link:hover {
   background: var(--cds-layer-hover);
   color: inherit;
   text-decoration: none;
+}
+
+button.soc-item.soc-watch-link.soc-ip-link strong {
+  color: var(--cds-link);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
 }
 
 .soc-ip-score {
@@ -2295,10 +2323,12 @@ body.soc-flyout-open {
 /* Complete + passdown form */
 
 .soc-complete-panel {
-  max-width: 640px;
-  margin: 40px auto;
+  max-width: none;
+  width: 100%;
+  margin: 0 0 24px;
   text-align: center;
-  padding: 40px 32px;
+  padding: 24px 32px 40px;
+  box-sizing: border-box;
 }
 
 .soc-complete-panel h1 {
@@ -2313,7 +2343,7 @@ body.soc-flyout-open {
 }
 
 .soc-shift-end {
-  max-width: 720px;
+  max-width: none;
 }
 
 .soc-shift-end[hidden] {

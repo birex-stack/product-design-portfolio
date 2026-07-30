@@ -192,15 +192,6 @@
               class="is-active"
               role="tab"
               aria-selected="true"
-              data-view="ungrouped"
-              id="tab-ungrouped"
-            >
-              All alerts
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected="false"
               data-view="grouped"
               id="tab-grouped"
             >
@@ -218,6 +209,15 @@
                 />
               </svg>
               ATDS Grouped
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-view="ungrouped"
+              id="tab-ungrouped"
+            >
+              All alerts
             </button>
           </div>
           <div class="soc-toolbar-tools">
@@ -260,7 +260,6 @@
           id="view-grouped"
           role="tabpanel"
           aria-labelledby="tab-grouped"
-          hidden
         >
           <aside class="soc-callout" role="status">
             <svg
@@ -277,7 +276,7 @@
               />
             </svg>
             <div class="soc-callout__body">
-              <strong>Draft cases · ATDS</strong>
+              <strong>Draft cases created by ATDS</strong>
               <p>
                 ATDS grouped related alerts into draft cases based on shared
                 IOCs, assets, and historical patterns. Review each draft, then
@@ -634,6 +633,7 @@
           id="view-ungrouped"
           role="tabpanel"
           aria-labelledby="tab-ungrouped"
+          hidden
         >
           <div class="soc-card" style="padding: 0; overflow: hidden">
             <table class="soc-alert-table">
