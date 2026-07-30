@@ -221,9 +221,9 @@ function initPrincipleCards() {
 initPrincipleCards();
 
 const CHALLENGE_CHAIN = [
+  { file: 'ibm-xftm.html', title: 'IBM XFTM' },
   { file: 'elastic-cases.html', title: 'Elastic Cases' },
   { file: 'elastic-slo.html', title: 'Elastic SLO' },
-  { file: 'ibm-xftm.html', title: 'IBM XFTM' },
   { file: 'karmen.html', title: 'KARMEN' },
   { file: 'otomoto.html', title: 'Otomoto' },
   { file: 'mobile-games.html', title: 'My hobby' },
