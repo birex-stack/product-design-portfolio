@@ -2910,6 +2910,10 @@ p {
   color: #ffffff;
 }
 
+.case-source--proto-cta {
+  margin-top: 40px;
+}
+
 .story-band--g100 .case-source .case-proto-btn {
   color: #ffffff;
 }
