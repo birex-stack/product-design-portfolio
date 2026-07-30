@@ -2910,6 +2910,15 @@ p {
   color: #ffffff;
 }
 
+.story-band--g100 .case-source .case-proto-btn {
+  color: #ffffff;
+}
+
+.story-band--g100 .case-source .case-proto-btn:hover {
+  color: #ffffff;
+  background: #0353e9;
+}
+
 .case-study--ibm-xftm .story-band--g100
   .analyst-experience-media:not(.analyst-experience-media--device):not(
     .analyst-experience-media--portrait
