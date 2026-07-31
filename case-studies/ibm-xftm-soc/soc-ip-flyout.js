@@ -9,6 +9,7 @@
 
   /** @type {Record<string, Array<{author: string, time: string, text: string}>>} */
   var commentsByIp = {};
+  var ignoreBackdropUntil = 0;
 
   function scoreTier(score) {
     var n = Number(score) || 0;
@@ -182,7 +183,7 @@
     var input = panel.querySelector("[data-soc-ip-comment-input]");
     if (!form || !listEl || !input) return;
 
-    form.addEventListener("submit", function (event) {
+    form.onsubmit = function (event) {
       event.preventDefault();
       var text = input.value.trim();
       if (!text) return;
@@ -196,9 +197,11 @@
 
       listEl.innerHTML = renderComments(commentsByIp[ip]);
       input.value = "";
-      input.focus();
+      try {
+        input.focus();
+      } catch (err) {}
       listEl.scrollTop = listEl.scrollHeight;
-    });
+    };
   }
 
   function ensureFlyout() {
@@ -236,6 +239,7 @@
 
     backdrop.addEventListener("click", function (event) {
       event.preventDefault();
+      if (Date.now() < ignoreBackdropUntil) return;
       closeFlyout();
     });
 
@@ -266,14 +270,36 @@
     document.body.classList.remove("soc-flyout-open");
   }
 
+  function showFlyout() {
+    var panel = document.getElementById("soc-ip-flyout");
+    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
+    ignoreBackdropUntil = Date.now() + 500;
+
+    if (backdrop) {
+      backdrop.hidden = false;
+      backdrop.classList.add("is-open");
+    }
+    if (panel) {
+      panel.hidden = false;
+      panel.classList.add("is-open");
+    }
+    document.body.classList.add("soc-flyout-open");
+
+    window.setTimeout(function () {
+      try {
+        var closeBtn = panel && panel.querySelector(".soc-flyout__close");
+        if (closeBtn) closeBtn.focus();
+      } catch (err) {}
+    }, 50);
+  }
+
   function openFlyout(btn) {
     var panel = ensureFlyout();
-    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
     var body = panel.querySelector("[data-soc-ip-body]");
     var title = panel.querySelector("#soc-ip-flyout-title");
     var label = panel.querySelector(".soc-flyout__label");
 
-    var ip = btn.getAttribute("data-ip") || btn.textContent.trim();
+    var ip = btn.getAttribute("data-ip") || (btn.textContent || "").trim();
     var country = btn.getAttribute("data-country") || "Unknown";
     var flag = btn.getAttribute("data-flag") || "";
     var score = btn.getAttribute("data-score") || "1";
@@ -404,18 +430,11 @@
       '<p class="soc-flyout__hint">Aggregated score 1–10 (10 = most dangerous). Vendor rows show native scales: VirusTotal detections, IPVoid blacklist hits, X-Force risk score.</p>';
 
     bindCommentForm(panel, ip);
-
-    backdrop.hidden = false;
-    panel.hidden = false;
-    backdrop.classList.add("is-open");
-    panel.classList.add("is-open");
-    document.body.classList.add("soc-flyout-open");
-    panel.querySelector(".soc-flyout__close").focus();
+    showFlyout();
   }
 
   function openEntityFlyout(btn) {
     var panel = ensureFlyout();
-    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
     var body = panel.querySelector("[data-soc-ip-body]");
     var title = panel.querySelector("#soc-ip-flyout-title");
     var label = panel.querySelector(".soc-flyout__label");
@@ -496,30 +515,38 @@
       '<p class="soc-flyout__hint">Watchlist entities are carried across shifts until cleared or escalated into an open case.</p>';
 
     bindCommentForm(panel, value);
-
-    backdrop.hidden = false;
-    panel.hidden = false;
-    backdrop.classList.add("is-open");
-    panel.classList.add("is-open");
-    document.body.classList.add("soc-flyout-open");
-    panel.querySelector(".soc-flyout__close").focus();
+    showFlyout();
   }
 
-  document.addEventListener("click", function (event) {
-    var ipBtn = event.target.closest(".soc-ip-link");
-    if (ipBtn) {
+  function eventElement(event) {
+    var target = event.target;
+    if (!target) return null;
+    if (target.nodeType === 3) target = target.parentElement;
+    return target && target.closest ? target : null;
+  }
+
+  document.addEventListener(
+    "click",
+    function (event) {
+      var target = eventElement(event);
+      if (!target || !target.closest) return;
+
+      var ipBtn = target.closest(".soc-ip-link");
+      if (ipBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        openFlyout(ipBtn);
+        return;
+      }
+
+      var watchBtn = target.closest(".soc-watch-link");
+      if (!watchBtn) return;
       event.preventDefault();
       event.stopPropagation();
-      openFlyout(ipBtn);
-      return;
-    }
-
-    var watchBtn = event.target.closest(".soc-watch-link");
-    if (!watchBtn) return;
-    event.preventDefault();
-    event.stopPropagation();
-    openEntityFlyout(watchBtn);
-  });
+      openEntityFlyout(watchBtn);
+    },
+    true
+  );
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") closeFlyout();

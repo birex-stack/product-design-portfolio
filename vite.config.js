@@ -12,6 +12,7 @@ export default defineConfig({
         ibmXftmSocAlerts: 'case-studies/ibm-xftm-soc/alerts.html',
         ibmXftmSocCases: 'case-studies/ibm-xftm-soc/cases.html',
         ibmXftmSocIncident: 'case-studies/ibm-xftm-soc/incident.html',
+        ibmXftmSocAlert: 'case-studies/ibm-xftm-soc/alert.html',
         ibmXftmSocComplete: 'case-studies/ibm-xftm-soc/complete.html',
         ibmXftmSocPassdown: 'case-studies/ibm-xftm-soc/passdown.html',
         elasticSlo: 'case-studies/elastic-slo.html',
