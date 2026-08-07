@@ -56,6 +56,10 @@ import { AiAssistantFlyout } from './AiAssistantFlyout';
 import { AlertsFlyout } from './AlertsFlyout';
 import { ChartLoadingState } from './ChartLoadingState';
 import { DashboardActionsMenu } from './DashboardActionsMenu';
+import {
+  PanelActionsMenu,
+  PanelHoverActionsOverlay,
+} from './PanelActionsMenu';
 import { SloCard } from './SloCard';
 import { TimelineEventChart } from './TimelineEventChart';
 
@@ -82,17 +86,52 @@ function DashboardPanelShell({
   loading = false,
   chartHeight = 180,
 }) {
+  const [hovered, setHovered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showActions = hovered || menuOpen;
+
   return (
     <EuiPanel
       hasBorder
       paddingSize={paddingSize}
-      style={{ height: '100%', minHeight: height, display: 'flex', flexDirection: 'column' }}
+      style={{
+        height: '100%',
+        minHeight: height,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {title && (
         <>
-          <EuiTitle size="xxs">
-            <h3>{title}</h3>
-          </EuiTitle>
+          <EuiFlexGroup
+            gutterSize="s"
+            alignItems="center"
+            justifyContent="spaceBetween"
+            responsive={false}
+          >
+            <EuiFlexItem grow style={{ minWidth: 0 }}>
+              <EuiTitle size="xxs">
+                <h3 style={{ margin: 0 }}>{title}</h3>
+              </EuiTitle>
+            </EuiFlexItem>
+            <EuiFlexItem
+              grow={false}
+              style={{
+                opacity: showActions ? 1 : 0,
+                pointerEvents: showActions ? 'auto' : 'none',
+                transition: 'opacity 120ms ease',
+              }}
+            >
+              <PanelActionsMenu
+                title={title}
+                isOpen={menuOpen}
+                onOpenChange={setMenuOpen}
+              />
+            </EuiFlexItem>
+          </EuiFlexGroup>
           <EuiSpacer size="s" />
         </>
       )}
@@ -103,6 +142,34 @@ function DashboardPanelShell({
           children
         )}
       </div>
+    </EuiPanel>
+  );
+}
+
+function MetricPanelChrome({ title, height, loading, children }) {
+  const [hovered, setHovered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showActions = hovered || menuOpen;
+
+  return (
+    <EuiPanel
+      hasBorder
+      paddingSize="none"
+      style={{ height, overflow: 'hidden', position: 'relative' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <PanelHoverActionsOverlay
+        title={title}
+        visible={showActions}
+        menuOpen={menuOpen}
+        onMenuOpenChange={setMenuOpen}
+      />
+      {loading ? (
+        <ChartLoadingState height={height} size="l" />
+      ) : (
+        children
+      )}
     </EuiPanel>
   );
 }
@@ -147,16 +214,16 @@ function MetricPanel({ metric, color, loadIndex = 0, resetKey }) {
 
   return (
     <div style={panelSpan(metric.w || 3)}>
-      <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
-        {loading ? (
-          <ChartLoadingState height={height} size="l" />
-        ) : (
-          <Chart size={['100%', height]}>
-            <Settings baseTheme={chartBaseTheme} />
-            <Metric id={metric.id} data={[[datum]]} />
-          </Chart>
-        )}
-      </EuiPanel>
+      <MetricPanelChrome
+        title={metric.title}
+        height={height}
+        loading={loading}
+      >
+        <Chart size={['100%', height]}>
+          <Settings baseTheme={chartBaseTheme} />
+          <Metric id={metric.id} data={[[datum]]} />
+        </Chart>
+      </MetricPanelChrome>
     </div>
   );
 }
@@ -168,6 +235,9 @@ function SloTilePanel({
   onAlertsClick,
 }) {
   const height = panel.height || 140;
+  const [hovered, setHovered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showActions = hovered || menuOpen;
   const slo = useMemo(() => {
     const fromList = SLOS.find((item) => item.id === panel.sloId);
     if (fromList) {
@@ -189,7 +259,19 @@ function SloTilePanel({
   }, [panel]);
 
   return (
-    <div style={panelSpan(panel.w || 6)}>
+    <div
+      style={{ ...panelSpan(panel.w || 6), position: 'relative' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <PanelHoverActionsOverlay
+        title={panel.title || slo.name}
+        visible={showActions}
+        menuOpen={menuOpen}
+        onMenuOpenChange={setMenuOpen}
+        top={10}
+        right={10}
+      />
       {loading ? (
         <EuiPanel
           hasBorder
@@ -233,16 +315,16 @@ function AlertsMetricPanel({ panel, loading = false }) {
 
   return (
     <div style={panelSpan(panel.w || 3)}>
-      <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
-        {loading ? (
-          <ChartLoadingState height={height} size="l" />
-        ) : (
-          <Chart size={['100%', height]}>
-            <Settings baseTheme={chartBaseTheme} />
-            <Metric id={panel.id} data={[[datum]]} />
-          </Chart>
-        )}
-      </EuiPanel>
+      <MetricPanelChrome
+        title={panel.title}
+        height={height}
+        loading={loading}
+      >
+        <Chart size={['100%', height]}>
+          <Settings baseTheme={chartBaseTheme} />
+          <Metric id={panel.id} data={[[datum]]} />
+        </Chart>
+      </MetricPanelChrome>
     </div>
   );
 }
@@ -797,9 +879,24 @@ function InvestigationEventPanel({ event, loadIndex, resetKey }) {
     DASH_LOAD_FIRST_MS
   );
   const meta = TIMELINE_TYPE_META[event.type] || TIMELINE_TYPE_META.log;
+  const [hovered, setHovered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showActions = hovered || menuOpen;
 
   return (
-    <EuiPanel hasBorder paddingSize="m">
+    <EuiPanel
+      hasBorder
+      paddingSize="m"
+      style={{ position: 'relative' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <PanelHoverActionsOverlay
+        title={event.title}
+        visible={showActions}
+        menuOpen={menuOpen}
+        onMenuOpenChange={setMenuOpen}
+      />
       <EuiFlexGroup
         gutterSize="s"
         alignItems="center"

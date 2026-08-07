@@ -34,6 +34,7 @@ export function ObservabilityChrome({
   activeNav = 'slos',
   onNavigateHome,
   onNavigateAlerts,
+  onNavigateCases,
   onNavigateDashboards,
   onOpenAssistant,
   assistantOpen = false,
@@ -66,7 +67,10 @@ export function ObservabilityChrome({
             active: activeNav === 'alerts',
             onClick: onNavigateAlerts,
           }),
-          navItem('Cases'),
+          navItem('Cases', {
+            active: activeNav === 'cases',
+            onClick: onNavigateCases,
+          }),
           navItem('Dashboards', {
             active: activeNav === 'dashboards',
             onClick: onNavigateDashboards,
@@ -104,7 +108,13 @@ export function ObservabilityChrome({
         items: [navItem('Dashboard')],
       },
     ],
-    [activeNav, onNavigateHome, onNavigateAlerts, onNavigateDashboards]
+    [
+      activeNav,
+      onNavigateHome,
+      onNavigateAlerts,
+      onNavigateCases,
+      onNavigateDashboards,
+    ]
   );
 
   const navIsVisible = navIsOpen || navIsDocked;

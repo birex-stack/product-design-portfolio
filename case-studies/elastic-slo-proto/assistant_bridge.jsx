@@ -9,6 +9,7 @@ import React, {
 const AssistantBridgeContext = createContext({
   request: null,
   analyzeDependencies: () => {},
+  askAgent: () => {},
   clearRequest: () => {},
 });
 
@@ -27,13 +28,25 @@ export function AssistantBridgeProvider({ children, onRequestOpen }) {
     [onRequestOpen]
   );
 
+  const askAgent = useCallback(
+    (payload) => {
+      setRequest({
+        id: `${Date.now()}`,
+        type: 'ask',
+        ...payload,
+      });
+      onRequestOpen?.();
+    },
+    [onRequestOpen]
+  );
+
   const clearRequest = useCallback(() => {
     setRequest(null);
   }, []);
 
   const value = useMemo(
-    () => ({ request, analyzeDependencies, clearRequest }),
-    [request, analyzeDependencies, clearRequest]
+    () => ({ request, analyzeDependencies, askAgent, clearRequest }),
+    [request, analyzeDependencies, askAgent, clearRequest]
   );
 
   return (

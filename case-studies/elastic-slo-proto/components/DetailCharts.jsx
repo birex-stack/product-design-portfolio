@@ -36,6 +36,7 @@ import {
 } from '../chart_colors';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 import { ChartLoadingState } from './ChartLoadingState';
+import { PanelActionsMenu } from './PanelActionsMenu';
 
 function seriesFromValues(values, labels) {
   return values.map((y, x) => ({
@@ -237,39 +238,79 @@ function useZoomedBars(bars) {
   };
 }
 
-function PanelHeader({ title, isZoomed, onReset, rightSide }) {
+function PanelHeader({
+  title,
+  actionsTitle,
+  isZoomed,
+  onReset,
+  rightSide,
+  showActions = false,
+  menuOpen = false,
+  onMenuOpenChange,
+}) {
+  const titleText =
+    actionsTitle || (typeof title === 'string' ? title : 'Chart');
+
   return (
     <EuiFlexGroup justifyContent="spaceBetween" alignItems="center" gutterSize="s">
-      <EuiFlexItem grow>
+      <EuiFlexItem grow style={{ minWidth: 0 }}>
         <EuiTitle size="xs">
           <h3>{title}</h3>
         </EuiTitle>
       </EuiFlexItem>
-      {(isZoomed || rightSide) && (
-        <EuiFlexItem grow={false}>
-          <EuiFlexGroup
-            gutterSize="s"
-            alignItems="center"
-            responsive={false}
-            justifyContent="flexEnd"
+      <EuiFlexItem grow={false}>
+        <EuiFlexGroup
+          gutterSize="s"
+          alignItems="center"
+          responsive={false}
+          justifyContent="flexEnd"
+        >
+          {isZoomed && (
+            <EuiFlexItem grow={false}>
+              <EuiButton
+                size="s"
+                color="primary"
+                iconType="refresh"
+                onClick={onReset}
+              >
+                Reset
+              </EuiButton>
+            </EuiFlexItem>
+          )}
+          {rightSide}
+          <EuiFlexItem
+            grow={false}
+            style={{
+              opacity: showActions || menuOpen ? 1 : 0,
+              pointerEvents: showActions || menuOpen ? 'auto' : 'none',
+              transition: 'opacity 120ms ease',
+            }}
           >
-            {isZoomed && (
-              <EuiFlexItem grow={false}>
-                <EuiButton
-                  size="s"
-                  color="primary"
-                  iconType="refresh"
-                  onClick={onReset}
-                >
-                  Reset
-                </EuiButton>
-              </EuiFlexItem>
-            )}
-            {rightSide}
-          </EuiFlexGroup>
-        </EuiFlexItem>
-      )}
+            <PanelActionsMenu
+              title={titleText}
+              isOpen={menuOpen}
+              onOpenChange={onMenuOpenChange}
+            />
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      </EuiFlexItem>
     </EuiFlexGroup>
+  );
+}
+
+function HoverablePanel({ children, ...panelProps }) {
+  const [hovered, setHovered] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const showActions = hovered || menuOpen;
+
+  return (
+    <EuiPanel
+      {...panelProps}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children({ showActions, menuOpen, setMenuOpen })}
+    </EuiPanel>
   );
 }
 
@@ -601,29 +642,36 @@ export function SliPanel({ slo, loading = false }) {
     : 'last 30 days';
 
   return (
-    <EuiPanel hasBorder paddingSize="m">
-      <PanelHeader
-        title="SLI observed values"
-        isZoomed={zoom.isZoomed}
-        onReset={zoom.reset}
-      />
-      <EuiSpacer size="s" />
-      <LineChart
-        values={zoom.values}
-        labels={zoom.labels}
-        target={slo.target}
-        color={getSloStatusHealthColor(slo.status, tokens)}
-        seriesName="SLI"
-        valueUnit="%"
-        loading={loading}
-        onBrushEnd={zoom.onBrushEnd}
-      />
-      <EuiText size="xs" color="subdued">
-        <p>
-          Objective {slo.target.toFixed(2)}% · {rangeLabel}
-        </p>
-      </EuiText>
-    </EuiPanel>
+    <HoverablePanel hasBorder paddingSize="m">
+      {({ showActions, menuOpen, setMenuOpen }) => (
+        <>
+          <PanelHeader
+            title="SLI observed values"
+            isZoomed={zoom.isZoomed}
+            onReset={zoom.reset}
+            showActions={showActions}
+            menuOpen={menuOpen}
+            onMenuOpenChange={setMenuOpen}
+          />
+          <EuiSpacer size="s" />
+          <LineChart
+            values={zoom.values}
+            labels={zoom.labels}
+            target={slo.target}
+            color={getSloStatusHealthColor(slo.status, tokens)}
+            seriesName="SLI"
+            valueUnit="%"
+            loading={loading}
+            onBrushEnd={zoom.onBrushEnd}
+          />
+          <EuiText size="xs" color="subdued">
+            <p>
+              Objective {slo.target.toFixed(2)}% · {rangeLabel}
+            </p>
+          </EuiText>
+        </>
+      )}
+    </HoverablePanel>
   );
 }
 
@@ -723,38 +771,45 @@ export function BurnRatePanel({
   );
 
   return (
-    <EuiPanel hasBorder paddingSize="m">
-      <PanelHeader
-        title="Budget burn rate"
-        isZoomed={zoom.isZoomed}
-        onReset={zoom.reset}
-        rightSide={
-          <EuiFlexItem grow={false}>
-            <EuiButtonGroup
-              legend="Burn rate window"
-              options={[
-                { id: '1h', label: '1h' },
-                { id: '6h', label: '6h' },
-                { id: '24h', label: '24h' },
-                { id: '72h', label: '72h' },
-              ]}
-              idSelected={burnWindow}
-              onChange={onBurnWindowChange}
-              buttonSize="compressed"
-            />
-          </EuiFlexItem>
-        }
-      />
-      <EuiSpacer size="s" />
-      <AreaChart
-        values={zoom.values}
-        labels={labels}
-        color={tokens.health.danger}
-        seriesName="Burn rate"
-        loading={loading}
-        onBrushEnd={zoom.onBrushEnd}
-      />
-    </EuiPanel>
+    <HoverablePanel hasBorder paddingSize="m">
+      {({ showActions, menuOpen, setMenuOpen }) => (
+        <>
+          <PanelHeader
+            title="Budget burn rate"
+            isZoomed={zoom.isZoomed}
+            onReset={zoom.reset}
+            showActions={showActions}
+            menuOpen={menuOpen}
+            onMenuOpenChange={setMenuOpen}
+            rightSide={
+              <EuiFlexItem grow={false}>
+                <EuiButtonGroup
+                  legend="Burn rate window"
+                  options={[
+                    { id: '1h', label: '1h' },
+                    { id: '6h', label: '6h' },
+                    { id: '24h', label: '24h' },
+                    { id: '72h', label: '72h' },
+                  ]}
+                  idSelected={burnWindow}
+                  onChange={onBurnWindowChange}
+                  buttonSize="compressed"
+                />
+              </EuiFlexItem>
+            }
+          />
+          <EuiSpacer size="s" />
+          <AreaChart
+            values={zoom.values}
+            labels={labels}
+            color={tokens.health.danger}
+            seriesName="Burn rate"
+            loading={loading}
+            onBrushEnd={zoom.onBrushEnd}
+          />
+        </>
+      )}
+    </HoverablePanel>
   );
 }
 
@@ -829,52 +884,60 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
   );
 
   return (
-    <EuiPanel hasBorder paddingSize="m">
-      <PanelHeader
-        title={
-          <>
-            Budget remaining:{' '}
-            <span
-              style={{
-                color: violated
-                  ? tokens.health.danger
-                  : tokens.health.success,
-              }}
-            >
-              {remaining.toFixed(2)}%
-            </span>
-          </>
-        }
-        isZoomed={zoom.isZoomed}
-        onReset={zoom.reset}
-      />
-      <EuiSpacer size="s" />
-      <LineChart
-        values={zoom.values}
-        labels={zoom.labels}
-        target={0}
-        color={
-          violated ? tokens.health.danger : getVisSeriesColor(tokens, 2)
-        }
-        yMin={-20}
-        yMax={80}
-        seriesName="Budget remaining"
-        valueUnit="%"
-        loading={loading}
-        onBrushEnd={zoom.onBrushEnd}
-        xAnnotation={
-          depletionAnnotation
-            ? {
-                ...depletionAnnotation,
-                color: tokens.health.danger,
-              }
-            : null
-        }
-      />
-      <EuiText size="xs" color="subdued">
-        <p>{forecastLabel}</p>
-      </EuiText>
-    </EuiPanel>
+    <HoverablePanel hasBorder paddingSize="m">
+      {({ showActions, menuOpen, setMenuOpen }) => (
+        <>
+          <PanelHeader
+            title={
+              <>
+                Budget remaining:{' '}
+                <span
+                  style={{
+                    color: violated
+                      ? tokens.health.danger
+                      : tokens.health.success,
+                  }}
+                >
+                  {remaining.toFixed(2)}%
+                </span>
+              </>
+            }
+            actionsTitle="Budget remaining"
+            isZoomed={zoom.isZoomed}
+            onReset={zoom.reset}
+            showActions={showActions}
+            menuOpen={menuOpen}
+            onMenuOpenChange={setMenuOpen}
+          />
+          <EuiSpacer size="s" />
+          <LineChart
+            values={zoom.values}
+            labels={zoom.labels}
+            target={0}
+            color={
+              violated ? tokens.health.danger : getVisSeriesColor(tokens, 2)
+            }
+            yMin={-20}
+            yMax={80}
+            seriesName="Budget remaining"
+            valueUnit="%"
+            loading={loading}
+            onBrushEnd={zoom.onBrushEnd}
+            xAnnotation={
+              depletionAnnotation
+                ? {
+                    ...depletionAnnotation,
+                    color: tokens.health.danger,
+                  }
+                : null
+            }
+          />
+          <EuiText size="xs" color="subdued">
+            <p>{forecastLabel}</p>
+          </EuiText>
+        </>
+      )}
+    </HoverablePanel>
   );
 }
 
@@ -917,11 +980,16 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
   }, [data, showGood, showBad, alertThreshold]);
 
   return (
-    <EuiPanel hasBorder paddingSize="m">
+    <HoverablePanel hasBorder paddingSize="m">
+      {({ showActions, menuOpen, setMenuOpen }) => (
+        <>
       <PanelHeader
         title="Good vs Bad events"
         isZoomed={zoom.isZoomed}
         onReset={zoom.reset}
+        showActions={showActions}
+        menuOpen={menuOpen}
+        onMenuOpenChange={setMenuOpen}
         rightSide={
           <EuiFlexItem grow={false}>
             <EuiButtonGroup
@@ -1026,6 +1094,8 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
           />
         )}
       </ChartFrame>
-    </EuiPanel>
+        </>
+      )}
+    </HoverablePanel>
   );
 }

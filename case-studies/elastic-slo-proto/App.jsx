@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAlertById } from './alerts_data';
 import { AssistantBridgeProvider } from './assistant_bridge';
+import { getCaseById } from './cases_data';
 import { getDashboardById } from './dashboards_data';
 import { AlertDetailPage } from './components/AlertDetailPage';
 import { AlertsListPage } from './components/AlertsListPage';
+import { CaseDetailPage } from './components/CaseDetailPage';
+import { CasesListPage } from './components/CasesListPage';
 import { DashboardDetailPage } from './components/DashboardDetailPage';
 import { DashboardsListPage } from './components/DashboardsListPage';
 import { ObservabilityChrome } from './components/ObservabilityChrome';
@@ -20,11 +23,17 @@ function parseRoute() {
   if (hash.startsWith('alerts/')) {
     return { name: 'alertDetail', id: hash.slice('alerts/'.length) };
   }
+  if (hash.startsWith('cases/')) {
+    return { name: 'caseDetail', id: hash.slice('cases/'.length) };
+  }
   if (hash.startsWith('dashboards/')) {
     return { name: 'dashboardDetail', id: hash.slice('dashboards/'.length) };
   }
   if (hash === 'alerts') {
     return { name: 'alerts' };
+  }
+  if (hash === 'cases') {
+    return { name: 'cases' };
   }
   if (hash === 'dashboards') {
     return { name: 'dashboards' };
@@ -65,6 +74,10 @@ export default function App() {
     window.location.hash = '#/alerts';
   }, []);
 
+  const navigateCases = useCallback(() => {
+    window.location.hash = '#/cases';
+  }, []);
+
   const navigateDashboards = useCallback(() => {
     window.location.hash = '#/dashboards';
   }, []);
@@ -77,6 +90,10 @@ export default function App() {
     window.location.hash = `#/alerts/${id}`;
   }, []);
 
+  const openCase = useCallback((id) => {
+    window.location.hash = `#/cases/${id}`;
+  }, []);
+
   const openDashboard = useCallback((id) => {
     window.location.hash = `#/dashboards/${id}`;
   }, []);
@@ -84,17 +101,40 @@ export default function App() {
   const slo = route.name === 'sloDetail' ? getSloById(route.id) : null;
   const alert =
     route.name === 'alertDetail' ? getAlertById(route.id) : null;
+  const caseItem =
+    route.name === 'caseDetail' ? getCaseById(route.id) : null;
   const dashboard =
     route.name === 'dashboardDetail' ? getDashboardById(route.id) : null;
 
   const activeNav =
     route.name === 'alerts' || route.name === 'alertDetail'
       ? 'alerts'
-      : route.name === 'dashboards' || route.name === 'dashboardDetail'
-        ? 'dashboards'
-        : 'slos';
+      : route.name === 'cases' || route.name === 'caseDetail'
+        ? 'cases'
+        : route.name === 'dashboards' || route.name === 'dashboardDetail'
+          ? 'dashboards'
+          : 'slos';
 
   const breadcrumbs = useMemo(() => {
+    if (route.name === 'caseDetail' && caseItem) {
+      return [
+        { text: 'Observability', onClick: (e) => e.preventDefault() },
+        {
+          text: 'Cases',
+          onClick: (e) => {
+            e.preventDefault();
+            navigateCases();
+          },
+        },
+        { text: `#${caseItem.id}` },
+      ];
+    }
+    if (route.name === 'cases') {
+      return [
+        { text: 'Observability', onClick: (e) => e.preventDefault() },
+        { text: 'Cases' },
+      ];
+    }
     if (route.name === 'dashboardDetail' && dashboard) {
       return [
         { text: 'Observability', onClick: (e) => e.preventDefault() },
@@ -154,9 +194,11 @@ export default function App() {
     route.name,
     slo,
     alert,
+    caseItem,
     dashboard,
     navigateHome,
     navigateAlerts,
+    navigateCases,
     navigateDashboards,
   ]);
 
@@ -167,7 +209,19 @@ export default function App() {
     (route.name === 'dashboardDetail' && dashboard);
 
   let page = <SloListPage onOpenSlo={openSlo} />;
-  if (route.name === 'dashboardDetail' && dashboard) {
+  if (route.name === 'caseDetail' && caseItem) {
+    page = (
+      <CaseDetailPage
+        caseItem={caseItem}
+        onBack={navigateCases}
+        onOpenCase={openCase}
+      />
+    );
+  } else if (route.name === 'caseDetail' && !caseItem) {
+    page = <CasesListPage onOpenCase={openCase} />;
+  } else if (route.name === 'cases') {
+    page = <CasesListPage onOpenCase={openCase} />;
+  } else if (route.name === 'dashboardDetail' && dashboard) {
     page = (
       <DashboardDetailPage
         dashboard={dashboard}
@@ -226,6 +280,7 @@ export default function App() {
         activeNav={activeNav}
         onNavigateHome={navigateHome}
         onNavigateAlerts={navigateAlerts}
+        onNavigateCases={navigateCases}
         onNavigateDashboards={navigateDashboards}
         assistantOpen={assistantOpen}
         onOpenAssistant={
