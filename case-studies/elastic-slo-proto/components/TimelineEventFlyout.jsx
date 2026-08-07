@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   EuiBadge,
   EuiCodeBlock,
@@ -13,6 +13,10 @@ import {
   EuiText,
   EuiTitle,
 } from '@elastic/eui';
+import { toFieldListItems } from './FieldValue';
+import { FlyoutHeaderActions } from './FlyoutHeaderActions';
+import { FlyoutListNavFooter } from './FlyoutListNavFooter';
+import { TimelineEventChart } from './TimelineEventChart';
 
 const TYPE_META = {
   alert: { icon: 'warning', label: 'Alert', color: 'danger' },
@@ -33,24 +37,40 @@ export function TimelineEventFlyout({
   session = 'inherit',
   hasChildBackground = true,
   size = 's',
+  /** Ordered list for footer prev/next when opened from a timeline. */
+  items,
+  onSelectItem,
 }) {
+  const listItems = useMemo(() => {
+    if (!event) return [];
+    return toFieldListItems(
+      [
+        {
+          title: 'Time',
+          description: event.date
+            ? `${event.time} · ${event.date}`
+            : event.time,
+        },
+        event.service
+          ? { title: 'Service', description: event.service }
+          : null,
+        event.environment
+          ? { title: 'Environment', description: event.environment }
+          : null,
+        event.region ? { title: 'Region', description: event.region } : null,
+        ...(event.fields || []),
+      ],
+      {
+        onDrillIn: () => {
+          /* Prototype: drill-in affordance only */
+        },
+      }
+    );
+  }, [event]);
+
   if (!event) return null;
 
   const meta = TYPE_META[event.type] || TYPE_META.log;
-  const listItems = [
-    {
-      title: 'Time',
-      description: event.date ? `${event.time} · ${event.date}` : event.time,
-    },
-    event.service
-      ? { title: 'Service', description: event.service }
-      : null,
-    event.environment
-      ? { title: 'Environment', description: event.environment }
-      : null,
-    event.region ? { title: 'Region', description: event.region } : null,
-    ...(event.fields || []),
-  ].filter(Boolean);
 
   return (
     <EuiFlyout
@@ -59,18 +79,31 @@ export function TimelineEventFlyout({
       size={size}
       session={session}
       hasChildBackground={hasChildBackground}
+      hideCloseButton
       flyoutMenuProps={{ title: event.title }}
       aria-label={event.title}
     >
       <EuiFlyoutHeader hasBorder>
-        <EuiFlexGroup gutterSize="s" alignItems="center" responsive={false}>
-          <EuiFlexItem grow={false}>
-            <EuiIcon type={meta.icon} />
-          </EuiFlexItem>
+        <EuiFlexGroup
+          justifyContent="spaceBetween"
+          alignItems="flexStart"
+          gutterSize="s"
+          responsive={false}
+        >
           <EuiFlexItem>
-            <EuiTitle size="s">
-              <h2>{event.title}</h2>
-            </EuiTitle>
+            <EuiFlexGroup gutterSize="s" alignItems="center" responsive={false}>
+              <EuiFlexItem grow={false}>
+                <EuiIcon type={meta.icon} />
+              </EuiFlexItem>
+              <EuiFlexItem>
+                <EuiTitle size="s">
+                  <h2>{event.title}</h2>
+                </EuiTitle>
+              </EuiFlexItem>
+            </EuiFlexGroup>
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <FlyoutHeaderActions onClose={onClose} />
           </EuiFlexItem>
         </EuiFlexGroup>
         <EuiSpacer size="s" />
@@ -94,6 +127,8 @@ export function TimelineEventFlyout({
         )}
       </EuiFlyoutHeader>
       <EuiFlyoutBody>
+        <TimelineEventChart event={event} />
+        <EuiSpacer size="m" />
         <EuiTitle size="xxs">
           <h3>Event details</h3>
         </EuiTitle>
@@ -121,6 +156,13 @@ export function TimelineEventFlyout({
           </>
         )}
       </EuiFlyoutBody>
+      {items?.length > 1 && onSelectItem && (
+        <FlyoutListNavFooter
+          items={items}
+          currentId={event.id}
+          onSelect={onSelectItem}
+        />
+      )}
     </EuiFlyout>
   );
 }

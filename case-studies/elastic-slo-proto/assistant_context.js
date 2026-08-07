@@ -273,7 +273,7 @@ function conversationShell({ title, userPrompt, assistantText, tools, extraMessa
   };
 }
 
-function buildDependencyTimeline(request = {}) {
+export function buildDependencyTimeline(request = {}) {
   const seriesName = request.seriesName || 'metric';
   const anchor = request.timeLabel || 'selected point';
   const valueLabel =

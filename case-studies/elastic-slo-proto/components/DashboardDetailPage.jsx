@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import {
-  EuiAccordion,
   EuiBadge,
   EuiBasicTable,
   EuiButton,
@@ -19,7 +18,10 @@ import {
   AreaSeries,
   Axis,
   BarSeries,
+  Bullet,
+  BulletSubtype,
   Chart,
+  Heatmap,
   LayoutDirection,
   LineAnnotation,
   LineSeries,
@@ -36,9 +38,12 @@ import {
   ALERT_THRESHOLD_LINE_STYLE,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
-import { getDashboardPanels } from '../dashboards_data';
+import { getDashboardPanels, loadInvestigationEvents } from '../dashboards_data';
+import { buildDependencyTimeline } from '../assistant_context';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 import { AiAssistantFlyout } from './AiAssistantFlyout';
+import { DashboardActionsMenu } from './DashboardActionsMenu';
+import { TimelineEventChart } from './TimelineEventChart';
 
 const GRID = {
   display: 'grid',
@@ -111,6 +116,165 @@ function MetricPanel({ metric, color }) {
           <Metric id={metric.id} data={[[datum]]} />
         </Chart>
       </EuiPanel>
+    </div>
+  );
+}
+
+function SloTilePanel({ panel }) {
+  const chartBaseTheme = useChartBaseTheme();
+  const height = 140;
+  const color =
+    panel.status === 'healthy'
+      ? '#D9F0E3'
+      : panel.status === 'degrading'
+        ? '#F8E8C9'
+        : '#F8D7DA';
+
+  const datum = useMemo(
+    () => ({
+      color,
+      title: panel.title,
+      subtitle: panel.subtitle,
+      value: panel.value,
+      valueFormatter: panel.valueFormatter,
+      domainMin: panel.domain?.[0] ?? 90,
+      domainMax: panel.domain?.[1] ?? 100,
+      progressBarDirection: LayoutDirection.Horizontal,
+      extra: (
+        <span>
+          Target <strong>{panel.target}%</strong>
+        </span>
+      ),
+    }),
+    [panel, color]
+  );
+
+  return (
+    <div style={panelSpan(panel.w || 3)}>
+      <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
+        <Chart size={['100%', height]}>
+          <Settings baseTheme={chartBaseTheme} />
+          <Metric id={panel.id} data={[[datum]]} />
+        </Chart>
+      </EuiPanel>
+    </div>
+  );
+}
+
+function AlertsMetricPanel({ panel }) {
+  const chartBaseTheme = useChartBaseTheme();
+  const height = 140;
+
+  const datum = useMemo(
+    () => ({
+      color: '#F8D7DA',
+      title: panel.title,
+      subtitle: panel.subtitle,
+      value: panel.value,
+      valueFormatter: panel.valueFormatter,
+      trend: panel.trend,
+      trendShape: MetricTrendShape.Area,
+      trendA11yTitle: `${panel.title} trend`,
+      trendA11yDescription: `Alert volume trend over the selected time range.`,
+    }),
+    [panel]
+  );
+
+  return (
+    <div style={panelSpan(panel.w || 3)}>
+      <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
+        <Chart size={['100%', height]}>
+          <Settings baseTheme={chartBaseTheme} />
+          <Metric id={panel.id} data={[[datum]]} />
+        </Chart>
+      </EuiPanel>
+    </div>
+  );
+}
+
+function HeatmapPanel({ panel }) {
+  const chartBaseTheme = useChartBaseTheme();
+  const height = 280;
+
+  return (
+    <div style={panelSpan(panel.w || 6)}>
+      <DashboardPanelShell title={panel.title} height={height + 48}>
+        <div style={{ width: '100%', height }}>
+          <Chart size={{ width: '100%', height }}>
+            <Settings
+              baseTheme={chartBaseTheme}
+              showLegend
+              legendPosition={Position.Right}
+              theme={{
+                heatmap: {
+                  cell: {
+                    maxWidth: 'fill',
+                    maxHeight: 'fill',
+                    label: { visible: false },
+                    border: { strokeWidth: 1, stroke: 'transparent' },
+                  },
+                  yAxisLabel: { width: 72 },
+                },
+              }}
+            />
+            <Heatmap
+              id={panel.id}
+              data={panel.data}
+              xAccessor="x"
+              yAccessor="y"
+              valueAccessor="value"
+              valueFormatter={(d) => `${Math.round(d)} ms`}
+              xScale={{ type: ScaleType.Ordinal }}
+              xAxisTitle=""
+              yAxisTitle=""
+              colorScale={{
+                type: 'bands',
+                bands: [
+                  { start: -Infinity, end: 80, color: '#D3F1E0', label: '< 80ms' },
+                  { start: 80, end: 160, color: '#F1E4A6', label: '80–160ms' },
+                  { start: 160, end: 240, color: '#F5C39B', label: '160–240ms' },
+                  { start: 240, end: Infinity, color: '#E7664C', label: '> 240ms' },
+                ],
+              }}
+            />
+          </Chart>
+        </div>
+      </DashboardPanelShell>
+    </div>
+  );
+}
+
+function BulletPanel({ panel }) {
+  const chartBaseTheme = useChartBaseTheme();
+  const height = 280;
+
+  return (
+    <div style={panelSpan(panel.w || 6)}>
+      <DashboardPanelShell title={panel.title} height={height + 48}>
+        <div style={{ width: '100%', height }}>
+          <Chart size={{ width: '100%', height }}>
+            <Settings baseTheme={chartBaseTheme} />
+            <Bullet
+              id={panel.id}
+              subtype={BulletSubtype.horizontal}
+              data={[
+                [
+                  {
+                    title: panel.title,
+                    subtitle: panel.subtitle,
+                    value: panel.value,
+                    target: panel.target,
+                    domain: panel.domain || [0, 100],
+                    valueFormatter: (d) => `${Math.round(d)}%`,
+                    targetFormatter: (d) => `${Math.round(d)}%`,
+                    tickFormatter: (d) => `${Math.round(d)}`,
+                  },
+                ],
+              ]}
+            />
+          </Chart>
+        </div>
+      </DashboardPanelShell>
     </div>
   );
 }
@@ -380,7 +544,77 @@ function ChartPanel({ panel, colors }) {
   if (panel.type === 'area') return <AreaPanel panel={panel} color={colors[1]} />;
   if (panel.type === 'bar') return <BarPanel panel={panel} color={colors[2]} />;
   if (panel.type === 'pie') return <PiePanel panel={panel} colors={colors} />;
+  if (panel.type === 'heatmap') return <HeatmapPanel panel={panel} />;
+  if (panel.type === 'bullet') return <BulletPanel panel={panel} />;
+  if (panel.type === 'sloTile') return <SloTilePanel panel={panel} />;
+  if (panel.type === 'alertsMetric') return <AlertsMetricPanel panel={panel} />;
   return null;
+}
+
+const TIMELINE_TYPE_META = {
+  alert: { icon: 'warning', label: 'Alert', color: 'danger' },
+  log: { icon: 'document', label: 'Log', color: 'hollow' },
+  apm: { icon: 'visLine', label: 'APM', color: 'primary' },
+  metric: { icon: 'stats', label: 'Metric', color: 'accent' },
+  dependency: { icon: 'branch', label: 'Dependency', color: 'warning' },
+  deploy: { icon: 'package', label: 'Deploy', color: 'success' },
+};
+
+function InvestigationTimelineDashboard({ events }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <EuiText size="s" color="subdued">
+        <p style={{ margin: 0 }}>
+          AI-generated investigation dashboard — each panel visualizes one
+          correlated event from the dependency timeline.
+        </p>
+      </EuiText>
+      {events.map((event) => {
+        const meta = TIMELINE_TYPE_META[event.type] || TIMELINE_TYPE_META.log;
+        return (
+          <EuiPanel key={event.id} hasBorder paddingSize="m">
+            <EuiFlexGroup
+              gutterSize="s"
+              alignItems="center"
+              responsive={false}
+              wrap
+            >
+              <EuiFlexItem grow={false}>
+                <EuiBadge color={meta.color}>{meta.label}</EuiBadge>
+              </EuiFlexItem>
+              <EuiFlexItem grow={false}>
+                <EuiText size="xs" color="subdued">
+                  <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    {event.time}
+                    {event.date ? ` · ${event.date}` : ''}
+                  </span>
+                </EuiText>
+              </EuiFlexItem>
+              {event.service && (
+                <EuiFlexItem grow={false}>
+                  <EuiBadge color="hollow">{event.service}</EuiBadge>
+                </EuiFlexItem>
+              )}
+            </EuiFlexGroup>
+            <EuiSpacer size="xs" />
+            <EuiTitle size="xs">
+              <h2>{event.title}</h2>
+            </EuiTitle>
+            {event.detail && (
+              <>
+                <EuiSpacer size="xs" />
+                <EuiText size="s" color="subdued">
+                  <p style={{ margin: 0 }}>{event.detail}</p>
+                </EuiText>
+              </>
+            )}
+            <EuiSpacer size="m" />
+            <TimelineEventChart event={event} />
+          </EuiPanel>
+        );
+      })}
+    </div>
+  );
 }
 
 export function DashboardDetailPage({
@@ -399,12 +633,18 @@ export function DashboardDetailPage({
     if (onAssistantOpenChange) onAssistantOpenChange(open);
     else setLocalAssistantOpen(open);
   };
+  const isInvestigation = dashboard?.layout === 'investigationTimeline';
+  const investigationEvents = useMemo(() => {
+    if (!isInvestigation) return [];
+    return loadInvestigationEvents() || buildDependencyTimeline();
+  }, [isInvestigation, dashboard?.id]);
   const panels = useMemo(
-    () => getDashboardPanels(dashboard),
-    [dashboard]
+    () => (isInvestigation ? null : getDashboardPanels(dashboard)),
+    [dashboard, isInvestigation]
   );
 
-  if (!dashboard || !panels) return null;
+  if (!dashboard) return null;
+  if (!isInvestigation && !panels) return null;
 
   // Soft tile fills typical of Kibana Metric panels
   const metricColors = ['#D4E7F7', '#D9F0E3', '#F8E8C9', '#E8DAF5'];
@@ -472,7 +712,7 @@ export function DashboardDetailPage({
           <EuiFlexGroup gutterSize="s" responsive={false} wrap>
             <EuiFlexItem grow={false}>
               <EuiButtonEmpty iconType="calendar" size="s">
-                {panels.timeRange}
+                {isInvestigation ? 'Incident window' : panels.timeRange}
               </EuiButtonEmpty>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
@@ -488,12 +728,7 @@ export function DashboardDetailPage({
               />
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
-              <EuiButtonIcon
-                iconType="boxesVertical"
-                size="s"
-                display="base"
-                aria-label="Actions"
-              />
+              <DashboardActionsMenu dashboard={dashboard} size="s" />
             </EuiFlexItem>
             {mode === 'edit' && (
               <EuiFlexItem grow={false}>
@@ -508,66 +743,82 @@ export function DashboardDetailPage({
 
       <EuiSpacer size="m" />
 
-      {mode === 'edit' && (
+      {isInvestigation ? (
+        <InvestigationTimelineDashboard events={investigationEvents} />
+      ) : (
         <>
-          <EuiText size="xs" color="subdued">
-            <p style={{ margin: 0 }}>
-              Edit mode · panels snap to a 48-column grid (shown here as 12 CSS
-              columns). Metrics use quarter width; charts use half or full width.
-            </p>
-          </EuiText>
-          <EuiSpacer size="s" />
-        </>
-      )}
+          {mode === 'edit' && (
+            <>
+              <EuiText size="xs" color="subdued">
+                <p style={{ margin: 0 }}>
+                  Edit mode · panels snap to a 48-column grid (shown here as 12 CSS
+                  columns). Metrics use quarter width; charts use half or full width.
+                </p>
+              </EuiText>
+              <EuiSpacer size="s" />
+            </>
+          )}
 
-      <div style={GRID}>
-        {panels.metrics.map((metric, i) => (
-          <MetricPanel
-            key={metric.id}
-            metric={metric}
-            color={metricColors[i % metricColors.length]}
-          />
-        ))}
-      </div>
+          <div style={GRID}>
+            {panels.metrics.map((metric, i) => (
+              <MetricPanel
+                key={metric.id}
+                metric={metric}
+                color={metricColors[i % metricColors.length]}
+              />
+            ))}
+          </div>
 
-      <EuiSpacer size="m" />
+          {panels.showcase && (
+            <>
+              <EuiSpacer size="m" />
+              <div style={GRID}>
+                {panels.showcase.tiles.map((panel) => (
+                  <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
+                ))}
+              </div>
+              <EuiSpacer size="m" />
+              <div style={GRID}>
+                {panels.showcase.charts.map((panel) => (
+                  <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
+                ))}
+              </div>
+            </>
+          )}
 
-      <div style={GRID}>
-        {panels.primaryCharts.map((panel) => (
-          <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-        ))}
-      </div>
+          <EuiSpacer size="m" />
 
-      <EuiSpacer size="m" />
+          <div style={GRID}>
+            {panels.primaryCharts.map((panel) => (
+              <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
+            ))}
+          </div>
 
-      <div style={GRID}>
-        <ChartPanel panel={panels.fullWidth} colors={chartColors} />
-      </div>
+          <EuiSpacer size="m" />
 
-      <EuiSpacer size="m" />
+          <div style={GRID}>
+            <ChartPanel panel={panels.fullWidth} colors={chartColors} />
+          </div>
 
-      <div style={GRID}>
-        <TablePanel panel={panels.table} />
-      </div>
+          <EuiSpacer size="m" />
 
-      <EuiSpacer size="m" />
+          <div style={GRID}>
+            <TablePanel panel={panels.table} />
+          </div>
 
-      <EuiAccordion
-        id={`${dashboard.id}-supporting`}
-        buttonContent={
+          <EuiSpacer size="m" />
+
           <EuiTitle size="xs">
             <h2>{panels.section.title}</h2>
           </EuiTitle>
-        }
-        initialIsOpen={!panels.section.collapsedByDefault}
-        paddingSize="m"
-      >
-        <div style={GRID}>
-          {panels.section.panels.map((panel) => (
-            <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-          ))}
-        </div>
-      </EuiAccordion>
+          <EuiSpacer size="m" />
+          <div style={GRID}>
+            {panels.section.panels.map((panel) => (
+              <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
+            ))}
+          </div>
+        </>
+      )}
 
       <AiAssistantFlyout
         isOpen={isAssistantOpen}

@@ -2,6 +2,8 @@ import React from 'react';
 import {
   EuiBadge,
   EuiBasicTable,
+  EuiFlexGroup,
+  EuiFlexItem,
   EuiFlyout,
   EuiFlyoutBody,
   EuiFlyoutHeader,
@@ -9,6 +11,7 @@ import {
   EuiText,
   EuiTitle,
 } from '@elastic/eui';
+import { FlyoutHeaderActions } from './FlyoutHeaderActions';
 
 function CellText({ children }) {
   return (
@@ -89,11 +92,29 @@ export function EventsFlyout({ sloName, bar, kind = 'bad', events, onClose }) {
   const title = isGood ? 'Good events' : 'Bad events';
 
   return (
-    <EuiFlyout ownFocus onClose={onClose} size="m" aria-labelledby="events-flyout-title">
+    <EuiFlyout
+      ownFocus
+      onClose={onClose}
+      size="m"
+      hideCloseButton
+      aria-labelledby="events-flyout-title"
+    >
       <EuiFlyoutHeader hasBorder>
-        <EuiTitle size="m">
-          <h2 id="events-flyout-title">{title}</h2>
-        </EuiTitle>
+        <EuiFlexGroup
+          justifyContent="spaceBetween"
+          alignItems="flexStart"
+          gutterSize="s"
+          responsive={false}
+        >
+          <EuiFlexItem>
+            <EuiTitle size="m">
+              <h2 id="events-flyout-title">{title}</h2>
+            </EuiTitle>
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <FlyoutHeaderActions onClose={onClose} />
+          </EuiFlexItem>
+        </EuiFlexGroup>
         <EuiSpacer size="s" />
         <EuiText size="s" color="subdued">
           <p>

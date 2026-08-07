@@ -533,11 +533,47 @@ export function BurnRatePanel({
   );
 }
 
+const FORECAST_BURN_RATE = 20.4;
+
+function parseWindowDays(windowLabel) {
+  const match = String(windowLabel || '').match(/(\d+)\s*days?/i);
+  return match ? Number(match[1]) : 30;
+}
+
+/** At burn rate B, full budget lasts window/B. Scale by remaining %. */
+function getBudgetExhaustionAt(remainingPct, windowLabel, burnRate = FORECAST_BURN_RATE) {
+  if (!(remainingPct > 0) || !(burnRate > 0)) return null;
+  const windowMs = parseWindowDays(windowLabel) * 24 * 60 * 60 * 1000;
+  const msLeft = ((remainingPct / 100) * windowMs) / burnRate;
+  return new Date(Date.now() + msLeft);
+}
+
+function formatExhaustionWhen(date) {
+  const time = date.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+  const day = date.toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+  return `${time}, ${day}`;
+}
+
 export function BudgetRemainingPanel({ slo, loading = false }) {
   const { euiTheme } = useEuiTheme();
   const zoom = useZoomedSeries(slo.budgetSeries, 3);
   const remaining = slo.budgetSeries[slo.budgetSeries.length - 1];
   const violated = remaining < 0;
+  const exhaustionAt = useMemo(
+    () => getBudgetExhaustionAt(remaining, slo.window, FORECAST_BURN_RATE),
+    [remaining, slo.window]
+  );
+  const forecastLabel = exhaustionAt
+    ? `Forecast @${FORECAST_BURN_RATE}x burn rate · budget depletes ${formatExhaustionWhen(exhaustionAt)}`
+    : `Forecast @${FORECAST_BURN_RATE}x burn rate · budget already exhausted`;
 
   return (
     <EuiPanel hasBorder paddingSize="m">
@@ -573,7 +609,7 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
         onBrushEnd={zoom.onBrushEnd}
       />
       <EuiText size="xs" color="subdued">
-        <p>Forecast @20.4x burn rate</p>
+        <p>{forecastLabel}</p>
       </EuiText>
     </EuiPanel>
   );

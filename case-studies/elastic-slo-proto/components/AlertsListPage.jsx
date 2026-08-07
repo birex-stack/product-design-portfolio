@@ -466,6 +466,8 @@ export function AlertsListPage({
           if (next) setFlyoutAlert(next);
         }}
         session="never"
+        items={filtered}
+        onSelectItem={setFlyoutAlert}
       />
 
       <AiAssistantFlyout

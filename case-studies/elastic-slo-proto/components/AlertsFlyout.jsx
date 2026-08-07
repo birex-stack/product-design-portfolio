@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   EuiFlyout,
   EuiFlyoutBody,
@@ -8,11 +8,13 @@ import {
   EuiTitle,
 } from '@elastic/eui';
 import { getAlertById } from '../alerts_data';
+import { getAlertsForSlo } from '../data';
 import { AlertDetailFlyout } from './AlertDetailFlyout';
 import { SloAlertsPanel } from './SloAlertsPanel';
 
 export function AlertsFlyout({ slo, onClose }) {
   const [selectedAlert, setSelectedAlert] = useState(null);
+  const alerts = useMemo(() => (slo ? getAlertsForSlo(slo) : []), [slo]);
 
   if (!slo) return null;
 
@@ -56,6 +58,8 @@ export function AlertsFlyout({ slo, onClose }) {
           session="inherit"
           size="s"
           hasChildBackground
+          items={alerts}
+          onSelectItem={setSelectedAlert}
         />
       )}
     </EuiFlyout>

@@ -73,6 +73,8 @@ export function SloAlertsPanel({
             if (next) setSelectedAlert(next);
           }}
           session="never"
+          items={alerts}
+          onSelectItem={setSelectedAlert}
         />
       )}
     </>

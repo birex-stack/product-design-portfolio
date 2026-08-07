@@ -3,3 +3,13 @@
   -webkit-animation-delay: 0.25s;
   animation-delay: 0.25s;
 }
+
+/*
+ * Chart tooltip portals use inline z-index: 100 (and often empty class names),
+ * so they render under EUI flyouts (~1000+), e.g. the AI Assistant push panel.
+ * Force portals above all page chrome.
+ */
+[id^='echTooltipPortal'],
+[id^='echAnnotationTooltipPortal'] {
+  z-index: 10050 !important;
+}

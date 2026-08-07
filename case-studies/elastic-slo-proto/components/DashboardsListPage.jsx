@@ -19,13 +19,13 @@ import {
   EuiTab,
   EuiTabs,
   EuiText,
-  EuiToolTip,
 } from '@elastic/eui';
 import {
   DASHBOARD_CREATORS,
   DASHBOARD_TAGS,
   DASHBOARDS,
 } from '../dashboards_data';
+import { DashboardActionsMenu } from './DashboardActionsMenu';
 
 const SORT_OPTIONS = [
   { value: 'recent', text: 'Recently viewed' },
@@ -287,13 +287,13 @@ export function DashboardsListPage({ onOpenDashboard }) {
         width: '88px',
         align: 'right',
         render: (_id, row) => (
-          <EuiToolTip content="Actions">
-            <EuiButtonIcon
-              iconType="boxesVertical"
-              aria-label={`Actions for ${row.title}`}
-              onClick={(e) => e.preventDefault()}
-            />
-          </EuiToolTip>
+          <DashboardActionsMenu
+            dashboard={row}
+            size="s"
+            display="empty"
+            color="text"
+            onOpen={(dashboard) => onOpenDashboard?.(dashboard.id)}
+          />
         ),
       },
     ],

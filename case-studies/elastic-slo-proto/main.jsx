@@ -4,6 +4,7 @@ import { EuiProvider } from '@elastic/eui';
 import { EuiThemeBorealis } from '@elastic/eui-theme-borealis';
 import '@elastic/charts/dist/theme_light.css';
 import './chart-overrides.css';
+import './eui-overrides.css';
 import App from './App';
 import { ToastProvider } from './toast_context';
 

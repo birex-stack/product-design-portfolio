@@ -100,6 +100,17 @@ function buildObservabilityAlerts(count = 250) {
     const second = String(Math.floor(rand(seed, 7) * 60)).padStart(2, '0');
     const durationH = 1 + Math.floor(rand(seed, 8) * 48);
 
+    // Seed investigation progress so the list shows analyst triage transparency.
+    // ~30% of alerts have ≥1 step done; acknowledged skew higher.
+    let guideStepsCompleted = 0;
+    const progressRoll = rand(seed, 11);
+    if (status === 'acknowledged' || progressRoll > 0.7) {
+      const maxDone = status === 'acknowledged' ? 5 : 4;
+      guideStepsCompleted = 1 + Math.floor(rand(seed, 12) * maxDone); // 1..5 or 1..4
+    } else if (progressRoll > 0.55) {
+      guideStepsCompleted = 1 + Math.floor(rand(seed, 13) * 2); // 1..2
+    }
+
     alerts.push({
       id: `obs-alert-${i}`,
       name: `${rule} · ${source.toLowerCase()}-${(i % 40) + 1}`,
@@ -111,6 +122,7 @@ function buildObservabilityAlerts(count = 250) {
       triggeredAt: `${hour}:${minute}:${second} ${String(day).padStart(2, '0')}-08-23`,
       duration: `${durationH}h`,
       sparkline: buildSparkline(seed + i),
+      guideStepsCompleted,
     });
   }
   return alerts;
@@ -186,10 +198,7 @@ export function getInvestigationGuide(alert) {
 
   const dashboardNames = dashboards.map((d) => d.title).join(' · ');
 
-  return {
-    title: `Investigation guide · ${alert.rule}`,
-    summary: `Triage steps for ${alert.source} alerts triggered by “${alert.rule}”.`,
-    steps: [
+  const steps = [
       {
         title: 'Confirm the alert is still active',
         body: `Check that status is still “${alert.status}” and review the activity chart for the evaluation window (${alert.duration}).`,
@@ -229,9 +238,17 @@ export function getInvestigationGuide(alert) {
             ? 'Escalate or open a case if impact is confirmed. Acknowledge the alert while investigating.'
             : 'Acknowledge if expected noise, or continue monitoring if the trend is recovering.',
       },
-    ],
+  ];
+
+  return {
+    title: `Investigation guide · ${alert.rule}`,
+    summary: `Triage steps for ${alert.source} alerts triggered by “${alert.rule}”.`,
+    steps,
   };
 }
+
+/** Stable total for list badges (matches getInvestigationGuide steps). */
+export const INVESTIGATION_GUIDE_STEP_TOTAL = 6;
 
 export function getLogsForAlert(alert, count = 24) {
   if (!alert) return [];

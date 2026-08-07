@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
   EuiAvatar,
+  EuiButtonIcon,
   EuiCollapsibleNav,
   EuiCollapsibleNavGroup,
   EuiFlexGroup,
@@ -10,12 +11,11 @@ import {
   EuiHeaderLinks,
   EuiHeaderLogo,
   EuiHeaderSectionItemButton,
-  EuiHorizontalRule,
   EuiIcon,
   EuiListGroup,
   EuiPageTemplate,
-  EuiShowFor,
-  EuiSwitch,
+  EuiTitle,
+  EuiToolTip,
   useEuiTheme,
   useGeneratedHtmlId,
 } from '@elastic/eui';
@@ -245,14 +245,42 @@ export function ObservabilityChrome({
 
           if (group.id === 'obs') {
             return (
-              <EuiCollapsibleNavGroup
-                key={group.id}
-                title={group.name}
-                iconType={group.iconType}
-                isCollapsible={false}
-                background="none"
-                paddingSize="none"
-              >
+              <div key={group.id}>
+                <EuiFlexGroup
+                  gutterSize="s"
+                  alignItems="center"
+                  responsive={false}
+                  style={{ padding: '12px 12px 4px' }}
+                >
+                  <EuiFlexItem grow={false}>
+                    <EuiIcon type={group.iconType} size="m" />
+                  </EuiFlexItem>
+                  <EuiFlexItem>
+                    <EuiTitle size="xxs">
+                      <h2 style={{ margin: 0 }}>{group.name}</h2>
+                    </EuiTitle>
+                  </EuiFlexItem>
+                  <EuiFlexItem grow={false}>
+                    <EuiToolTip
+                      content={
+                        navIsDocked ? 'Undock navigation' : 'Dock navigation'
+                      }
+                    >
+                      <EuiButtonIcon
+                        iconType={navIsDocked ? 'pinFill' : 'pin'}
+                        aria-label={
+                          navIsDocked ? 'Undock navigation' : 'Dock navigation'
+                        }
+                        aria-pressed={navIsDocked}
+                        color={navIsDocked ? 'primary' : 'text'}
+                        onClick={() => {
+                          setNavIsDocked((docked) => !docked);
+                          setNavIsOpen(true);
+                        }}
+                      />
+                    </EuiToolTip>
+                  </EuiFlexItem>
+                </EuiFlexGroup>
                 <EuiListGroup
                   maxWidth="none"
                   color="text"
@@ -260,7 +288,7 @@ export function ObservabilityChrome({
                   size="s"
                   listItems={listItems}
                 />
-              </EuiCollapsibleNavGroup>
+              </div>
             );
           }
 
@@ -283,27 +311,6 @@ export function ObservabilityChrome({
           );
         })}
 
-        <EuiHorizontalRule margin="s" />
-
-        <EuiShowFor sizes={['l', 'xl']}>
-          <EuiFlexGroup
-            gutterSize="s"
-            alignItems="center"
-            justifyContent="spaceAround"
-            style={{ padding: '0 12px 12px' }}
-          >
-            <EuiFlexItem grow={false}>
-              <EuiSwitch
-                label="Dock navigation"
-                checked={navIsDocked}
-                onChange={(e) => {
-                  setNavIsDocked(e.target.checked);
-                  setNavIsOpen(true);
-                }}
-              />
-            </EuiFlexItem>
-          </EuiFlexGroup>
-        </EuiShowFor>
       </EuiCollapsibleNav>
 
       <EuiPageTemplate

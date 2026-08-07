@@ -1,23 +1,23 @@
 import React from 'react';
-import { EuiButton, EuiButtonIcon } from '@elastic/eui';
+import { EuiButtonIcon } from '@elastic/eui';
 
-/** Page-header Actions control — collapses to icon-only when the AI assistant is open. */
-export function DetailActionsButton({ iconOnly = false }) {
-  if (iconOnly) {
-    return (
-      <EuiButtonIcon
-        display="base"
-        color="primary"
-        iconType="boxesHorizontal"
-        aria-label="Actions"
-        size="m"
-      />
-    );
-  }
-
+/**
+ * Always-visible actions kebab on detail views.
+ * Flyout headers should use size="xs" (see FlyoutHeaderActions).
+ */
+export function DetailActionsButton({
+  'aria-label': ariaLabel = 'Actions',
+  size = 'm',
+  display = 'base',
+  color = 'primary',
+}) {
   return (
-    <EuiButton color="primary" iconType="arrowDown" iconSide="right">
-      Actions
-    </EuiButton>
+    <EuiButtonIcon
+      display={display}
+      color={color}
+      iconType="boxesVertical"
+      aria-label={ariaLabel}
+      size={size}
+    />
   );
 }

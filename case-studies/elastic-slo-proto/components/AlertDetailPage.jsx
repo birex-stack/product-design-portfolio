@@ -8,7 +8,6 @@ import {
   EuiDescriptionList,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiNotificationBadge,
   EuiPanel,
   EuiSpacer,
   EuiSteps,
@@ -22,6 +21,7 @@ import {
   getInvestigationGuide,
   getLogsForAlert,
   getRelatedAlerts,
+  INVESTIGATION_GUIDE_STEP_TOTAL,
 } from '../alerts_data';
 import { getAlertSeverityBadgeColor } from '../severity';
 import { useToasts } from '../toast_context';
@@ -32,6 +32,11 @@ import {
   AlertsInventoryTable,
 } from './AlertsInventoryTable';
 import { DetailActionsButton } from './DetailActionsButton';
+import { FieldValue } from './FieldValue';
+import {
+  initialCompletedSteps,
+  InvestigationProgressBadge,
+} from './InvestigationProgressBadge';
 
 const STATUS_COLOR = ALERT_STATUS_COLOR;
 
@@ -50,7 +55,7 @@ function CellText({ children }) {
   );
 }
 
-function AlertBadges({ alert }) {
+function AlertBadges({ alert, guideCompleted, guideTotal }) {
   return (
     <EuiFlexGroup gutterSize="s" responsive={false} wrap>
       <EuiFlexItem grow={false}>
@@ -69,6 +74,14 @@ function AlertBadges({ alert }) {
       {alert.source && (
         <EuiFlexItem grow={false}>
           <EuiBadge>{alert.source}</EuiBadge>
+        </EuiFlexItem>
+      )}
+      {guideCompleted > 0 && (
+        <EuiFlexItem grow={false}>
+          <InvestigationProgressBadge
+            completed={guideCompleted}
+            total={guideTotal || INVESTIGATION_GUIDE_STEP_TOTAL}
+          />
         </EuiFlexItem>
       )}
     </EuiFlexGroup>
@@ -104,9 +117,17 @@ export function AlertDetailBody({ alert, context, compact = false }) {
         }
       : null,
     alert.source
-      ? { title: 'Source', description: alert.source }
+      ? {
+          title: 'Source',
+          description: <FieldValue title="Source" value={alert.source} />,
+        }
       : null,
-    alert.rule ? { title: 'Rule', description: alert.rule } : null,
+    alert.rule
+      ? {
+          title: 'Rule',
+          description: <FieldValue title="Rule" value={alert.rule} />,
+        }
+      : null,
     {
       title: 'Triggered',
       description: alert.triggeredAt,
@@ -117,7 +138,9 @@ export function AlertDetailBody({ alert, context, compact = false }) {
     },
     {
       title: 'Reason',
-      description: alert.reason,
+      description: (
+        <FieldValue title="Reason" value={alert.reason} />
+      ),
     },
   ].filter(Boolean);
 
@@ -235,17 +258,34 @@ function AlertLogsTab({ alert, compact = false }) {
 
   return (
     <EuiPanel hasBorder paddingSize={compact ? 's' : 'm'}>
-      {!compact && (
-        <>
+      <EuiFlexGroup
+        alignItems="center"
+        justifyContent="spaceBetween"
+        gutterSize="s"
+        responsive={false}
+        wrap
+      >
+        <EuiFlexItem>
           <EuiText size="xs" color="subdued">
             <p style={{ margin: 0 }}>
-              Sample logs correlated with <strong>{alert.rule}</strong> around the
-              alert trigger time.
+              <strong>{logs.length}</strong> sample log
+              {logs.length === 1 ? '' : 's'} correlated with{' '}
+              <strong>{alert.rule}</strong> around the alert trigger time.
             </p>
           </EuiText>
-          <EuiSpacer size="m" />
-        </>
-      )}
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiButtonEmpty
+            iconType="logoLogging"
+            size="xs"
+            flush="right"
+            onClick={(e) => e.preventDefault()}
+          >
+            View in logs
+          </EuiButtonEmpty>
+        </EuiFlexItem>
+      </EuiFlexGroup>
+      <EuiSpacer size="m" />
       <EuiBasicTable
         items={logs}
         columns={columns}
@@ -256,10 +296,18 @@ function AlertLogsTab({ alert, compact = false }) {
   );
 }
 
-function InvestigationGuideSection({ alert, compact = false }) {
+function InvestigationGuideSection({
+  alert,
+  compact = false,
+  completedSteps,
+  onToggleStep,
+}) {
   const { addToast } = useToasts();
   const guide = useMemo(() => getInvestigationGuide(alert), [alert]);
   if (!guide) return null;
+
+  const totalSteps = guide.steps.length;
+  const completedCount = completedSteps?.size || 0;
 
   const openDashboard = (id) => {
     window.location.hash = `#/dashboards/${id}`;
@@ -287,65 +335,116 @@ function InvestigationGuideSection({ alert, compact = false }) {
       <EuiSteps
         headingElement="h4"
         titleSize={compact ? 'xs' : 's'}
-        steps={guide.steps.map((step) => ({
-          title: step.title,
-          children: (
-            <>
-              <EuiText size="s">
-                <p>{step.body}</p>
-              </EuiText>
-              {step.dashboards?.length > 0 && (
-                <>
-                  <EuiSpacer size="s" />
-                  <EuiFlexGroup
-                    direction="column"
-                    gutterSize="none"
-                    alignItems="flexStart"
-                  >
-                    {step.dashboards.map((dashboard) => (
-                      <EuiFlexItem grow={false} key={dashboard.id}>
-                        <EuiButtonEmpty
-                          iconType="dashboardApp"
-                          iconSide="left"
-                          flush="left"
-                          size="s"
-                          onClick={() => openDashboard(dashboard.id)}
-                        >
-                          {dashboard.title}
-                        </EuiButtonEmpty>
-                      </EuiFlexItem>
-                    ))}
-                  </EuiFlexGroup>
-                </>
-              )}
-              {step.query && (
-                <>
-                  <EuiSpacer size="s" />
-                  <EuiCodeBlock
-                    language="sql"
-                    fontSize="s"
-                    paddingSize="m"
-                    isCopyable
-                    overflowHeight={compact ? 160 : 220}
-                  >
-                    {step.query}
-                  </EuiCodeBlock>
-                  <EuiSpacer size="s" />
-                  <EuiButton
-                    iconType="play"
-                    size="s"
-                    fill
-                    onClick={runQuery}
-                  >
-                    Run query
-                  </EuiButton>
-                </>
-              )}
-            </>
-          ),
-          status: 'incomplete',
-        }))}
+        steps={guide.steps.map((step, index) => {
+          const isComplete = completedSteps?.has(index);
+          return {
+            title: step.title,
+            status: isComplete ? 'complete' : 'incomplete',
+            children: (
+              <>
+                <EuiText size="s">
+                  <p>{step.body}</p>
+                </EuiText>
+                {step.dashboards?.length > 0 && (
+                  <>
+                    <EuiSpacer size="s" />
+                    <EuiFlexGroup
+                      direction="column"
+                      gutterSize="none"
+                      alignItems="flexStart"
+                    >
+                      {step.dashboards.map((dashboard) => (
+                        <EuiFlexItem grow={false} key={dashboard.id}>
+                          <EuiButtonEmpty
+                            iconType="dashboardApp"
+                            iconSide="left"
+                            flush="left"
+                            size="s"
+                            onClick={() => openDashboard(dashboard.id)}
+                          >
+                            {dashboard.title}
+                          </EuiButtonEmpty>
+                        </EuiFlexItem>
+                      ))}
+                    </EuiFlexGroup>
+                  </>
+                )}
+                {step.query && (
+                  <>
+                    <EuiSpacer size="s" />
+                    <EuiCodeBlock
+                      language="sql"
+                      fontSize="s"
+                      paddingSize="m"
+                      isCopyable
+                      overflowHeight={compact ? 160 : 220}
+                    >
+                      {step.query}
+                    </EuiCodeBlock>
+                    <EuiSpacer size="s" />
+                    <EuiButton
+                      iconType="play"
+                      size="s"
+                      fill
+                      onClick={runQuery}
+                    >
+                      Run query
+                    </EuiButton>
+                  </>
+                )}
+                <EuiSpacer size="s" />
+                <EuiButtonEmpty
+                  iconType={isComplete ? 'editorUndo' : 'check'}
+                  size="s"
+                  flush="left"
+                  color={isComplete ? 'text' : 'success'}
+                  onClick={() => onToggleStep?.(index)}
+                >
+                  {isComplete ? 'Undo' : 'Mark as done'}
+                </EuiButtonEmpty>
+              </>
+            ),
+          };
+        })}
       />
+      <EuiSpacer size="m" />
+      <EuiPanel
+        color={completedCount === totalSteps ? 'success' : 'subdued'}
+        paddingSize="s"
+        hasShadow={false}
+        style={{ borderRadius: 6 }}
+      >
+        <EuiFlexGroup
+          alignItems="center"
+          justifyContent="spaceBetween"
+          gutterSize="s"
+          responsive={false}
+          wrap
+        >
+          <EuiFlexItem grow={false}>
+            <EuiText size="s">
+              <p style={{ margin: 0 }}>
+                <strong>
+                  {completedCount} of {totalSteps}
+                </strong>{' '}
+                steps done
+              </p>
+            </EuiText>
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiText
+              size="xs"
+              color={completedCount === totalSteps ? 'success' : 'subdued'}
+            >
+              <span>
+                {completedCount === totalSteps
+                  ? 'Investigation done'
+                  : `${totalSteps - completedCount} remaining`}
+              </span>
+            </EuiText>
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      </EuiPanel>
     </EuiPanel>
   );
 }
@@ -358,11 +457,16 @@ export function AlertDetailView({
   narrowLayout = false,
   showTitle = true,
   titleSize = 'l',
-  showActions = false,
-  actionsIconOnly = false,
+  showActions = true,
+  onGuideProgressChange,
 }) {
   const [selectedTab, setSelectedTab] = useState('overview');
   const context = getAlertContext(alert);
+  const guide = useMemo(() => getInvestigationGuide(alert), [alert]);
+  const guideTotal = guide?.steps.length || INVESTIGATION_GUIDE_STEP_TOTAL;
+  const [completedSteps, setCompletedSteps] = useState(() =>
+    initialCompletedSteps(alert?.guideStepsCompleted)
+  );
   const relatedCount = useMemo(
     () => (alert ? getRelatedAlerts(alert).length : 0),
     [alert]
@@ -370,9 +474,25 @@ export function AlertDetailView({
 
   useEffect(() => {
     setSelectedTab('overview');
-  }, [alert?.id]);
+    setCompletedSteps(initialCompletedSteps(alert?.guideStepsCompleted));
+  }, [alert?.id, alert?.guideStepsCompleted]);
+
+  useEffect(() => {
+    onGuideProgressChange?.(completedSteps.size);
+  }, [completedSteps, onGuideProgressChange]);
+
+  const toggleStep = (index) => {
+    setCompletedSteps((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+  };
 
   if (!alert) return null;
+
+  const guideCompleted = completedSteps.size;
 
   return (
     <>
@@ -391,12 +511,16 @@ export function AlertDetailView({
             </EuiFlexItem>
             {showActions && (
               <EuiFlexItem grow={false}>
-                <DetailActionsButton iconOnly={actionsIconOnly} />
+                <DetailActionsButton />
               </EuiFlexItem>
             )}
           </EuiFlexGroup>
           <EuiSpacer size="s" />
-          <AlertBadges alert={alert} />
+          <AlertBadges
+            alert={alert}
+            guideCompleted={guideCompleted}
+            guideTotal={guideTotal}
+          />
           <EuiSpacer size="s" />
           <EuiText size="s" color="subdued">
             <p>{alert.reason}</p>
@@ -417,7 +541,7 @@ export function AlertDetailView({
           onClick={() => setSelectedTab('related')}
           append={
             relatedCount > 0 ? (
-              <EuiNotificationBadge size="s">{relatedCount}</EuiNotificationBadge>
+              <EuiBadge color="hollow">{relatedCount}</EuiBadge>
             ) : undefined
           }
         >
@@ -436,18 +560,15 @@ export function AlertDetailView({
       {selectedTab === 'overview' && (
         <>
           <EuiPanel hasBorder paddingSize={compact ? 's' : 'm'}>
-            {!compact && (
-              <>
-                <EuiTitle size="xs">
-                  <h3>Alert details</h3>
-                </EuiTitle>
-                <EuiSpacer size="m" />
-              </>
-            )}
             <AlertDetailBody alert={alert} context={context} compact={compact} />
           </EuiPanel>
           <EuiSpacer size="m" />
-          <InvestigationGuideSection alert={alert} compact={compact} />
+          <InvestigationGuideSection
+            alert={alert}
+            compact={compact}
+            completedSteps={completedSteps}
+            onToggleStep={toggleStep}
+          />
         </>
       )}
 
@@ -503,8 +624,6 @@ export function AlertDetailPage({
         narrowLayout={isAssistantOpen}
         showTitle
         titleSize="l"
-        showActions
-        actionsIconOnly={isAssistantOpen}
       />
 
       <AiAssistantFlyout

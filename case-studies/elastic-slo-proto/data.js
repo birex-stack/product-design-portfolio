@@ -435,6 +435,12 @@ export function getAlertsForSlo(slo) {
       triggeredAt: `${hour}:${minute}:00 14-08-23`,
       duration: `${1 + ((seed + i) % 12)}h`,
       sparkline: buildAlertActivitySeries(seriesSeed, 24),
+      guideStepsCompleted:
+        statuses[(seed + i) % statuses.length] === 'acknowledged'
+          ? 2 + ((seed + i) % 4)
+          : i % 3 === 0
+            ? 1 + ((seed + i) % 3)
+            : 0,
     });
   }
   return alerts;

@@ -4,9 +4,12 @@ import {
   EuiBasicTable,
   EuiButtonIcon,
   EuiLink,
+  EuiSpacer,
   EuiText,
 } from '@elastic/eui';
+import { INVESTIGATION_GUIDE_STEP_TOTAL } from '../alerts_data';
 import { getAlertSeverityBadgeColor } from '../severity';
+import { InvestigationProgressBadge } from './InvestigationProgressBadge';
 
 export const ALERT_STATUS_COLOR = {
   active: 'danger',
@@ -147,6 +150,15 @@ export function AlertsInventoryTable({
                 {alert?.rule ? ` · ${alert.rule}` : ''}
               </div>
             </EuiText>
+          )}
+          {alert?.guideStepsCompleted > 0 && (
+            <>
+              <EuiSpacer size="xs" />
+              <InvestigationProgressBadge
+                completed={alert.guideStepsCompleted}
+                total={INVESTIGATION_GUIDE_STEP_TOTAL}
+              />
+            </>
           )}
         </div>
       ),

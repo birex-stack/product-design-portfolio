@@ -1,0 +1,4 @@
+/* Match SLO card / Kibana-style tile corners across the prototype */
+.euiPanel {
+  border-radius: 6px !important;
+}

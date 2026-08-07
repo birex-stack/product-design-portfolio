@@ -5,7 +5,6 @@ import {
   EuiButtonEmpty,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiNotificationBadge,
   EuiPageHeader,
   EuiSpacer,
   EuiTab,
@@ -72,7 +71,7 @@ export function SloDetailPage({ slo, onBack, assistantOpen, onAssistantOpenChang
         pageTitle={slo.name}
         description={slo.description}
         rightSideItems={[
-          <DetailActionsButton key="actions" iconOnly={isAssistantOpen} />,
+          <DetailActionsButton key="actions" />,
         ]}
       />
 
@@ -108,7 +107,7 @@ export function SloDetailPage({ slo, onBack, assistantOpen, onAssistantOpenChang
           onClick={() => setSelectedTab('alerts')}
           append={
             slo.alerts > 0 ? (
-              <EuiNotificationBadge>{slo.alerts}</EuiNotificationBadge>
+              <EuiBadge color="hollow">{slo.alerts}</EuiBadge>
             ) : undefined
           }
         >

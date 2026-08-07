@@ -25,6 +25,10 @@ import {
   getAssistantConversation,
   getDependencyAnalysisConversation,
 } from '../assistant_context';
+import {
+  AI_INVESTIGATION_DASHBOARD_ID,
+  stashInvestigationEvents,
+} from '../dashboards_data';
 import { TimelineEventFlyout } from './TimelineEventFlyout';
 
 const TIMELINE_TYPE_META = {
@@ -283,6 +287,25 @@ function DependencyTimeline({ message, selectedEventId, onEventClick }) {
           );
         })}
       </div>
+      {(message.items || []).length > 0 && (
+        <>
+          <EuiSpacer size="s" />
+          <EuiText size="xs" color="subdued">
+            <p style={{ margin: '0 0 6px' }}>Next step</p>
+          </EuiText>
+          <EuiButtonEmpty
+            iconType="dashboardApp"
+            size="s"
+            flush="left"
+            onClick={() => {
+              stashInvestigationEvents(message.items);
+              window.location.hash = `#/dashboards/${AI_INVESTIGATION_DASHBOARD_ID}`;
+            }}
+          >
+            Visualize in dashboards
+          </EuiButtonEmpty>
+        </>
+      )}
     </TimelineItem>
   );
 }
@@ -472,6 +495,12 @@ export function AiAssistantFlyout({
   const [thinking, setThinking] = useState(false);
   const [thinkingLabel, setThinkingLabel] = useState('Thinking…');
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const timelineItems = useMemo(() => {
+    const timelineMessage = conversation.messages.find(
+      (message) => message.role === 'timeline'
+    );
+    return timelineMessage?.items || [];
+  }, [conversation]);
 
   const conversationKey = [
     request?.id,
@@ -615,18 +644,27 @@ export function AiAssistantFlyout({
               <EuiFlexGroup gutterSize="xs" alignItems="center" responsive={false}>
                 <EuiFlexItem grow={false}>
                   <EuiToolTip content="Conversation">
-                    <EuiButtonIcon iconType="editorComment" aria-label="Conversation" />
+                    <EuiButtonIcon
+                      iconType="editorComment"
+                      size="xs"
+                      aria-label="Conversation"
+                    />
                   </EuiToolTip>
                 </EuiFlexItem>
                 <EuiFlexItem grow={false}>
                   <EuiToolTip content="Share">
-                    <EuiButtonIcon iconType="share" aria-label="Share" />
+                    <EuiButtonIcon
+                      iconType="share"
+                      size="xs"
+                      aria-label="Share"
+                    />
                   </EuiToolTip>
                 </EuiFlexItem>
                 <EuiFlexItem grow={false}>
                   <EuiToolTip content="Close">
                     <EuiButtonIcon
                       iconType="cross"
+                      size="xs"
                       aria-label="Close AI Assistant"
                       onClick={handleClose}
                     />
@@ -712,6 +750,8 @@ export function AiAssistantFlyout({
           session="never"
           size="s"
           hasChildBackground={false}
+          items={timelineItems}
+          onSelectItem={setSelectedEvent}
         />
       )}
     </>

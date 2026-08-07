@@ -71,7 +71,7 @@ export function AlertActivityChart({ alert, slo }) {
 
   return (
     <div>
-      <EuiTitle size="xxs">
+      <EuiTitle size="xs">
         <h3>Alert activity</h3>
       </EuiTitle>
       <EuiText size="xs" color="subdued">
