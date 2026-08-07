@@ -1,7 +1,20 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/product-design-portfolio/',
+  plugins: [react()],
+  optimizeDeps: {
+    include: [
+      '@emotion/react',
+      '@emotion/css',
+      '@elastic/eui',
+      '@elastic/eui-theme-borealis',
+      '@elastic/datemath',
+      '@elastic/charts',
+      'moment',
+    ],
+  },
   build: {
     rollupOptions: {
       input: {
@@ -15,6 +28,7 @@ export default defineConfig({
         ibmXftmSocComplete: 'case-studies/ibm-xftm-soc/complete.html',
         ibmXftmSocPassdown: 'case-studies/ibm-xftm-soc/passdown.html',
         elasticSlo: 'case-studies/elastic-slo.html',
+        elasticSloProto: 'case-studies/elastic-slo-proto/index.html',
         elasticCases: 'case-studies/elastic-cases.html',
         otomoto: 'case-studies/otomoto.html',
         mobileGames: 'case-studies/mobile-games.html',

@@ -1,0 +1,5 @@
+/* Elastic Charts defaults to 1.5s before "Right-click to show actions" — too slow for the proto */
+.echTooltipPrompt.slideDown {
+  -webkit-animation-delay: 0.25s;
+  animation-delay: 0.25s;
+}
