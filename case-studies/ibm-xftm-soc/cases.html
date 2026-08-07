@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cases — XFTM SOC Prototype</title>
@@ -15,19 +18,18 @@
   </head>
   <body>
     <div class="soc-proto-banner">
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
       <span
         ><strong>Interactive prototype</strong> — SOC analyst investigation
         experience</span
       >
-      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
     </div>
 
     <div class="soc-app">
       <header class="soc-header">
         <div class="soc-header-left">
-          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
           <div class="soc-breadcrumb">
-            <span>Home</span><span>/</span
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
             ><span aria-current="page">Cases</span>
           </div>
         </div>
@@ -101,6 +103,21 @@
             </button>
           </div>
           <div class="soc-toolbar-tools">
+            <label class="soc-search" aria-label="Search cases">
+              <svg
+                class="soc-search__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
+                />
+              </svg>
+              <input type="search" placeholder="Search cases" />
+            </label>
             <button
               class="soc-icon-btn"
               type="button"
@@ -118,38 +135,22 @@
                 />
               </svg>
             </button>
-            <label class="soc-search" aria-label="Search cases">
-              <svg
-                class="soc-search__icon"
-                width="16"
-                height="16"
-                viewBox="0 0 32 32"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
-                />
-              </svg>
-              <input type="search" placeholder="Search cases" />
-            </label>
           </div>
         </div>
 
         <article class="soc-incident-group" data-assignee="me">
           <a class="soc-incident-group__head" href="./incident.html">
-            <span class="soc-tag soc-tag--high">High</span>
             <div>
+              <div class="soc-incident-group__badges">
+                <span class="soc-tag soc-tag--high">High</span>
+                <span class="soc-tag soc-tag--count">5 alerts</span>
+              </div>
               <h3>INC-2025-4821 · Suspected ransomware staging</h3>
               <p>
                 Finance · 5 correlated alerts · Updated 12m ago · Assigned: you
                 · In progress
               </p>
             </div>
-            <span class="soc-tag soc-tag--count">5 alerts</span>
-            <span style="color: var(--cds-link); font-size: 0.8125rem"
-              >Open →</span
-            >
           </a>
           <table class="soc-alert-table">
             <thead>
@@ -166,9 +167,7 @@
             <tbody>
               <tr>
                 <td>
-                  <a href="./incident.html"
-                    >ALT-88421 · Suspicious PowerShell</a
-                  >
+                  <a href="./alert.html?id=ALT-88421">ALT-88421 · Suspicious PowerShell</a>
                 </td>
                 <td>Close / Associate · 72%</td>
                 <td>endpoint-fin-04</td>
@@ -202,7 +201,7 @@
               </tr>
               <tr>
                 <td>
-                  <a href="./incident.html">ALT-88419 · Encoded command</a>
+                  <a href="./alert.html?id=ALT-88419">ALT-88419 · Encoded command</a>
                 </td>
                 <td>Close / Associate · 68%</td>
                 <td>endpoint-fin-04</td>
@@ -236,7 +235,7 @@
               </tr>
               <tr>
                 <td>
-                  <a href="./incident.html">ALT-88411 · Rare process tree</a>
+                  <a href="./alert.html?id=ALT-88411">ALT-88411 · Rare process tree</a>
                 </td>
                 <td>Investigate · 54%</td>
                 <td>endpoint-fin-04</td>
@@ -273,19 +272,21 @@
         </article>
 
         <article class="soc-incident-group" data-assignee="me">
-          <a class="soc-incident-group__head" href="./incident.html">
-            <span class="soc-tag soc-tag--medium">Medium</span>
+          <a
+            class="soc-incident-group__head"
+            href="./incident.html?case=INC-2025-4818"
+          >
             <div>
+              <div class="soc-incident-group__badges">
+                <span class="soc-tag soc-tag--medium">Medium</span>
+                <span class="soc-tag soc-tag--count">3 alerts</span>
+              </div>
               <h3>INC-2025-4818 · Impossible travel / remote access</h3>
               <p>
                 Remote access · 3 correlated alerts · Updated 41m ago ·
                 Assigned: you · In progress
               </p>
             </div>
-            <span class="soc-tag soc-tag--count">3 alerts</span>
-            <span style="color: var(--cds-link); font-size: 0.8125rem"
-              >Open →</span
-            >
           </a>
           <table class="soc-alert-table">
             <thead>
@@ -302,7 +303,7 @@
             <tbody>
               <tr>
                 <td>
-                  <a href="./incident.html">ALT-88390 · Geo velocity</a>
+                  <a href="./alert.html?id=ALT-88390">ALT-88390 · Geo velocity</a>
                 </td>
                 <td>Investigate · 71%</td>
                 <td>vpn-gateway</td>
@@ -339,7 +340,7 @@
               </tr>
               <tr>
                 <td>
-                  <a href="./incident.html">ALT-88388 · New device auth</a>
+                  <a href="./alert.html?id=ALT-88388">ALT-88388 · New device auth</a>
                 </td>
                 <td>Monitor · 54%</td>
                 <td>idp-sso</td>
@@ -379,19 +380,21 @@
         </article>
 
         <article class="soc-incident-group" data-assignee="other" hidden>
-          <a class="soc-incident-group__head" href="./incident.html">
-            <span class="soc-tag soc-tag--medium">Medium</span>
+          <a
+            class="soc-incident-group__head"
+            href="./incident.html?case=INC-2025-4812"
+          >
             <div>
+              <div class="soc-incident-group__badges">
+                <span class="soc-tag soc-tag--medium">Medium</span>
+                <span class="soc-tag soc-tag--count">4 alerts</span>
+              </div>
               <h3>INC-2025-4812 · Phishing click → mailbox rule</h3>
               <p>
                 Messaging · 4 correlated alerts · Updated 2h ago · Unassigned ·
                 In progress
               </p>
             </div>
-            <span class="soc-tag soc-tag--count">4 alerts</span>
-            <span style="color: var(--cds-link); font-size: 0.8125rem"
-              >Open →</span
-            >
           </a>
           <table class="soc-alert-table">
             <thead>
@@ -408,9 +411,7 @@
             <tbody>
               <tr>
                 <td>
-                  <a href="./incident.html"
-                    >ALT-88340 · Credential harvest URL</a
-                  >
+                  <a href="./alert.html?id=ALT-88340">ALT-88340 · Credential harvest URL</a>
                 </td>
                 <td>Escalate · 81%</td>
                 <td>mail-gateway</td>
@@ -444,9 +445,7 @@
               </tr>
               <tr>
                 <td>
-                  <a href="./incident.html"
-                    >ALT-88341 · Inbox forwarding rule</a
-                  >
+                  <a href="./alert.html?id=ALT-88341">ALT-88341 · Inbox forwarding rule</a>
                 </td>
                 <td>Escalate · 79%</td>
                 <td>m365</td>
@@ -484,18 +483,17 @@
 
         <article class="soc-incident-group" data-assignee="other" hidden>
           <div class="soc-incident-group__head" style="cursor: default">
-            <span class="soc-tag soc-tag--low">Closed</span>
             <div>
+              <div class="soc-incident-group__badges">
+                <span class="soc-tag soc-tag--low">Closed</span>
+                <span class="soc-tag soc-tag--count">8 alerts</span>
+              </div>
               <h3>SOCJ233244 · IT automation PowerShell script</h3>
               <p>
                 Finance · Closed May 12 · Benign IT change · Reference for ATDS
                 association
               </p>
             </div>
-            <span class="soc-tag soc-tag--count">8 alerts</span>
-            <span style="color: var(--cds-text-helper); font-size: 0.8125rem"
-              >Closed</span
-            >
           </div>
           <table class="soc-alert-table">
             <thead>
@@ -580,7 +578,7 @@
       </main>
     </div>
 
-    <script src="./soc-ip-flyout.js"></script>
+    <script type="module" src="./soc-ip-flyout.js"></script>
     <script>
       (function () {
         var switcher = document.querySelector(".soc-switcher");

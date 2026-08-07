@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INC-2025-4821 — XFTM SOC Prototype</title>
@@ -15,19 +18,19 @@
   </head>
   <body>
     <div class="soc-proto-banner">
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
       <span
         ><strong>Interactive prototype</strong> — SOC analyst investigation
         experience</span
       >
-      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
     </div>
 
     <div class="soc-app">
       <header class="soc-header">
         <div class="soc-header-left">
-          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
           <div class="soc-breadcrumb">
-            <span>Home</span><span>/</span><span>Cases</span><span>/</span
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
+            ><a href="./cases.html">Cases</a><span>/</span
             ><span aria-current="page">INC-2025-4821</span>
           </div>
         </div>
@@ -77,20 +80,18 @@
               <a href="./cases.html">← Back to cases</a>
             </p>
             <h1>
-              <span class="soc-tag soc-tag--medium" style="margin-right: 8px"
+              <span
+                class="soc-tag soc-tag--medium"
+                id="incident-severity"
+                style="margin-right: 8px"
                 >Medium</span
               >
-              INC-2025-4821
+              <span id="incident-id">INC-2025-4821</span>
             </h1>
-            <p>
+            <p id="incident-subtitle">
               Suspicious PowerShell on finance workstation · correlated historical
               pattern
             </p>
-          </div>
-          <div class="soc-btn-row">
-            <a class="soc-btn soc-btn--secondary" href="./alerts.html"
-              >Save draft</a
-            >
           </div>
         </div>
 
@@ -99,7 +100,6 @@
             <section class="soc-card" style="margin-bottom: 16px">
               <div class="soc-card__head">
                 <h2>Incident overview</h2>
-                <span class="soc-tag soc-tag--count">5 alerts correlated</span>
               </div>
               <div class="soc-card__body">
                 <dl class="soc-kv">
@@ -163,7 +163,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td>ALT-88421 · Suspicious PowerShell</td>
+                    <td><a href="./alert.html?id=ALT-88421">ALT-88421 · Suspicious PowerShell</a></td>
                     <td>Close / Associate</td>
                     <td>72% FP</td>
                     <td>
@@ -198,7 +198,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>ALT-88419 · Encoded command</td>
+                    <td><a href="./alert.html?id=ALT-88419">ALT-88419 · Encoded command</a></td>
                     <td>Close / Associate</td>
                     <td>68% FP</td>
                     <td>
@@ -232,7 +232,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>ALT-88411 · Rare process tree</td>
+                    <td><a href="./alert.html?id=ALT-88411">ALT-88411 · Rare process tree</a></td>
                     <td>Investigate</td>
                     <td>54%</td>
                     <td>
@@ -266,7 +266,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>ALT-88405 · Unusual SMB shares</td>
+                    <td><a href="./alert.html?id=ALT-88405">ALT-88405 · Unusual SMB shares</a></td>
                     <td>Monitor</td>
                     <td>41%</td>
                     <td>
@@ -300,7 +300,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td>ALT-88398 · Scheduled task update</td>
+                    <td><a href="./alert.html?id=ALT-88398">ALT-88398 · Scheduled task update</a></td>
                     <td>Close / Associate</td>
                     <td>70% FP</td>
                     <td>
@@ -469,10 +469,10 @@
 
           <div class="soc-atds-actions" data-atds-action="associate">
             <a class="soc-btn soc-btn--secondary" href="./complete.html"
-              >Close Alert</a
+              >Close case</a
             >
             <a class="soc-btn soc-btn--secondary" href="./complete.html"
-              >Escalate as new case</a
+              >Escalate to IR</a
             >
             <a class="soc-btn soc-btn--primary" href="./complete.html"
               >Associate with other case</a
@@ -486,6 +486,59 @@
         </div>
       </main>
     </div>
-    <script src="./soc-ip-flyout.js"></script>
+    <script type="module" src="./soc-ip-flyout.js"></script>
+    <script>
+      (function () {
+        var cases = {
+          "INC-2025-4821": {
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            subtitle:
+              "Suspicious PowerShell on finance workstation · correlated historical pattern",
+            asset: "Acme Finance · endpoint-fin-04 (Win10)",
+            complete: "./complete.html?case=INC-2025-4821",
+          },
+          "INC-2025-4818": {
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            subtitle:
+              "Impossible travel / remote access · VPN and new device authentication",
+            asset: "Acme Finance · vpn-gateway / remote access",
+            complete: "./complete.html?case=INC-2025-4818",
+          },
+          "INC-2025-4812": {
+            severity: "Medium",
+            severityClass: "soc-tag--medium",
+            subtitle:
+              "Phishing click → mailbox rule · messaging compromise pattern",
+            asset: "Acme Finance · mailbox / messaging",
+            complete: "./complete.html?case=INC-2025-4812",
+          },
+        };
+        var params = new URLSearchParams(window.location.search);
+        var caseId = params.get("case") || "INC-2025-4821";
+        var data = cases[caseId] || cases["INC-2025-4821"];
+        document.title = caseId + " — XFTM SOC Prototype";
+        var crumb = document.querySelector(
+          '.soc-breadcrumb span[aria-current="page"]'
+        );
+        if (crumb) crumb.textContent = caseId;
+        var idEl = document.getElementById("incident-id");
+        if (idEl) idEl.textContent = caseId;
+        var sub = document.getElementById("incident-subtitle");
+        if (sub) sub.textContent = data.subtitle;
+        var sev = document.getElementById("incident-severity");
+        if (sev) {
+          sev.className = "soc-tag " + data.severityClass;
+          sev.style.marginRight = "8px";
+          sev.textContent = data.severity;
+        }
+        var asset = document.querySelectorAll(".soc-kv dd")[1];
+        if (asset) asset.textContent = data.asset;
+        document.querySelectorAll(".soc-atds-actions a").forEach(function (a) {
+          a.href = data.complete;
+        });
+      })();
+    </script>
   </body>
 </html>

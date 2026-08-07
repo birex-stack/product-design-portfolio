@@ -223,8 +223,8 @@ initPrincipleCards();
 const CHALLENGE_CHAIN = [
   { file: 'ibm-xftm.html', title: 'IBM XFTM' },
   { file: 'elastic-cases.html', title: 'Elastic Cases' },
+  { file: 'elastic-slo.html', title: 'Elastic SLO' },
   { file: 'karmen.html', title: 'KARMEN' },
-  // { file: 'elastic-slo.html', title: 'Elastic SLO' }, // hidden — restore when SLO returns to homepage
   { file: 'otomoto.html', title: 'Otomoto' },
   { file: 'mobile-games.html', title: 'My hobby' },
 ];

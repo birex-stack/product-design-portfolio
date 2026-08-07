@@ -9,6 +9,7 @@
 
   /** @type {Record<string, Array<{author: string, time: string, text: string}>>} */
   var commentsByIp = {};
+  var ignoreBackdropUntil = 0;
 
   function scoreTier(score) {
     var n = Number(score) || 0;
@@ -182,7 +183,7 @@
     var input = panel.querySelector("[data-soc-ip-comment-input]");
     if (!form || !listEl || !input) return;
 
-    form.addEventListener("submit", function (event) {
+    form.onsubmit = function (event) {
       event.preventDefault();
       var text = input.value.trim();
       if (!text) return;
@@ -196,9 +197,11 @@
 
       listEl.innerHTML = renderComments(commentsByIp[ip]);
       input.value = "";
-      input.focus();
+      try {
+        input.focus();
+      } catch (err) {}
       listEl.scrollTop = listEl.scrollHeight;
-    });
+    };
   }
 
   function ensureFlyout() {
@@ -236,6 +239,7 @@
 
     backdrop.addEventListener("click", function (event) {
       event.preventDefault();
+      if (Date.now() < ignoreBackdropUntil) return;
       closeFlyout();
     });
 
@@ -266,13 +270,36 @@
     document.body.classList.remove("soc-flyout-open");
   }
 
+  function showFlyout() {
+    var panel = document.getElementById("soc-ip-flyout");
+    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
+    ignoreBackdropUntil = Date.now() + 500;
+
+    if (backdrop) {
+      backdrop.hidden = false;
+      backdrop.classList.add("is-open");
+    }
+    if (panel) {
+      panel.hidden = false;
+      panel.classList.add("is-open");
+    }
+    document.body.classList.add("soc-flyout-open");
+
+    window.setTimeout(function () {
+      try {
+        var closeBtn = panel && panel.querySelector(".soc-flyout__close");
+        if (closeBtn) closeBtn.focus();
+      } catch (err) {}
+    }, 50);
+  }
+
   function openFlyout(btn) {
     var panel = ensureFlyout();
-    var backdrop = document.querySelector("[data-soc-ip-backdrop]");
     var body = panel.querySelector("[data-soc-ip-body]");
     var title = panel.querySelector("#soc-ip-flyout-title");
+    var label = panel.querySelector(".soc-flyout__label");
 
-    var ip = btn.getAttribute("data-ip") || btn.textContent.trim();
+    var ip = btn.getAttribute("data-ip") || (btn.textContent || "").trim();
     var country = btn.getAttribute("data-country") || "Unknown";
     var flag = btn.getAttribute("data-flag") || "";
     var score = btn.getAttribute("data-score") || "1";
@@ -290,6 +317,7 @@
     var xfTier = scoreTier(vendors.xforce);
     var comments = seedComments(ip, score, notes);
 
+    if (label) label.textContent = "IP reputation";
     title.textContent = ip;
 
     body.innerHTML =
@@ -402,22 +430,123 @@
       '<p class="soc-flyout__hint">Aggregated score 1–10 (10 = most dangerous). Vendor rows show native scales: VirusTotal detections, IPVoid blacklist hits, X-Force risk score.</p>';
 
     bindCommentForm(panel, ip);
-
-    backdrop.hidden = false;
-    panel.hidden = false;
-    backdrop.classList.add("is-open");
-    panel.classList.add("is-open");
-    document.body.classList.add("soc-flyout-open");
-    panel.querySelector(".soc-flyout__close").focus();
+    showFlyout();
   }
 
-  document.addEventListener("click", function (event) {
-    var btn = event.target.closest(".soc-ip-link");
-    if (!btn) return;
-    event.preventDefault();
-    event.stopPropagation();
-    openFlyout(btn);
-  });
+  function openEntityFlyout(btn) {
+    var panel = ensureFlyout();
+    var body = panel.querySelector("[data-soc-ip-body]");
+    var title = panel.querySelector("#soc-ip-flyout-title");
+    var label = panel.querySelector(".soc-flyout__label");
+
+    var entityType = btn.getAttribute("data-entity-type") || "entity";
+    var value = btn.getAttribute("data-value") || "";
+    var display = btn.getAttribute("data-display") || value;
+    var entityLabel = btn.getAttribute("data-label") || "Watchlist entity";
+    var risk = btn.getAttribute("data-risk") || "—";
+    var score = btn.getAttribute("data-score") || "5";
+    var notes = btn.getAttribute("data-notes") || "";
+    var related = btn.getAttribute("data-related") || "—";
+    var tier = scoreTier(score);
+    var comments = seedComments(value, score, notes);
+
+    var rows = "";
+    if (entityType === "user") {
+      rows =
+        "<div><dt>Department</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-dept") || "—") +
+        "</dd></div>" +
+        "<div><dt>Role</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-role") || "—") +
+        "</dd></div>" +
+        "<div><dt>Last activity</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-last-activity") || "—") +
+        "</dd></div>";
+    } else if (entityType === "hash") {
+      rows =
+        "<div><dt>Full hash</dt><dd class=\"soc-mono\">" +
+        escapeHtml(value) +
+        "</dd></div>" +
+        "<div><dt>Malware family</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-family") || "—") +
+        "</dd></div>" +
+        "<div><dt>First seen</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-first-seen") || "—") +
+        "</dd></div>" +
+        "<div><dt>Last seen</dt><dd>" +
+        escapeHtml(btn.getAttribute("data-last-seen") || "—") +
+        "</dd></div>";
+    }
+
+    if (label) label.textContent = "Watchlist · " + entityLabel;
+    title.textContent = display;
+
+    body.innerHTML =
+      '<div class="soc-flyout__score-row">' +
+      '<span class="soc-ip-score soc-ip-score--' +
+      tier +
+      '">' +
+      escapeHtml(score) +
+      "/10</span>" +
+      '<span class="soc-flyout__score-label">' +
+      escapeHtml(risk) +
+      " · watchlist priority</span>" +
+      "</div>" +
+      '<dl class="soc-kv soc-flyout__kv">' +
+      "<div><dt>Type</dt><dd>" +
+      escapeHtml(entityLabel) +
+      "</dd></div>" +
+      rows +
+      "<div><dt>Related cases</dt><dd>" +
+      escapeHtml(related) +
+      "</dd></div>" +
+      "</dl>" +
+      '<section class="soc-flyout__comments" aria-label="Analyst comments">' +
+      "<h3>Analyst comments</h3>" +
+      '<div data-soc-ip-comments>' +
+      renderComments(comments) +
+      "</div>" +
+      '<form class="soc-ip-comment-form" data-soc-ip-comment-form>' +
+      '<label class="soc-ip-comment-form__label" for="soc-ip-comment-input">Add comment</label>' +
+      '<textarea id="soc-ip-comment-input" data-soc-ip-comment-input rows="3" placeholder="Share context for other analysts…" required></textarea>' +
+      '<button type="submit" class="soc-btn soc-btn--primary">Post comment</button>' +
+      "</form>" +
+      "</section>" +
+      '<p class="soc-flyout__hint">Watchlist entities are carried across shifts until cleared or escalated into an open case.</p>';
+
+    bindCommentForm(panel, value);
+    showFlyout();
+  }
+
+  function eventElement(event) {
+    var target = event.target;
+    if (!target) return null;
+    if (target.nodeType === 3) target = target.parentElement;
+    return target && target.closest ? target : null;
+  }
+
+  document.addEventListener(
+    "click",
+    function (event) {
+      var target = eventElement(event);
+      if (!target || !target.closest) return;
+
+      var ipBtn = target.closest(".soc-ip-link");
+      if (ipBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        openFlyout(ipBtn);
+        return;
+      }
+
+      var watchBtn = target.closest(".soc-watch-link");
+      if (!watchBtn) return;
+      event.preventDefault();
+      event.stopPropagation();
+      openEntityFlyout(watchBtn);
+    },
+    true
+  );
 
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") closeFlyout();

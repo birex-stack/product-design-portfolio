@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Investigation complete — XFTM SOC Prototype</title>
@@ -15,19 +18,19 @@
   </head>
   <body>
     <div class="soc-proto-banner">
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
       <span
         ><strong>Interactive prototype</strong> — SOC analyst investigation
         experience</span
       >
-      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
     </div>
 
     <div class="soc-app">
       <header class="soc-header">
         <div class="soc-header-left">
-          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
           <div class="soc-breadcrumb">
-            <span>Home</span><span>/</span><span>Cases</span><span>/</span
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
+            ><a href="./cases.html">Cases</a><span>/</span
             ><span aria-current="page">Complete</span>
           </div>
         </div>
@@ -102,7 +105,10 @@
           </section>
 
           <div class="soc-btn-row" style="justify-content: center">
-            <a class="soc-btn soc-btn--primary" href="./alerts.html"
+            <a
+              class="soc-btn soc-btn--primary"
+              id="next-investigation"
+              href="./incident.html?case=INC-2025-4818"
               >Next investigation</a
             >
             <a class="soc-btn soc-btn--secondary" href="./passdown.html"
@@ -112,5 +118,51 @@
         </div>
       </main>
     </div>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var caseId = params.get("case") || "INC-2025-4821";
+        var queue = {
+          "INC-2025-4821": {
+            title: "INC-2025-4821 · Suspicious PowerShell",
+            disposition: "Associate with closed case SOCJ233244",
+            next: "./incident.html?case=INC-2025-4818",
+            nextLabel: "Next investigation · INC-2025-4818",
+          },
+          "INC-2025-4818": {
+            title: "INC-2025-4818 · Impossible travel / remote access",
+            disposition: "Escalate as new case",
+            next: "./incident.html?case=INC-2025-4812",
+            nextLabel: "Next investigation · INC-2025-4812",
+          },
+          "INC-2025-4812": {
+            title: "INC-2025-4812 · Phishing click → mailbox rule",
+            disposition: "Close alert",
+            next: "./alerts.html",
+            nextLabel: "Next investigation · open alerts",
+          },
+        };
+        var current = queue[caseId] || queue["INC-2025-4821"];
+        var crumb = document.querySelector('.soc-breadcrumb span[aria-current="page"]');
+        if (crumb) crumb.textContent = "Complete";
+        var summary = document.querySelector(".soc-complete-panel > p");
+        if (summary) {
+          summary.innerHTML =
+            caseId +
+            " marked as <strong>" +
+            current.disposition +
+            "</strong>. ATDS recommendation accepted. Audit trail saved for this disposition.";
+        }
+        var incidentDd = document.querySelector(".soc-kv dd");
+        if (incidentDd) incidentDd.textContent = current.title;
+        var dispositionDd = document.querySelectorAll(".soc-kv dd")[1];
+        if (dispositionDd) dispositionDd.textContent = current.disposition;
+        var next = document.getElementById("next-investigation");
+        if (next) {
+          next.href = current.next;
+          next.textContent = current.nextLabel;
+        }
+      })();
+    </script>
   </body>
 </html>

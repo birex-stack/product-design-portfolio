@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
@@ -33,7 +36,7 @@
             to trusted triage
           </h1>
           <p class="case-hero-lead reveal reveal-text">
-            A triage workflow built around ATDS — IBM's Advanced Threat
+            A triage workflow built around ATDS — IBM's Automated Threat
             Disposition System — turning trusted AI/ML scoring into actionable
             alerts analysts can close, escalate or automate with confidence.
           </p>
@@ -245,11 +248,6 @@
                 end-to-end validation — from cases queue through ATDS disposition
                 — ready for engineering handoff.
               </p>
-              <p class="case-source">
-                <a href="./ibm-xftm-soc/shift-briefing.html">
-                  Open SOC analyst flow prototype →
-                </a>
-              </p>
             </div>
           </li>
 
@@ -316,14 +314,81 @@
           faster disposition without sacrificing auditability, the right context
           before commitment, and ATDS guidance trusted enough to act on.
         </p>
-        <p class="case-source reveal reveal-text">
-          <a href="./ibm-xftm-soc/shift-briefing.html">
-            Explore SOC analyst investigation flow →
-          </a>
-        </p>
         <hr class="case-analyst-rule" aria-hidden="true" />
 
         <div class="analyst-experience-grid reveal reveal-stagger">
+          <article class="analyst-experience-item reveal reveal-image">
+            <div>
+              <h3 class="analyst-experience-outcome">
+                Start the shift with shared context.
+              </h3>
+              <p class="analyst-experience-desc">
+                Step one of Shift Briefing turns the previous analyst’s passdown
+                into a scannable handoff — volume, severity mix, open incidents
+                and MTTR — so the incoming SOC analyst acknowledges what matters
+                before continuing.
+              </p>
+            </div>
+            <div class="analyst-experience-media">
+              <img
+                src="../images/ibm-xftm/analyst-shift-briefing.jpg"
+                alt="IBM XFTM — Shift Briefing with previous shift KPIs, alert volume, and severity mix"
+                width="1024"
+                height="670"
+                loading="eager"
+                decoding="sync"
+              />
+            </div>
+          </article>
+
+          <article class="analyst-experience-item reveal reveal-image">
+            <div>
+              <h3 class="analyst-experience-outcome">
+                Brief on the threat landscape before triage.
+              </h3>
+              <p class="analyst-experience-desc">
+                Step two doubles as continuous training at the start of every
+                shift — analysts learn what is active in the threat landscape
+                right now, why it matters for their queue, and how to recognize
+                and handle emerging attack patterns before the first alert lands.
+              </p>
+            </div>
+            <div class="analyst-experience-media">
+              <img
+                src="../images/ibm-xftm/analyst-shift-briefing-news.jpg"
+                alt="IBM XFTM — Shift Briefing threat landscape news with required reads before starting shift"
+                width="1024"
+                height="668"
+                loading="eager"
+                decoding="sync"
+              />
+            </div>
+          </article>
+
+          <article class="analyst-experience-item reveal reveal-image">
+            <div>
+              <h3 class="analyst-experience-outcome">
+                Alerts grouped by ATDS into draft cases.
+              </h3>
+              <p class="analyst-experience-desc">
+                The Alerts view can stay flat or switch to ATDS Grouped —
+                related alerts clustered into draft cases by shared IOCs,
+                assets and historical patterns. Analysts review each draft,
+                then accept, edit or dismiss before it becomes an open case.
+              </p>
+            </div>
+            <div class="analyst-experience-media">
+              <img
+                src="../images/ibm-xftm/analyst-alerts-atds-grouped.jpg"
+                alt="IBM XFTM — Alerts view with ATDS Grouped draft cases, severity mix, and rule volume"
+                width="1024"
+                height="712"
+                loading="eager"
+                decoding="sync"
+              />
+            </div>
+          </article>
+
           <article class="analyst-experience-item reveal reveal-image">
             <div>
               <h3 class="analyst-experience-outcome">Reduced cognitive load in the queue.</h3>
@@ -414,7 +479,40 @@
               />
             </div>
           </article>
+
+          <article class="analyst-experience-item reveal reveal-image">
+            <div>
+              <h3 class="analyst-experience-outcome">
+                Close the shift with a scored handoff.
+              </h3>
+              <p class="analyst-experience-desc">
+                End of shift locks the passdown for the next briefing and
+                returns a shift score — alerts handled, triage speed, ATDS
+                accept rate and escalation quality — so analysts see the impact
+                of the shift before they log out.
+              </p>
+            </div>
+            <div class="analyst-experience-media">
+              <img
+                src="../images/ibm-xftm/analyst-shift-complete.jpg"
+                alt="IBM XFTM — Shift complete with shift score, recap metrics, and logout"
+                width="964"
+                height="1024"
+                loading="eager"
+                decoding="sync"
+              />
+            </div>
+          </article>
         </div>
+
+        <p class="case-source case-source--proto-cta reveal reveal-text">
+          <a
+            class="case-proto-btn"
+            href="./ibm-xftm-soc/shift-briefing.html"
+          >
+            Open interactive prototype
+          </a>
+        </p>
       </section>
       </section>
 
@@ -436,6 +534,12 @@
           <li>
             Explicit disposition paths — associate, escalate or dismiss, every
             outcome analyst-owned and auditable.
+          </li>
+          <li>
+            Shift Briefing and passdown as product, not side channel —
+            continuous learning on active threats, a transparent handoff locked
+            into the next shift, and a flow that matches how SOC teams already
+            rotate work.
           </li>
         </ul>
       </section>

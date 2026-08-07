@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7VHSD6ZKSP"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7VHSD6ZKSP');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alerts — XFTM SOC Prototype</title>
@@ -15,19 +18,18 @@
   </head>
   <body>
     <div class="soc-proto-banner">
+      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
       <span
         ><strong>Interactive prototype</strong> — SOC analyst investigation
         experience</span
       >
-      <a href="../ibm-xftm.html">← Back to IBM XFTM case study</a>
     </div>
 
     <div class="soc-app">
       <header class="soc-header">
         <div class="soc-header-left">
-          <a class="soc-logo" href="./shift-briefing.html">XFTM</a>
           <div class="soc-breadcrumb">
-            <span>Home</span><span>/</span
+            <a href="./shift-briefing.html">IBM XFTM</a><span>/</span
             ><span aria-current="page">Alerts</span>
           </div>
         </div>
@@ -68,13 +70,115 @@
           <div>
             <h1>Alerts</h1>
             <p>
-              Open alerts · ATDS-assisted triage · all alerts or grouped
-              incidents
+              Open alerts · ATDS-assisted triage · all alerts or grouped as cases
             </p>
           </div>
           <a class="soc-btn soc-btn--secondary" href="./passdown.html"
             >End of shift</a
           >
+        </div>
+
+        <div class="soc-alert-summary">
+          <div class="soc-chart-panel">
+            <h3 class="soc-chart-title">Open alerts by severity</h3>
+            <p class="soc-chart-sub">12 open · High 5 · Medium 7</p>
+            <div class="soc-donut-wrap">
+              <svg
+                class="soc-donut soc-donut--lg"
+                viewBox="0 0 120 120"
+                role="img"
+                aria-label="High 5, Medium 7"
+              >
+                <circle class="soc-donut-track" cx="60" cy="60" r="50" />
+                <!-- circumference ≈ 314; High 5/12 ≈ 131, Medium 7/12 ≈ 183 -->
+                <circle
+                  class="soc-donut-seg soc-donut-seg--high"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  stroke-dasharray="131 183"
+                  stroke-dashoffset="0"
+                />
+                <circle
+                  class="soc-donut-seg soc-donut-seg--medium"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  stroke-dasharray="183 131"
+                  stroke-dashoffset="-131"
+                />
+                <text class="soc-donut-center-value" x="60" y="56" text-anchor="middle">12</text>
+                <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">open</text>
+              </svg>
+              <ul class="soc-donut-legend">
+                <li>
+                  <i class="soc-legend-swatch soc-legend-swatch--high"></i>High
+                  <strong>5</strong>
+                </li>
+                <li>
+                  <i class="soc-legend-swatch soc-legend-swatch--medium"></i>Medium
+                  <strong>7</strong>
+                </li>
+                <li>
+                  <i class="soc-legend-swatch soc-legend-swatch--critical"></i>Critical
+                  <strong>0</strong>
+                </li>
+                <li>
+                  <i class="soc-legend-swatch soc-legend-swatch--low"></i>Low
+                  <strong>0</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="soc-chart-panel">
+            <h3 class="soc-chart-title">Open alerts by rule name</h3>
+            <p class="soc-chart-sub">Top detection rules in the open queue</p>
+            <div class="soc-bars soc-bars--typed soc-bars--rules">
+              <div class="soc-bar-row">
+                <span title="Phishing / mailbox manipulation">Phishing / mailbox</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill soc-bar-fill--phishing" style="width: 100%"></div>
+                </div>
+                <span>4</span>
+              </div>
+              <div class="soc-bar-row">
+                <span title="Impossible travel / identity">Geo / identity</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill soc-bar-fill--unauth" style="width: 75%"></div>
+                </div>
+                <span>3</span>
+              </div>
+              <div class="soc-bar-row">
+                <span title="Suspicious PowerShell">Suspicious PowerShell</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill soc-bar-fill--malware" style="width: 50%"></div>
+                </div>
+                <span>2</span>
+              </div>
+              <div class="soc-bar-row">
+                <span title="Rare process tree">Rare process tree</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill" style="width: 25%"></div>
+                </div>
+                <span>1</span>
+              </div>
+              <div class="soc-bar-row">
+                <span title="Unusual SMB shares">Unusual SMB shares</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill soc-bar-fill--exfil" style="width: 25%"></div>
+                </div>
+                <span>1</span>
+              </div>
+              <div class="soc-bar-row">
+                <span title="Scheduled task update">Scheduled task update</span>
+                <div class="soc-bar-track">
+                  <div class="soc-bar-fill" style="width: 25%; background: #08bdba"></div>
+                </div>
+                <span>1</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="soc-toolbar">
@@ -88,22 +192,50 @@
               class="is-active"
               role="tab"
               aria-selected="true"
-              data-view="ungrouped"
-              id="tab-ungrouped"
+              data-view="grouped"
+              id="tab-grouped"
             >
-              All alerts
+              <svg
+                class="soc-ai-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <!-- Material Symbols: auto_awesome -->
+                <path
+                  d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"
+                />
+              </svg>
+              ATDS Grouped
             </button>
             <button
               type="button"
               role="tab"
               aria-selected="false"
-              data-view="grouped"
-              id="tab-grouped"
+              data-view="ungrouped"
+              id="tab-ungrouped"
             >
-              Grouped incidents
+              All alerts
             </button>
           </div>
           <div class="soc-toolbar-tools">
+            <label class="soc-search" aria-label="Search alerts">
+              <svg
+                class="soc-search__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 32 32"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
+                />
+              </svg>
+              <input type="search" placeholder="Search alerts" />
+            </label>
             <button
               class="soc-icon-btn"
               type="button"
@@ -121,21 +253,6 @@
                 />
               </svg>
             </button>
-            <label class="soc-search" aria-label="Search alerts">
-              <svg
-                class="soc-search__icon"
-                width="16"
-                height="16"
-                viewBox="0 0 32 32"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
-                />
-              </svg>
-              <input type="search" placeholder="Search alerts" />
-            </label>
           </div>
         </div>
 
@@ -143,45 +260,44 @@
           id="view-grouped"
           role="tabpanel"
           aria-labelledby="tab-grouped"
-          hidden
         >
           <aside class="soc-callout" role="status">
             <svg
-              class="soc-callout__icon"
+              class="soc-callout__icon soc-ai-icon"
               width="20"
               height="20"
-              viewBox="0 0 32 32"
+              viewBox="0 0 24 24"
               fill="currentColor"
               aria-hidden="true"
             >
+              <!-- Material Symbols: auto_awesome -->
               <path
-                d="M16 2a14 14 0 1 0 14 14A14 14 0 0 0 16 2Zm0 26a12 12 0 1 1 12-12 12 12 0 0 1-12 12Z"
+                d="m19 9 1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"
               />
-              <path d="M15 11h2v2h-2zm0 4h2v8h-2z" />
             </svg>
             <div class="soc-callout__body">
-              <strong>Grouped with AI · ATDS</strong>
+              <strong>Draft cases created by ATDS</strong>
               <p>
-                Related alerts are correlated into incidents by Adaptive Threat
-                Detection System (ATDS) based on shared IOCs, assets, and
-                historical patterns.
+                ATDS grouped related alerts into draft cases based on shared
+                IOCs, assets, and historical patterns. Review each draft, then
+                accept, edit, or dismiss before it becomes an open case.
               </p>
             </div>
           </aside>
 
           <article class="soc-incident-group">
-            <a class="soc-incident-group__head" href="./incident.html">
-              <span class="soc-tag soc-tag--high">High</span>
+            <a class="soc-incident-group__head soc-incident-group__head--atds" href="./incident.html">
               <div>
-                <h3>INC-2025-4821 · Suspected ransomware staging</h3>
+                <div class="soc-incident-group__badges">
+                  <span class="soc-tag soc-tag--high">High</span>
+                  <span class="soc-tag soc-tag--draft">Draft</span>
+                  <span class="soc-tag soc-tag--count">5 alerts</span>
+                </div>
+                <h3>DRAFT-4821 · Suspected ransomware staging</h3>
                 <p>
-                  Finance · 5 correlated alerts · Updated 12m ago · Assigned: you
+                  Finance · ATDS draft case · 5 related alerts · Updated 12m ago
                 </p>
               </div>
-              <span class="soc-tag soc-tag--count">5 alerts</span>
-              <span style="color: var(--cds-link); font-size: 0.8125rem"
-                >Open →</span
-              >
             </a>
             <table class="soc-alert-table">
               <thead>
@@ -198,9 +314,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88421 · Suspicious PowerShell</a
-                    >
+                    <a href="./alert.html?id=ALT-88421">ALT-88421 · Suspicious PowerShell</a>
                   </td>
                   <td>Close / Associate · 72%</td>
                   <td>endpoint-fin-04</td>
@@ -234,7 +348,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="./incident.html">ALT-88419 · Encoded command</a>
+                    <a href="./alert.html?id=ALT-88419">ALT-88419 · Encoded command</a>
                   </td>
                   <td>Close / Associate · 68%</td>
                   <td>endpoint-fin-04</td>
@@ -268,7 +382,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="./incident.html">ALT-88411 · Rare process tree</a>
+                    <a href="./alert.html?id=ALT-88411">ALT-88411 · Rare process tree</a>
                   </td>
                   <td>Investigate · 54%</td>
                   <td>endpoint-fin-04</td>
@@ -305,19 +419,19 @@
           </article>
 
           <article class="soc-incident-group">
-            <a class="soc-incident-group__head" href="./incident.html">
-              <span class="soc-tag soc-tag--medium">Medium</span>
+            <a class="soc-incident-group__head soc-incident-group__head--atds" href="./incident.html">
               <div>
-                <h3>INC-2025-4818 · Impossible travel / remote access</h3>
+                <div class="soc-incident-group__badges">
+                  <span class="soc-tag soc-tag--medium">Medium</span>
+                  <span class="soc-tag soc-tag--draft">Draft</span>
+                  <span class="soc-tag soc-tag--count">3 alerts</span>
+                </div>
+                <h3>DRAFT-4818 · Impossible travel / remote access</h3>
                 <p>
-                  Remote access · 3 correlated alerts · Updated 41m ago ·
-                  Assigned: you
+                  Remote access · ATDS draft case · 3 related alerts · Updated
+                  41m ago
                 </p>
               </div>
-              <span class="soc-tag soc-tag--count">3 alerts</span>
-              <span style="color: var(--cds-link); font-size: 0.8125rem"
-                >Open →</span
-              >
             </a>
             <table class="soc-alert-table">
               <thead>
@@ -334,7 +448,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <a href="./incident.html">ALT-88390 · Geo velocity</a>
+                    <a href="./alert.html?id=ALT-88390">ALT-88390 · Geo velocity</a>
                   </td>
                   <td>Investigate · 71%</td>
                   <td>vpn-gateway</td>
@@ -371,7 +485,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="./incident.html">ALT-88388 · New device auth</a>
+                    <a href="./alert.html?id=ALT-88388">ALT-88388 · New device auth</a>
                   </td>
                   <td>Monitor · 54%</td>
                   <td>idp-sso</td>
@@ -411,18 +525,18 @@
           </article>
 
           <article class="soc-incident-group">
-            <a class="soc-incident-group__head" href="./incident.html">
-              <span class="soc-tag soc-tag--medium">Medium</span>
+            <a class="soc-incident-group__head soc-incident-group__head--atds" href="./incident.html">
               <div>
-                <h3>INC-2025-4812 · Phishing click → mailbox rule</h3>
+                <div class="soc-incident-group__badges">
+                  <span class="soc-tag soc-tag--medium">Medium</span>
+                  <span class="soc-tag soc-tag--draft">Draft</span>
+                  <span class="soc-tag soc-tag--count">4 alerts</span>
+                </div>
+                <h3>DRAFT-4812 · Phishing click → mailbox rule</h3>
                 <p>
-                  Messaging · 4 correlated alerts · Updated 2h ago · Unassigned
+                  Messaging · ATDS draft case · 4 related alerts · Updated 2h ago
                 </p>
               </div>
-              <span class="soc-tag soc-tag--count">4 alerts</span>
-              <span style="color: var(--cds-link); font-size: 0.8125rem"
-                >Open →</span
-              >
             </a>
             <table class="soc-alert-table">
               <thead>
@@ -439,9 +553,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88340 · Credential harvest URL</a
-                    >
+                    <a href="./alert.html?id=ALT-88340">ALT-88340 · Credential harvest URL</a>
                   </td>
                   <td>Escalate · 81%</td>
                   <td>mail-gateway</td>
@@ -477,9 +589,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88341 · Inbox forwarding rule</a
-                    >
+                    <a href="./alert.html?id=ALT-88341">ALT-88341 · Inbox forwarding rule</a>
                   </td>
                   <td>Escalate · 79%</td>
                   <td>m365</td>
@@ -523,6 +633,7 @@
           id="view-ungrouped"
           role="tabpanel"
           aria-labelledby="tab-ungrouped"
+          hidden
         >
           <div class="soc-card" style="padding: 0; overflow: hidden">
             <table class="soc-alert-table">
@@ -543,9 +654,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--high">High</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88421 · Suspicious PowerShell</a
-                    >
+                    <a href="./alert.html?id=ALT-88421">ALT-88421 · Suspicious PowerShell</a>
                   </td>
                   <td>Close / Associate · 72%</td>
                   <td>INC-2025-4821</td>
@@ -582,7 +691,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--high">High</span></td>
                   <td>
-                    <a href="./incident.html">ALT-88419 · Encoded command</a>
+                    <a href="./alert.html?id=ALT-88419">ALT-88419 · Encoded command</a>
                   </td>
                   <td>Close / Associate · 68%</td>
                   <td>INC-2025-4821</td>
@@ -618,7 +727,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html">ALT-88411 · Rare process tree</a>
+                    <a href="./alert.html?id=ALT-88411">ALT-88411 · Rare process tree</a>
                   </td>
                   <td>Investigate · 54%</td>
                   <td>INC-2025-4821</td>
@@ -654,7 +763,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html">ALT-88405 · Unusual SMB shares</a>
+                    <a href="./alert.html?id=ALT-88405">ALT-88405 · Unusual SMB shares</a>
                   </td>
                   <td>Monitor · 41%</td>
                   <td>INC-2025-4821</td>
@@ -690,9 +799,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88398 · Scheduled task update</a
-                    >
+                    <a href="./alert.html?id=ALT-88398">ALT-88398 · Scheduled task update</a>
                   </td>
                   <td>Close / Associate · 70%</td>
                   <td>INC-2025-4821</td>
@@ -728,7 +835,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--high">High</span></td>
                   <td>
-                    <a href="./incident.html">ALT-88390 · Geo velocity</a>
+                    <a href="./alert.html?id=ALT-88390">ALT-88390 · Geo velocity</a>
                   </td>
                   <td>Investigate · 71%</td>
                   <td>INC-2025-4818</td>
@@ -768,7 +875,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html">ALT-88388 · New device auth</a>
+                    <a href="./alert.html?id=ALT-88388">ALT-88388 · New device auth</a>
                   </td>
                   <td>Monitor · 54%</td>
                   <td>INC-2025-4818</td>
@@ -808,9 +915,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88385 · Concurrent sessions</a
-                    >
+                    <a href="./alert.html?id=ALT-88385">ALT-88385 · Concurrent sessions</a>
                   </td>
                   <td>Investigate · 62%</td>
                   <td>INC-2025-4818</td>
@@ -849,9 +954,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--high">High</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88341 · Inbox forwarding rule</a
-                    >
+                    <a href="./alert.html?id=ALT-88341">ALT-88341 · Inbox forwarding rule</a>
                   </td>
                   <td>Escalate · 79%</td>
                   <td>INC-2025-4812</td>
@@ -890,9 +993,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--high">High</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88340 · Credential harvest URL</a
-                    >
+                    <a href="./alert.html?id=ALT-88340">ALT-88340 · Credential harvest URL</a>
                   </td>
                   <td>Escalate · 81%</td>
                   <td>INC-2025-4812</td>
@@ -931,9 +1032,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88338 · Suspicious reply-all</a
-                    >
+                    <a href="./alert.html?id=ALT-88338">ALT-88338 · Suspicious reply-all</a>
                   </td>
                   <td>Monitor · 48%</td>
                   <td>INC-2025-4812</td>
@@ -972,9 +1071,7 @@
                 <tr>
                   <td><span class="soc-tag soc-tag--medium">Medium</span></td>
                   <td>
-                    <a href="./incident.html"
-                      >ALT-88335 · Lookalike domain click</a
-                    >
+                    <a href="./alert.html?id=ALT-88335">ALT-88335 · Lookalike domain click</a>
                   </td>
                   <td>Investigate · 66%</td>
                   <td>INC-2025-4812</td>
@@ -1014,9 +1111,21 @@
       </main>
     </div>
 
-    <script src="./soc-ip-flyout.js"></script>
+    <script type="module" src="./soc-ip-flyout.js"></script>
     <script>
       (function () {
+        document.querySelectorAll(".soc-alert-table tbody").forEach(function (tbody) {
+          var rows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+          rows.sort(function (a, b) {
+            var ta = (a.cells[a.cells.length - 1].textContent || "").trim();
+            var tb = (b.cells[b.cells.length - 1].textContent || "").trim();
+            return ta.localeCompare(tb);
+          });
+          rows.forEach(function (row) {
+            tbody.appendChild(row);
+          });
+        });
+
         var switcher = document.querySelector(".soc-switcher");
         var grouped = document.getElementById("view-grouped");
         var ungrouped = document.getElementById("view-ungrouped");
