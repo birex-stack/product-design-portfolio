@@ -2,7 +2,8 @@ import { createElement, useCallback, useMemo, useState } from 'react';
 import { useAssistantBridge } from './assistant_bridge';
 import { useToasts } from './toast_context';
 
-const THRESHOLD_STROKE = '#BD271E';
+/** Reserved severity.danger (EUI health/severity palette). */
+const THRESHOLD_STROKE = '#EE4C48';
 
 /**
  * Elastic Charts renders tooltip actions with its own React tree.

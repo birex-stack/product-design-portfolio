@@ -140,6 +140,11 @@ export function ObservabilityChrome({
           top: ${secondaryHeaderTop} !important;
           inset-block-start: ${secondaryHeaderTop} !important;
         }
+        /* Align Overview–Dashboards with CollapsibleNavGroup titles (Logs, …). */
+        .obsChrome__navPrimary .euiListGroupItem__button {
+          padding-inline-start: ${euiTheme.size.m};
+          padding-inline-end: ${euiTheme.size.m};
+        }
       `}</style>
       <EuiHeader
         theme="dark"
@@ -244,13 +249,16 @@ export function ObservabilityChrome({
           }));
 
           if (group.id === 'obs') {
+            const navInset = euiTheme.size.m;
             return (
-              <div key={group.id}>
+              <div key={group.id} className="obsChrome__navPrimary">
                 <EuiFlexGroup
                   gutterSize="s"
                   alignItems="center"
                   responsive={false}
-                  style={{ padding: '12px 12px 4px' }}
+                  style={{
+                    padding: `${euiTheme.size.m} ${navInset} ${euiTheme.size.xs}`,
+                  }}
                 >
                   <EuiFlexItem grow={false}>
                     <EuiIcon type={group.iconType} size="m" />

@@ -21,6 +21,7 @@ import {
   Tooltip,
 } from '@elastic/charts';
 import { ALERT_SEVERITIES, aggregateAlertsBy } from '../alerts_data';
+import { getVisSeriesColor, useChartColorTokens } from '../chart_colors';
 import { getAlertSeverityChartColor } from '../severity';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 
@@ -153,6 +154,7 @@ function CompactSummaryPanel({
   onSourceChange,
 }) {
   const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const [selected, setSelected] = useState('severity');
 
   const view = {
@@ -173,7 +175,7 @@ function CompactSummaryPanel({
       data: byRule,
       activeKey: rule,
       onSelect: onRuleChange,
-      getBarColor: () => euiTheme.colors.vis?.euiColorVis1,
+      getBarColor: () => getVisSeriesColor(tokens, 1),
       footer: (data, activeKey) =>
         `${data.length} categor${data.length === 1 ? 'y' : 'ies'} · top ${Math.min(
           8,
@@ -184,7 +186,7 @@ function CompactSummaryPanel({
       data: bySource,
       activeKey: source,
       onSelect: onSourceChange,
-      getBarColor: () => euiTheme.colors.vis?.euiColorVis2,
+      getBarColor: () => getVisSeriesColor(tokens, 2),
       footer: (data, activeKey) =>
         `${data.length} categor${data.length === 1 ? 'y' : 'ies'} · top ${Math.min(
           8,
@@ -450,7 +452,7 @@ export function AlertsSummaryCharts({
   onRuleChange,
   compact = false,
 }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
 
   const byRule = useMemo(() => aggregateAlertsBy('rule', alerts), [alerts]);
   const bySource = useMemo(() => aggregateAlertsBy('source', alerts), [alerts]);
@@ -488,7 +490,7 @@ export function AlertsSummaryCharts({
         <HorizontalBarChart
           title="Alerts by rule"
           data={byRule}
-          color={euiTheme.colors.vis?.euiColorVis1}
+          color={getVisSeriesColor(tokens, 1)}
           activeKey={rule}
           onSelect={onRuleChange}
         />
@@ -497,7 +499,7 @@ export function AlertsSummaryCharts({
         <HorizontalBarChart
           title="Alerts by source"
           data={bySource}
-          color={euiTheme.colors.vis?.euiColorVis2}
+          color={getVisSeriesColor(tokens, 2)}
           activeKey={source}
           onSelect={onSourceChange}
         />

@@ -358,7 +358,9 @@ export function getDashboardPanels(dashboard) {
     });
   });
 
-  const bulletValue = Math.round(25 + rand(seed, 92) * 70);
+  // Throughput (req/s) — neutral capacity metric, not health/severity
+  const bulletValue = Math.round(1800 + rand(seed, 92) * 2200);
+  const bulletPrevious = Math.round(2200 + rand(seed, 93) * 1200);
 
   return {
     timeRange: 'Last 24 hours',
@@ -434,11 +436,13 @@ export function getDashboardPanels(dashboard) {
         {
           id: 'chart-bullet',
           type: 'bullet',
-          title: 'Error budget remaining',
-          subtitle: 'Rolling 30d window',
+          title: 'Request throughput',
+          subtitle: 'Last 15 minutes · vs previous period',
           value: bulletValue,
-          target: 40,
-          domain: [0, 100],
+          target: bulletPrevious,
+          targetLabel: 'Previously',
+          domain: [0, 5000],
+          valueUnit: 'req/s',
           w: 6,
         },
         {

@@ -12,6 +12,7 @@ import {
   Settings,
 } from '@elastic/charts';
 import { EuiSpacer, EuiText, EuiTitle, useEuiTheme } from '@elastic/eui';
+import { getVisSeriesColor, useChartColorTokens } from '../chart_colors';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 
 const POINTS = 18;
@@ -74,10 +75,16 @@ function logLevelStacks(seed) {
   });
 }
 
-function chartSpecForEvent(event, colors) {
+/**
+ * Severity/health reserved for status, errors, alerts, log levels, degradation.
+ * Neutral vis for latency/throughput/retry trends that are not severity encodings.
+ */
+function chartSpecForEvent(event, tokens) {
   const seed = seedFromId(event.id);
   const type = event.type || 'log';
   const titleLower = String(event.title || '').toLowerCase();
+  const vis0 = getVisSeriesColor(tokens, 0);
+  const vis2 = getVisSeriesColor(tokens, 2);
 
   if (type === 'deploy') {
     return {
@@ -89,7 +96,7 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Pods ready',
       unit: '',
       tickFormat: (d) => `${Math.round(d)}`,
-      color: colors.success,
+      color: tokens.health.success,
       eventX: EVENT_X,
       eventLabel: 'Deploy done',
     };
@@ -105,7 +112,7 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'p95',
       unit: 'ms',
       tickFormat: (d) => (d >= 1000 ? `${(d / 1000).toFixed(1)}s` : `${Math.round(d)}`),
-      color: colors.primary,
+      color: vis0,
       eventX: EVENT_X,
       eventLabel: 'Spike',
     };
@@ -119,6 +126,11 @@ function chartSpecForEvent(event, colors) {
       data: logLevelStacks(seed),
       eventX: EVENT_X,
       eventLabel: 'Surge',
+      levelColors: {
+        info: tokens.health.unknown,
+        warn: tokens.health.warning,
+        error: tokens.health.danger,
+      },
     };
   }
 
@@ -135,7 +147,7 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Matches / min',
       unit: '',
       tickFormat: (d) => `${Math.round(d)}`,
-      color: colors.danger,
+      color: tokens.health.danger,
       eventX: EVENT_X - 1,
       eventLabel: 'First seen',
     };
@@ -151,8 +163,9 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Error rate',
       unit: '%',
       tickFormat: (d) => `${Number(d).toFixed(1)}%`,
-      color: colors.danger,
+      color: tokens.health.danger,
       threshold: 3,
+      thresholdColor: tokens.health.danger,
       eventX: EVENT_X,
       eventLabel: 'Alert',
     };
@@ -168,8 +181,9 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Burn rate',
       unit: 'x',
       tickFormat: (d) => `${Number(d).toFixed(1)}x`,
-      color: colors.danger,
+      color: tokens.health.danger,
       threshold: 14.4,
+      thresholdColor: tokens.health.danger,
       eventX: EVENT_X,
       eventLabel: 'Fired',
     };
@@ -185,9 +199,10 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Retries / min',
       unit: '',
       tickFormat: (d) => `${Number(d).toFixed(1)}`,
-      color: colors.accent,
+      color: vis2,
       threshold: 0.8,
       thresholdLabel: 'Baseline',
+      thresholdColor: tokens.health.unknown,
       eventX: EVENT_X,
       eventLabel: 'Anomaly',
     };
@@ -203,7 +218,8 @@ function chartSpecForEvent(event, colors) {
       seriesName: 'Command p95',
       unit: 'ms',
       tickFormat: (d) => `${Math.round(d)}`,
-      color: colors.warning,
+      // Degraded health state — reserved warning token
+      color: tokens.health.warning,
       eventX: EVENT_X,
       eventLabel: 'Degraded',
     };
@@ -218,7 +234,7 @@ function chartSpecForEvent(event, colors) {
     seriesName: 'Signal',
     unit: '',
     tickFormat: (d) => `${Math.round(d)}`,
-    color: colors.primary,
+    color: vis0,
     eventX: EVENT_X,
     eventLabel: 'Event',
   };
@@ -245,25 +261,17 @@ function EventMarker({ label }) {
 export function TimelineEventChart({ event }) {
   const chartBaseTheme = useChartBaseTheme();
   const { euiTheme } = useEuiTheme();
-  const colors = {
-    primary: euiTheme.colors.primary,
-    danger: euiTheme.colors.danger,
-    success: euiTheme.colors.success,
-    warning: euiTheme.colors.warning,
-    accent: euiTheme.colors.accent,
-  };
+  const tokens = useChartColorTokens();
 
   const spec = useMemo(
-    () => (event ? chartSpecForEvent(event, colors) : null),
-    // colors from theme are stable enough for prototype; include event only
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [event]
+    () => (event ? chartSpecForEvent(event, tokens) : null),
+    [event, tokens]
   );
 
   if (!event || !spec) return null;
 
   const height = 168;
-  const thresholdColor = euiTheme.colors.danger;
+  const thresholdColor = spec.thresholdColor || tokens.health.danger;
 
   return (
     <div>
@@ -346,7 +354,7 @@ export function TimelineEventChart({ event }) {
                 data={spec.data}
                 xScaleType={ScaleType.Linear}
                 yScaleType={ScaleType.Linear}
-                color={euiTheme.colors.lightShade}
+                color={spec.levelColors.info}
               />
               <BarSeries
                 id="warn"
@@ -357,7 +365,7 @@ export function TimelineEventChart({ event }) {
                 data={spec.data}
                 xScaleType={ScaleType.Linear}
                 yScaleType={ScaleType.Linear}
-                color={euiTheme.colors.warning}
+                color={spec.levelColors.warn}
               />
               <BarSeries
                 id="error"
@@ -368,7 +376,7 @@ export function TimelineEventChart({ event }) {
                 data={spec.data}
                 xScaleType={ScaleType.Linear}
                 yScaleType={ScaleType.Linear}
-                color={euiTheme.colors.danger}
+                color={spec.levelColors.error}
               />
             </>
           ) : null}

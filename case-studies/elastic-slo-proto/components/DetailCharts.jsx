@@ -8,7 +8,6 @@ import {
   EuiSpacer,
   EuiText,
   EuiTitle,
-  useEuiTheme,
 } from '@elastic/eui';
 import {
   AnnotationDomainType,
@@ -27,6 +26,7 @@ import {
   ALERT_THRESHOLD_LINE_STYLE,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
+import { getVisSeriesColor, useChartColorTokens } from '../chart_colors';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 import { ChartLoadingState } from './ChartLoadingState';
 
@@ -290,6 +290,7 @@ function LineChart({
   onBrushEnd,
 }) {
   const chartBaseTheme = useChartBaseTheme();
+  const tokens = useChartColorTokens();
   const data = useMemo(() => seriesFromValues(values, labels), [values, labels]);
   const { tooltipActions, alertThreshold, alertThresholdDetails } =
     useChartTooltipActions({ seriesName, valueUnit });
@@ -336,7 +337,7 @@ function LineChart({
           ]}
           style={{
             line: {
-              stroke: '#BD271E',
+              stroke: tokens.health.danger,
               strokeWidth: 1.5,
               opacity: 1,
               dash: [4, 3],
@@ -455,7 +456,7 @@ function AreaChart({
 }
 
 export function SliPanel({ slo, loading = false }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const zoom = useZoomedSeries(slo.sparkline, 1);
   const rangeLabel = zoom.range
     ? `days ${(zoom.range.min + 1).toFixed(1)}–${(zoom.range.max + 1).toFixed(1)} · ${zoom.values.length} points`
@@ -473,7 +474,7 @@ export function SliPanel({ slo, loading = false }) {
         values={zoom.values}
         labels={zoom.labels}
         target={slo.target}
-        color={euiTheme.colors.primary}
+        color={getVisSeriesColor(tokens, 0)}
         seriesName="SLI"
         valueUnit="%"
         loading={loading}
@@ -494,7 +495,7 @@ export function BurnRatePanel({
   onBurnWindowChange,
   loading = false,
 }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const zoom = useZoomedSeries(slo.burnSeries, 2);
 
   return (
@@ -524,7 +525,7 @@ export function BurnRatePanel({
       <AreaChart
         values={zoom.values}
         labels={zoom.labels}
-        color={euiTheme.colors.danger}
+        color={tokens.health.danger}
         seriesName="Burn rate"
         loading={loading}
         onBrushEnd={zoom.onBrushEnd}
@@ -563,7 +564,7 @@ function formatExhaustionWhen(date) {
 }
 
 export function BudgetRemainingPanel({ slo, loading = false }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const zoom = useZoomedSeries(slo.budgetSeries, 3);
   const remaining = slo.budgetSeries[slo.budgetSeries.length - 1];
   const violated = remaining < 0;
@@ -584,8 +585,8 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
             <span
               style={{
                 color: violated
-                  ? euiTheme.colors.danger
-                  : euiTheme.colors.success,
+                  ? tokens.health.danger
+                  : tokens.health.success,
               }}
             >
               {remaining.toFixed(2)}%
@@ -600,7 +601,9 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
         values={zoom.values}
         labels={zoom.labels}
         target={0}
-        color={euiTheme.colors.primary}
+        color={
+          violated ? tokens.health.danger : getVisSeriesColor(tokens, 2)
+        }
         yMin={-20}
         yMax={80}
         seriesName="Budget remaining"
@@ -615,10 +618,8 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
   );
 }
 
-const GOOD_EVENTS_COLOR = '#00BFB3';
-
 export function GoodBadPanel({ bars, onBarClick, loading = false }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const chartBaseTheme = useChartBaseTheme();
   const zoom = useZoomedBars(bars);
   const { tooltipActions, alertThreshold, alertThresholdDetails } =
@@ -727,7 +728,7 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
             yAccessors={['good']}
             stackAccessors={['x']}
             data={data}
-            color={GOOD_EVENTS_COLOR}
+            color={tokens.health.success}
             tickFormat={(d) => Number(d).toLocaleString()}
           />
         )}
@@ -741,7 +742,7 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
             yAccessors={['bad']}
             stackAccessors={['x']}
             data={data}
-            color={euiTheme.colors.danger}
+            color={tokens.health.danger}
             tickFormat={(d) => Number(d).toLocaleString()}
           />
         )}

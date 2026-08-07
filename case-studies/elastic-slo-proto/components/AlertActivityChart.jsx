@@ -16,12 +16,10 @@ import {
   ALERT_THRESHOLD_LINE_STYLE,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
+import { useChartColorTokens } from '../chart_colors';
 import { buildAlertActivitySeries } from '../data';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 
-const ALERT_ACTIVE_FILL = 'rgba(189, 39, 30, 0.18)';
-const ALERT_ACTIVE_STROKE = 'rgba(189, 39, 30, 0.45)';
-const THRESHOLD_COLOR = '#BD271E';
 /** Space for top LineAnnotation marker — charts don't auto-size for custom markers. */
 const MARKER_TOP_MARGIN = 22;
 
@@ -31,7 +29,7 @@ function parseDurationHours(duration) {
 }
 
 /** Plain SVG — avoid EUI hooks inside annotation markers (can clip/mis-measure). */
-function AlertMarker() {
+function AlertMarker({ color }) {
   return (
     <svg
       width="16"
@@ -41,15 +39,26 @@ function AlertMarker() {
       focusable="false"
     >
       <path
-        fill={THRESHOLD_COLOR}
+        fill={color}
         d="M8.87 1.5a1 1 0 0 0-1.74 0L1.2 12.25A1 1 0 0 0 2.07 13.75h11.86a1 1 0 0 0 .87-1.5L8.87 1.5zM8 5.25a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-1.5 0v-3A.75.75 0 0 1 8 5.25zm0 6.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"
       />
     </svg>
   );
 }
 
+function hexToRgba(hex, alpha) {
+  const raw = String(hex || '').replace('#', '');
+  if (raw.length !== 6) return `rgba(238, 76, 72, ${alpha})`;
+  const r = parseInt(raw.slice(0, 2), 16);
+  const g = parseInt(raw.slice(2, 4), 16);
+  const b = parseInt(raw.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export function AlertActivityChart({ alert, slo }) {
   const chartBaseTheme = useChartBaseTheme();
+  const tokens = useChartColorTokens();
+  const danger = tokens.health.danger;
   const { tooltipActions, alertThreshold } = useChartTooltipActions({
     seriesName: alert?.name || 'Alert activity',
     valueUnit: '',
@@ -62,7 +71,6 @@ export function AlertActivityChart({ alert, slo }) {
     const points = series.length;
     const trigger = Math.floor(points * 0.55);
     const hours = parseDurationHours(alert?.duration);
-    // Map duration hours onto remaining buckets (cap at chart end)
     const span = Math.max(2, Math.min(points - trigger - 1, Math.round(hours * 1.5)));
     const end =
       alert?.status === 'active' ? points - 1 : Math.min(points - 1, trigger + span);
@@ -122,8 +130,8 @@ export function AlertActivityChart({ alert, slo }) {
               },
             ]}
             style={{
-              fill: ALERT_ACTIVE_FILL,
-              stroke: ALERT_ACTIVE_STROKE,
+              fill: hexToRgba(danger, 0.18),
+              stroke: hexToRgba(danger, 0.45),
               strokeWidth: 1,
               opacity: 1,
             }}
@@ -150,11 +158,11 @@ export function AlertActivityChart({ alert, slo }) {
                 details: `Alert triggered · ${alert?.triggeredAt || ''}`,
               },
             ]}
-            marker={<AlertMarker />}
+            marker={<AlertMarker color={danger} />}
             markerPosition={Position.Top}
             style={{
               line: {
-                stroke: THRESHOLD_COLOR,
+                stroke: danger,
                 strokeWidth: 1.5,
                 opacity: 0.9,
               },
@@ -169,7 +177,7 @@ export function AlertActivityChart({ alert, slo }) {
             xAccessor="x"
             yAccessors={['y']}
             data={data}
-            color="#6092C0"
+            color={tokens.vis[2]}
             areaSeriesStyle={{
               area: { opacity: 0.15 },
               line: { strokeWidth: 2 },

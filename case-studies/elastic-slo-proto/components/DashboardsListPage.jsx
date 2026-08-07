@@ -308,12 +308,12 @@ export function DashboardsListPage({ onOpenDashboard }) {
         pageTitle="Dashboards"
         description="Browse, search, and organize dashboards. Filter by tag or creator, star favorites, and sort by recent activity."
         rightSideItems={[
-          <EuiButtonEmpty key="import" iconType="importAction" onClick={() => {}}>
-            Import
-          </EuiButtonEmpty>,
           <EuiButton key="create" fill iconType="plusInCircle" onClick={() => {}}>
             Create dashboard
           </EuiButton>,
+          <EuiButtonEmpty key="import" iconType="importAction" onClick={() => {}}>
+            Import
+          </EuiButtonEmpty>,
         ]}
       />
 

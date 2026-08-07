@@ -11,7 +11,6 @@ import {
   EuiSpacer,
   EuiText,
   EuiTitle,
-  useEuiTheme,
 } from '@elastic/eui';
 import {
   AnnotationDomainType,
@@ -38,6 +37,10 @@ import {
   ALERT_THRESHOLD_LINE_STYLE,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
+import {
+  getSloStatusHealthSoft,
+  useChartColorTokens,
+} from '../chart_colors';
 import { getDashboardPanels, loadInvestigationEvents } from '../dashboards_data';
 import { buildDependencyTimeline } from '../assistant_context';
 import { useChartBaseTheme } from '../use_chart_base_theme';
@@ -122,13 +125,9 @@ function MetricPanel({ metric, color }) {
 
 function SloTilePanel({ panel }) {
   const chartBaseTheme = useChartBaseTheme();
+  const tokens = useChartColorTokens();
   const height = 140;
-  const color =
-    panel.status === 'healthy'
-      ? '#D9F0E3'
-      : panel.status === 'degrading'
-        ? '#F8E8C9'
-        : '#F8D7DA';
+  const color = getSloStatusHealthSoft(panel.status, tokens);
 
   const datum = useMemo(
     () => ({
@@ -163,11 +162,13 @@ function SloTilePanel({ panel }) {
 
 function AlertsMetricPanel({ panel }) {
   const chartBaseTheme = useChartBaseTheme();
+  const tokens = useChartColorTokens();
   const height = 140;
+  const color = tokens.healthSoft.danger;
 
   const datum = useMemo(
     () => ({
-      color: '#F8D7DA',
+      color,
       title: panel.title,
       subtitle: panel.subtitle,
       value: panel.value,
@@ -177,7 +178,7 @@ function AlertsMetricPanel({ panel }) {
       trendA11yTitle: `${panel.title} trend`,
       trendA11yDescription: `Alert volume trend over the selected time range.`,
     }),
-    [panel]
+    [panel, color]
   );
 
   return (
@@ -194,7 +195,9 @@ function AlertsMetricPanel({ panel }) {
 
 function HeatmapPanel({ panel }) {
   const chartBaseTheme = useChartBaseTheme();
+  const tokens = useChartColorTokens();
   const height = 280;
+  const [healthy, warning, risk, danger] = tokens.statusBands;
 
   return (
     <div style={panelSpan(panel.w || 6)}>
@@ -230,10 +233,10 @@ function HeatmapPanel({ panel }) {
               colorScale={{
                 type: 'bands',
                 bands: [
-                  { start: -Infinity, end: 80, color: '#D3F1E0', label: '< 80ms' },
-                  { start: 80, end: 160, color: '#F1E4A6', label: '80–160ms' },
-                  { start: 160, end: 240, color: '#F5C39B', label: '160–240ms' },
-                  { start: 240, end: Infinity, color: '#E7664C', label: '> 240ms' },
+                  { start: -Infinity, end: 80, color: healthy, label: '< 80ms' },
+                  { start: 80, end: 160, color: warning, label: '80–160ms' },
+                  { start: 160, end: 240, color: risk, label: '160–240ms' },
+                  { start: 240, end: Infinity, color: danger, label: '> 240ms' },
                 ],
               }}
             />
@@ -247,6 +250,9 @@ function HeatmapPanel({ panel }) {
 function BulletPanel({ panel }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 280;
+  const unit = panel.valueUnit || '';
+  const formatValue = (d) =>
+    unit ? `${Math.round(d).toLocaleString()} ${unit}` : `${Math.round(d)}`;
 
   return (
     <div style={panelSpan(panel.w || 6)}>
@@ -257,6 +263,9 @@ function BulletPanel({ panel }) {
             <Bullet
               id={panel.id}
               subtype={BulletSubtype.horizontal}
+              valueLabels={{
+                target: panel.targetLabel || 'Previously',
+              }}
               data={[
                 [
                   {
@@ -265,9 +274,9 @@ function BulletPanel({ panel }) {
                     value: panel.value,
                     target: panel.target,
                     domain: panel.domain || [0, 100],
-                    valueFormatter: (d) => `${Math.round(d)}%`,
-                    targetFormatter: (d) => `${Math.round(d)}%`,
-                    tickFormatter: (d) => `${Math.round(d)}`,
+                    valueFormatter: formatValue,
+                    targetFormatter: formatValue,
+                    tickFormatter: (d) => Math.round(d).toLocaleString(),
                   },
                 ],
               ]}
@@ -623,7 +632,7 @@ export function DashboardDetailPage({
   assistantOpen,
   onAssistantOpenChange,
 }) {
-  const { euiTheme } = useEuiTheme();
+  const tokens = useChartColorTokens();
   const [mode, setMode] = useState('view');
   const [starred, setStarred] = useState(Boolean(dashboard?.starred));
   const [localAssistantOpen, setLocalAssistantOpen] = useState(false);
@@ -646,16 +655,10 @@ export function DashboardDetailPage({
   if (!dashboard) return null;
   if (!isInvestigation && !panels) return null;
 
-  // Soft tile fills typical of Kibana Metric panels
-  const metricColors = ['#D4E7F7', '#D9F0E3', '#F8E8C9', '#E8DAF5'];
-
-  const chartColors = [
-    euiTheme.colors.primary,
-    euiTheme.colors.accent,
-    euiTheme.colors.danger,
-    euiTheme.colors.success,
-    euiTheme.colors.warning,
-  ];
+  // Neutral vis soft fills for generic metric tiles (not health/severity).
+  const metricColors = tokens.visSoft;
+  // Neutral categorical series for non-status charts.
+  const chartColors = tokens.vis;
 
   return (
     <>
