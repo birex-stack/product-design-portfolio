@@ -24,9 +24,16 @@ import {
 } from '@elastic/charts';
 import {
   ALERT_THRESHOLD_LINE_STYLE,
+  ALERT_THRESHOLD_MARKER_POSITION,
+  AlertThresholdAnnotationMarker,
+  getYDomainIncludingThreshold,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
-import { getVisSeriesColor, useChartColorTokens } from '../chart_colors';
+import {
+  getSloStatusHealthColor,
+  getVisSeriesColor,
+  useChartColorTokens,
+} from '../chart_colors';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 import { ChartLoadingState } from './ChartLoadingState';
 
@@ -70,7 +77,8 @@ function densifyValues(values, minX, maxX, seed = 1) {
     let y = sampleLinear(values, x);
     const n = Math.sin(seed * 12.9898 + x * 78.233 + i * 3.1) * 43758.5453;
     const r = n - Math.floor(n);
-    y += (r - 0.5) * Math.abs(y) * detail * 2;
+    // Absolute noise only — relative noise on ~99% SLI invents false breaches.
+    y += (r - 0.5) * detail * 3;
     points.push(Number(y.toFixed(3)));
     labels.push(`Day ${(x + 1).toFixed(1)}`);
   }
@@ -277,6 +285,57 @@ function ChartFrame({ height = 180, loading = false, children }) {
   );
 }
 
+/**
+ * Vertical-annotation badge. `align` keeps the full label inside the plot when
+ * the anchor sits near a chart edge (`end` = hang left of the line).
+ */
+function XAnnotationMarker({ label, lines, color, align = 'center' }) {
+  const rows =
+    Array.isArray(lines) && lines.length > 0
+      ? lines.filter(Boolean)
+      : [label].filter(Boolean);
+  if (!rows.length) return null;
+
+  // Charts centers the marker on the annotation line; shift so the badge
+  // edge touches that line. Hang below the top plot edge (Position.Top).
+  const transform =
+    align === 'end'
+      ? 'translateX(-50%) translateY(100%)'
+      : align === 'start'
+        ? 'translateX(50%) translateY(100%)'
+        : 'translateY(100%)';
+
+  // Flag shape: round only the side away from the annotation line.
+  const borderRadius =
+    align === 'end'
+      ? '4px 0 0 4px'
+      : align === 'start'
+        ? '0 4px 4px 0'
+        : 4;
+
+  return (
+    <div
+      style={{
+        fontSize: 10,
+        lineHeight: 1.25,
+        padding: '3px 7px',
+        borderRadius,
+        background: color || 'rgba(0,0,0,0.72)',
+        color: '#fff',
+        fontWeight: 600,
+        textAlign: align === 'end' ? 'right' : align === 'start' ? 'left' : 'center',
+        transform,
+        // Avoid mid-word wrap; keep each row on one line.
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {rows.map((row) => (
+        <div key={row}>{row}</div>
+      ))}
+    </div>
+  );
+}
+
 function LineChart({
   values,
   labels,
@@ -288,12 +347,38 @@ function LineChart({
   valueUnit = '%',
   loading = false,
   onBrushEnd,
+  /** Optional vertical marker: { x, label, color? } */
+  xAnnotation = null,
 }) {
   const chartBaseTheme = useChartBaseTheme();
   const tokens = useChartColorTokens();
   const data = useMemo(() => seriesFromValues(values, labels), [values, labels]);
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName, valueUnit });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName, valueUnit });
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values,
+        alertThreshold,
+        yMin,
+        yMax,
+        // Keep SLO target / objective line visible below a healthy series.
+        extraValues: target != null ? [target] : [],
+      }),
+    [values, alertThreshold, yMin, yMax, target]
+  );
+  const annotationColor = xAnnotation?.color || tokens.health.danger;
+  const annotationAlign = useMemo(() => {
+    if (xAnnotation == null || !values?.length) return 'center';
+    const ratio = Number(xAnnotation.x) / Math.max(values.length - 1, 1);
+    if (ratio >= 0.62) return 'end';
+    if (ratio <= 0.38) return 'start';
+    return 'center';
+  }, [xAnnotation, values?.length]);
 
   return (
     <ChartFrame height={180} loading={loading}>
@@ -302,6 +387,18 @@ function LineChart({
         onBrushEnd={onBrushEnd}
         brushAxis="x"
         minBrushDelta={4}
+        theme={
+          xAnnotation
+            ? {
+                chartMargins: {
+                  top: 36,
+                  bottom: 0,
+                  left: 0,
+                  right: annotationAlign === 'end' ? 4 : 8,
+                },
+              }
+            : undefined
+        }
       />
       <Tooltip
         headerFormatter={({ value }) =>
@@ -322,11 +419,7 @@ function LineChart({
         id="left"
         position={Position.Left}
         tickFormat={(d) => `${Number(d).toFixed(1)}${valueUnit}`}
-        domain={
-          yMin != null && yMax != null
-            ? { min: yMin, max: yMax }
-            : undefined
-        }
+        domain={yDomain}
       />
       {target != null && (
         <LineAnnotation
@@ -356,6 +449,36 @@ function LineChart({
             },
           ]}
           style={ALERT_THRESHOLD_LINE_STYLE}
+          marker={<AlertThresholdAnnotationMarker label={alertThresholdLabel} />}
+          markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
+        />
+      )}
+      {xAnnotation != null && Number.isFinite(Number(xAnnotation.x)) && (
+        <LineAnnotation
+          id="x-annotation"
+          domainType={AnnotationDomainType.XDomain}
+          dataValues={[
+            {
+              dataValue: Number(xAnnotation.x),
+              details: xAnnotation.label,
+            },
+          ]}
+          marker={
+            <XAnnotationMarker
+              label={xAnnotation.label}
+              lines={xAnnotation.lines}
+              color={annotationColor}
+              align={annotationAlign}
+            />
+          }
+          markerPosition={Position.Top}
+          style={{
+            line: {
+              stroke: annotationColor,
+              strokeWidth: 1.5,
+              opacity: 0.9,
+            },
+          }}
         />
       )}
       <LineSeries
@@ -390,8 +513,20 @@ function AreaChart({
 }) {
   const chartBaseTheme = useChartBaseTheme();
   const data = useMemo(() => seriesFromValues(values, labels), [values, labels]);
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName, valueUnit: '' });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName, valueUnit: '' });
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values,
+        alertThreshold,
+      }),
+    [values, alertThreshold]
+  );
 
   return (
     <ChartFrame height={160} loading={loading}>
@@ -419,6 +554,7 @@ function AreaChart({
         id="left"
         position={Position.Left}
         tickFormat={(d) => Number(d).toFixed(2)}
+        domain={yDomain}
       />
       {alertThreshold != null && (
         <LineAnnotation
@@ -431,6 +567,8 @@ function AreaChart({
             },
           ]}
           style={ALERT_THRESHOLD_LINE_STYLE}
+          marker={<AlertThresholdAnnotationMarker label={alertThresholdLabel} />}
+          markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
         />
       )}
       <AreaSeries
@@ -474,7 +612,7 @@ export function SliPanel({ slo, loading = false }) {
         values={zoom.values}
         labels={zoom.labels}
         target={slo.target}
-        color={getVisSeriesColor(tokens, 0)}
+        color={getSloStatusHealthColor(slo.status, tokens)}
         seriesName="SLI"
         valueUnit="%"
         loading={loading}
@@ -489,6 +627,79 @@ export function SliPanel({ slo, loading = false }) {
   );
 }
 
+const BURN_WINDOW_MS = {
+  '1h': 60 * 60 * 1000,
+  '6h': 6 * 60 * 60 * 1000,
+  '24h': 24 * 60 * 60 * 1000,
+  '72h': 72 * 60 * 60 * 1000,
+};
+
+/** Stable "now" so axis ticks don't jump between renders. */
+const BURN_SERIES_END = new Date('2023-08-14T15:30:00');
+
+function formatBurnRateTick(date, windowId) {
+  if (windowId === '72h') {
+    return date.toLocaleString(undefined, {
+      weekday: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  }
+  if (windowId === '24h') {
+    return date.toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  }
+  return date.toLocaleTimeString(undefined, {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
+
+/** Time labels for the selected burn window (and optional zoom slice). */
+function buildBurnRateTimeLabels(
+  windowId,
+  count,
+  { range = null, fullLength = count } = {}
+) {
+  const spanMs = BURN_WINDOW_MS[windowId] || BURN_WINDOW_MS['24h'];
+  const endMs = BURN_SERIES_END.getTime();
+  const startMs = endMs - spanMs;
+  const minIdx = range?.min ?? 0;
+  const maxIdx = range?.max ?? Math.max(fullLength - 1, 0);
+  const fullSpan = Math.max(fullLength - 1, 1);
+
+  return Array.from({ length: count }, (_, i) => {
+    const t = count <= 1 ? 1 : i / (count - 1);
+    const origT = (minIdx + t * (maxIdx - minIdx)) / fullSpan;
+    const ms = startMs + origT * spanMs;
+    return formatBurnRateTick(new Date(ms), windowId);
+  });
+}
+
+/** Slightly different burn profile per window so switching feels real. */
+function burnSeriesForWindow(baseSeries, windowId) {
+  const scale =
+    { '1h': 1.45, '6h': 1.15, '24h': 1, '72h': 0.72 }[windowId] || 1;
+  const volatility =
+    { '1h': 0.28, '6h': 0.18, '24h': 0.12, '72h': 0.08 }[windowId] || 0.12;
+  const seed =
+    { '1h': 11, '6h': 17, '24h': 23, '72h': 29 }[windowId] || 23;
+
+  return (baseSeries || []).map((y, i) => {
+    const n = Math.sin(seed * 9.1 + i * 4.7) * 10000;
+    const r = n - Math.floor(n);
+    const next = Number(y) * scale * (1 + (r - 0.5) * volatility);
+    return Number(Math.max(0, next).toFixed(2));
+  });
+}
+
 export function BurnRatePanel({
   slo,
   burnWindow,
@@ -496,7 +707,20 @@ export function BurnRatePanel({
   loading = false,
 }) {
   const tokens = useChartColorTokens();
-  const zoom = useZoomedSeries(slo.burnSeries, 2);
+  const windowSeries = useMemo(
+    () => burnSeriesForWindow(slo.burnSeries, burnWindow),
+    [slo.burnSeries, burnWindow]
+  );
+  // Seed includes window so zoom resets when switching 1h / 6h / …
+  const zoom = useZoomedSeries(windowSeries, burnWindow);
+  const labels = useMemo(
+    () =>
+      buildBurnRateTimeLabels(burnWindow, zoom.values.length, {
+        range: zoom.range,
+        fullLength: windowSeries.length,
+      }),
+    [burnWindow, zoom.values.length, zoom.range, windowSeries.length]
+  );
 
   return (
     <EuiPanel hasBorder paddingSize="m">
@@ -524,7 +748,7 @@ export function BurnRatePanel({
       <EuiSpacer size="s" />
       <AreaChart
         values={zoom.values}
-        labels={zoom.labels}
+        labels={labels}
         color={tokens.health.danger}
         seriesName="Burn rate"
         loading={loading}
@@ -563,18 +787,46 @@ function formatExhaustionWhen(date) {
   return `${time}, ${day}`;
 }
 
+/** First index where budget hits or crosses 0% (exhausted). */
+function findBudgetDepletionIndex(values = []) {
+  for (let i = 0; i < values.length; i += 1) {
+    if (Number(values[i]) <= 0) return i;
+  }
+  return -1;
+}
+
+function getBudgetDepletionAnnotation(values, windowLabel) {
+  const idx = findBudgetDepletionIndex(values);
+  if (idx < 0) return null;
+  const days = parseWindowDays(windowLabel);
+  const t = idx / Math.max(values.length - 1, 1);
+  const depletedAt = new Date(
+    Date.now() - (1 - t) * days * 24 * 60 * 60 * 1000
+  );
+  const when = formatExhaustionWhen(depletedAt);
+  return {
+    x: idx,
+    label: `Budget exhausted at ${when}`,
+    lines: ['Budget exhausted', when],
+  };
+}
+
 export function BudgetRemainingPanel({ slo, loading = false }) {
   const tokens = useChartColorTokens();
   const zoom = useZoomedSeries(slo.budgetSeries, 3);
   const remaining = slo.budgetSeries[slo.budgetSeries.length - 1];
-  const violated = remaining < 0;
+  const violated = remaining <= 0;
   const exhaustionAt = useMemo(
     () => getBudgetExhaustionAt(remaining, slo.window, FORECAST_BURN_RATE),
     [remaining, slo.window]
   );
   const forecastLabel = exhaustionAt
-    ? `Forecast @${FORECAST_BURN_RATE}x burn rate · budget depletes ${formatExhaustionWhen(exhaustionAt)}`
+    ? `Forecast @${FORECAST_BURN_RATE}x burn rate · budget exhausted at ${formatExhaustionWhen(exhaustionAt)}`
     : `Forecast @${FORECAST_BURN_RATE}x burn rate · budget already exhausted`;
+  const depletionAnnotation = useMemo(
+    () => getBudgetDepletionAnnotation(zoom.values, slo.window),
+    [zoom.values, slo.window]
+  );
 
   return (
     <EuiPanel hasBorder paddingSize="m">
@@ -610,6 +862,14 @@ export function BudgetRemainingPanel({ slo, loading = false }) {
         valueUnit="%"
         loading={loading}
         onBrushEnd={zoom.onBrushEnd}
+        xAnnotation={
+          depletionAnnotation
+            ? {
+                ...depletionAnnotation,
+                color: tokens.health.danger,
+              }
+            : null
+        }
       />
       <EuiText size="xs" color="subdued">
         <p>{forecastLabel}</p>
@@ -622,8 +882,12 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
   const tokens = useChartColorTokens();
   const chartBaseTheme = useChartBaseTheme();
   const zoom = useZoomedBars(bars);
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName: 'Good vs Bad events', valueUnit: '' });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName: 'Good vs Bad events', valueUnit: '' });
   // Default: Bad only. Both series stay available via the filter control.
   const [seriesFilter, setSeriesFilter] = useState('bad');
 
@@ -641,6 +905,16 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
 
   const showGood = seriesFilter === 'both' || seriesFilter === 'good';
   const showBad = seriesFilter === 'both' || seriesFilter === 'bad';
+  const yDomain = useMemo(() => {
+    const values = data.flatMap((row) => {
+      const next = [];
+      if (showGood) next.push(row.good);
+      if (showBad) next.push(row.bad);
+      if (showGood && showBad) next.push(row.good + row.bad);
+      return next;
+    });
+    return getYDomainIncludingThreshold({ values, alertThreshold });
+  }, [data, showGood, showBad, alertThreshold]);
 
   return (
     <EuiPanel hasBorder paddingSize="m">
@@ -704,6 +978,7 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
           id="left"
           position={Position.Left}
           tickFormat={(d) => Number(d).toLocaleString()}
+          domain={yDomain}
         />
         {alertThreshold != null && (
           <LineAnnotation
@@ -716,6 +991,10 @@ export function GoodBadPanel({ bars, onBarClick, loading = false }) {
               },
             ]}
             style={ALERT_THRESHOLD_LINE_STYLE}
+            marker={
+              <AlertThresholdAnnotationMarker label={alertThresholdLabel} />
+            }
+            markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
           />
         )}
         {showGood && (

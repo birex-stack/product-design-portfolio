@@ -286,26 +286,54 @@ function DependencyTimeline({ message, selectedEventId, onEventClick }) {
             </button>
           );
         })}
-      </div>
-      {(message.items || []).length > 0 && (
-        <>
-          <EuiSpacer size="s" />
-          <EuiText size="xs" color="subdued">
-            <p style={{ margin: '0 0 6px' }}>Next step</p>
-          </EuiText>
-          <EuiButtonEmpty
-            iconType="dashboardApp"
-            size="s"
-            flush="left"
+        {(message.items || []).length > 0 && (
+          <button
+            type="button"
             onClick={() => {
               stashInvestigationEvents(message.items);
               window.location.hash = `#/dashboards/${AI_INVESTIGATION_DASHBOARD_ID}`;
             }}
+            style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              textAlign: 'left',
+              marginBottom: 0,
+              padding: '8px 10px 8px 4px',
+              border: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              color: euiTheme.colors.primary,
+            }}
           >
-            Visualize in dashboards
-          </EuiButtonEmpty>
-        </>
-      )}
+            <div
+              style={{
+                position: 'absolute',
+                left: -28,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                background: euiTheme.colors.primary,
+                color: euiTheme.colors.emptyShade,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1,
+              }}
+            >
+              <EuiIcon type="play" size="s" color="ghost" />
+            </div>
+            <EuiText size="s" color="primary">
+              <p style={{ margin: 0 }}>
+                <strong>Visualize events in dashboards</strong>
+              </p>
+            </EuiText>
+          </button>
+        )}
+      </div>
     </TimelineItem>
   );
 }

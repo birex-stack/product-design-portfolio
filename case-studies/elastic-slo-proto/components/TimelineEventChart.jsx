@@ -10,9 +10,17 @@ import {
   Position,
   ScaleType,
   Settings,
+  Tooltip,
 } from '@elastic/charts';
 import { EuiSpacer, EuiText, EuiTitle, useEuiTheme } from '@elastic/eui';
 import { getVisSeriesColor, useChartColorTokens } from '../chart_colors';
+import {
+  ALERT_THRESHOLD_LINE_STYLE,
+  ALERT_THRESHOLD_MARKER_POSITION,
+  AlertThresholdAnnotationMarker,
+  getYDomainIncludingThreshold,
+  useChartTooltipActions,
+} from '../chart_tooltip_actions';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 
 const POINTS = 18;
@@ -258,6 +266,14 @@ function EventMarker({ label }) {
   );
 }
 
+function seriesValuesFromSpec(spec) {
+  if (!spec?.data?.length) return [];
+  return spec.data.map((d) => {
+    if (typeof d.y === 'number' && Number.isFinite(d.y)) return d.y;
+    return (Number(d.info) || 0) + (Number(d.warn) || 0) + (Number(d.error) || 0);
+  });
+}
+
 export function TimelineEventChart({ event }) {
   const chartBaseTheme = useChartBaseTheme();
   const { euiTheme } = useEuiTheme();
@@ -268,10 +284,31 @@ export function TimelineEventChart({ event }) {
     [event, tokens]
   );
 
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({
+    seriesName: spec?.seriesName || spec?.title || 'Event metric',
+    valueUnit: spec?.unit || '',
+  });
+
+  const yDomain = useMemo(() => {
+    if (!spec) return undefined;
+    return getYDomainIncludingThreshold({
+      values: seriesValuesFromSpec(spec),
+      alertThreshold:
+        alertThreshold != null ? alertThreshold : spec.threshold,
+      extraValues: spec.threshold != null ? [spec.threshold] : [],
+    });
+  }, [spec, alertThreshold]);
+
   if (!event || !spec) return null;
 
   const height = 168;
   const thresholdColor = spec.thresholdColor || tokens.health.danger;
+  const showAlertThreshold = alertThreshold != null;
 
   return (
     <div>
@@ -292,6 +329,10 @@ export function TimelineEventChart({ event }) {
               chartMargins: { top: 18, bottom: 0, left: 0, right: 0 },
             }}
           />
+          <Tooltip
+            headerFormatter={({ value }) => `t${Number(value) + 1}`}
+            actions={tooltipActions}
+          />
           <Axis
             id="bottom"
             position={Position.Bottom}
@@ -303,9 +344,10 @@ export function TimelineEventChart({ event }) {
             position={Position.Left}
             tickFormat={spec.tickFormat || ((d) => `${Math.round(d)}`)}
             ticks={4}
+            domain={yDomain}
           />
 
-          {spec.threshold != null && (
+          {spec.threshold != null && !showAlertThreshold && (
             <LineAnnotation
               id="threshold"
               domainType={AnnotationDomainType.YDomain}
@@ -324,6 +366,24 @@ export function TimelineEventChart({ event }) {
                 </span>
               }
               markerPosition={Position.Right}
+            />
+          )}
+
+          {showAlertThreshold && (
+            <LineAnnotation
+              id="alert-rule-threshold"
+              domainType={AnnotationDomainType.YDomain}
+              dataValues={[
+                {
+                  dataValue: alertThreshold,
+                  details: alertThresholdDetails,
+                },
+              ]}
+              style={ALERT_THRESHOLD_LINE_STYLE}
+              marker={
+                <AlertThresholdAnnotationMarker label={alertThresholdLabel} />
+              }
+              markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
             />
           )}
 

@@ -4,8 +4,6 @@ import {
   EuiButtonIcon,
   EuiCollapsibleNav,
   EuiCollapsibleNavGroup,
-  EuiFlexGroup,
-  EuiFlexItem,
   EuiHeader,
   EuiHeaderLink,
   EuiHeaderLinks,
@@ -14,7 +12,6 @@ import {
   EuiIcon,
   EuiListGroup,
   EuiPageTemplate,
-  EuiTitle,
   EuiToolTip,
   useEuiTheme,
   useGeneratedHtmlId,
@@ -140,11 +137,6 @@ export function ObservabilityChrome({
           top: ${secondaryHeaderTop} !important;
           inset-block-start: ${secondaryHeaderTop} !important;
         }
-        /* Align Overview–Dashboards with CollapsibleNavGroup titles (Logs, …). */
-        .obsChrome__navPrimary .euiListGroupItem__button {
-          padding-inline-start: ${euiTheme.size.m};
-          padding-inline-end: ${euiTheme.size.m};
-        }
       `}</style>
       <EuiHeader
         theme="dark"
@@ -249,46 +241,38 @@ export function ObservabilityChrome({
           }));
 
           if (group.id === 'obs') {
-            const navInset = euiTheme.size.m;
             return (
-              <div key={group.id} className="obsChrome__navPrimary">
-                <EuiFlexGroup
-                  gutterSize="s"
-                  alignItems="center"
-                  responsive={false}
-                  style={{
-                    padding: `${euiTheme.size.m} ${navInset} ${euiTheme.size.xs}`,
-                  }}
-                >
-                  <EuiFlexItem grow={false}>
-                    <EuiIcon type={group.iconType} size="m" />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiTitle size="xxs">
-                      <h2 style={{ margin: 0 }}>{group.name}</h2>
-                    </EuiTitle>
-                  </EuiFlexItem>
-                  <EuiFlexItem grow={false}>
-                    <EuiToolTip
-                      content={
+              <EuiCollapsibleNavGroup
+                key={group.id}
+                title={group.name}
+                iconType={group.iconType}
+                iconSize="m"
+                titleSize="xxs"
+                isCollapsible
+                initialIsOpen
+                arrowDisplay="none"
+                paddingSize="none"
+                extraAction={
+                  <EuiToolTip
+                    content={
+                      navIsDocked ? 'Undock navigation' : 'Dock navigation'
+                    }
+                  >
+                    <EuiButtonIcon
+                      iconType={navIsDocked ? 'pinFill' : 'pin'}
+                      aria-label={
                         navIsDocked ? 'Undock navigation' : 'Dock navigation'
                       }
-                    >
-                      <EuiButtonIcon
-                        iconType={navIsDocked ? 'pinFill' : 'pin'}
-                        aria-label={
-                          navIsDocked ? 'Undock navigation' : 'Dock navigation'
-                        }
-                        aria-pressed={navIsDocked}
-                        color={navIsDocked ? 'primary' : 'text'}
-                        onClick={() => {
-                          setNavIsDocked((docked) => !docked);
-                          setNavIsOpen(true);
-                        }}
-                      />
-                    </EuiToolTip>
-                  </EuiFlexItem>
-                </EuiFlexGroup>
+                      aria-pressed={navIsDocked}
+                      color={navIsDocked ? 'primary' : 'text'}
+                      onClick={() => {
+                        setNavIsDocked((docked) => !docked);
+                        setNavIsOpen(true);
+                      }}
+                    />
+                  </EuiToolTip>
+                }
+              >
                 <EuiListGroup
                   maxWidth="none"
                   color="text"
@@ -296,7 +280,7 @@ export function ObservabilityChrome({
                   size="s"
                   listItems={listItems}
                 />
-              </div>
+              </EuiCollapsibleNavGroup>
             );
           }
 

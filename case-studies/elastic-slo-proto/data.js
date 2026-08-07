@@ -12,40 +12,121 @@ function sparkline(seed, base, volatility, points = 28) {
   return values;
 }
 
+function rand01(seed, i) {
+  const n = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
+  return n - Math.floor(n);
+}
+
 /**
- * Metric trend Y-scale is [0, maxY]; the band is only the bottom 50% of the
- * card and maxY sits at the vertical middle. SLI-like values (~99) therefore
- * hug that middle line. This series keeps peaks at `peak` (same midline) and
- * pulls valleys down toward ~valleyFloor so the area reaches nearer the value %.
+ * SLI observed series aligned with current SLI, target, and health status.
+ * Healthy stays above target; warning hovers near it; violated stays below.
  */
-function metricTrend(seed, base, volatility, points = 28) {
-  const peak = 100;
-  const valleyFloor = Math.max(28, 42 - volatility * 5);
+function sliObservedSeries(seed, sli, target, status, points = 28) {
   const values = [];
+  let v = sli;
 
   for (let i = 0; i < points; i += 1) {
-    const t = i / (points - 1);
-    const n1 = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453;
-    const n2 = Math.sin(seed * 4.17 + i * 19.13) * 23421.631;
-    const r1 = n1 - Math.floor(n1);
-    const r2 = n2 - Math.floor(n2);
+    const r = rand01(seed, i);
+    const r2 = rand01(seed + 3, i);
+    const t = i / Math.max(points - 1, 1);
+    const pull = 0.12 + t * 0.35;
 
-    const waveA = 0.55 + 0.45 * Math.sin(t * Math.PI * (1.6 + (seed % 5) * 0.35) + seed);
-    const waveB = 0.5 + 0.5 * Math.sin(t * Math.PI * (3.2 + (seed % 3)) + r1 * 2);
-    const dip = Math.pow(Math.sin(t * Math.PI * (2 + (seed % 4)) + seed * 0.7), 2);
-    const noise = (r1 - 0.5) * 0.28 + (r2 - 0.5) * 0.14;
+    if (status === 'healthy') {
+      const floor = target + 0.05;
+      const ceil = Math.min(100, Math.max(sli + 0.6, target + 1.2));
+      const vol = Math.max(0.12, (sli - target) * 0.4);
+      v += (r - 0.48) * vol;
+      v = v * (1 - pull) + sli * pull;
+      v = Math.min(ceil, Math.max(floor, v));
+    } else if (status === 'warning' || status === 'degrading') {
+      const vol = Math.max(0.18, Math.abs(sli - target) + 0.35);
+      v =
+        sli +
+        Math.sin(t * Math.PI * 2.4 + seed) * vol * 0.55 +
+        (r - 0.5) * vol * 0.5;
+      // Occasional brief dips below target — typical of a warning SLO.
+      if (r2 > 0.72) v = target - (0.05 + r * 0.25);
+      else v = Math.max(target - 0.12, v);
+      v = Math.min(100, Math.max(Math.min(target, sli) - 1.2, v));
+    } else {
+      // violated — remain below target, centered on current SLI
+      const gap = Math.max(0.4, target - sli);
+      const vol = Math.max(0.35, gap * 0.4);
+      const floor = Math.max(0, sli - Math.max(1.5, gap * 0.7));
+      const ceil = target - 0.05;
+      v =
+        sli +
+        Math.sin(t * Math.PI * 1.7 + seed) * vol +
+        (r - 0.5) * vol * 0.7;
+      if (r2 > 0.9) v = target - 0.08;
+      v = v * (1 - pull * 0.45) + sli * pull * 0.55;
+      v = Math.min(ceil, Math.max(floor, v));
+    }
 
-    const healthBias = Math.min(1, Math.max(0, (base - 90) / 10));
-    let shape = waveA * 0.45 + waveB * 0.35 + (1 - dip) * 0.2 + noise;
-    shape = shape * (0.5 + healthBias * 0.35) + healthBias * 0.12;
-    shape = Math.min(1, Math.max(0, shape));
-
-    values.push(Number((valleyFloor + shape * (peak - valleyFloor)).toFixed(2)));
+    values.push(Number(v.toFixed(2)));
   }
 
-  const maxIdx = values.reduce((best, y, i, arr) => (y > arr[best] ? i : best), 0);
-  values[maxIdx] = peak;
+  values[points - 1] = Number(Number(sli).toFixed(2));
+
+  if (status === 'healthy') {
+    for (let i = 0; i < values.length; i += 1) {
+      if (values[i] < target) {
+        values[i] = Number(
+          (target + 0.05 + rand01(seed, i + 40) * 0.25).toFixed(2)
+        );
+      }
+    }
+    values[points - 1] = Number(Number(sli).toFixed(2));
+  }
+
   return values;
+}
+
+/**
+ * Error budget remaining (%) aligned with SLO health.
+ * Violated SLOs end at 0 or negative (budget exhausted / overspent).
+ */
+function budgetRemainingSeries(seed, status, points = 28) {
+  let end;
+  if (status === 'healthy') {
+    end = 35 + rand01(seed, 0) * 40;
+  } else if (status === 'warning' || status === 'degrading') {
+    end = 8 + rand01(seed, 0) * 18;
+  } else {
+    // violated — exhausted or overspent
+    end = rand01(seed, 0) > 0.35 ? -(0.5 + rand01(seed, 1) * 12) : 0;
+  }
+
+  const start =
+    status === 'violated'
+      ? 18 + rand01(seed, 2) * 40
+      : status === 'warning' || status === 'degrading'
+        ? end + 12 + rand01(seed, 2) * 28
+        : Math.min(95, end + 5 + rand01(seed, 2) * 22);
+
+  const values = [];
+  for (let i = 0; i < points; i += 1) {
+    const t = i / Math.max(points - 1, 1);
+    const r = rand01(seed, i + 10);
+    let v = start + (end - start) * (0.15 * t + 0.85 * t * t);
+    v += (r - 0.5) * (status === 'healthy' ? 2.5 : 4);
+
+    if (status === 'healthy') v = Math.max(20, Math.min(100, v));
+    else if (status === 'warning' || status === 'degrading') {
+      v = Math.max(3, Math.min(55, v));
+    } else {
+      v = Math.max(-25, Math.min(70, v));
+    }
+    values.push(Number(v.toFixed(2)));
+  }
+
+  values[points - 1] = Number(Number(end).toFixed(2));
+  return values;
+}
+
+/** Placeholder so SLO object literals parse; overwritten when exporting SLOS. */
+function metricTrend() {
+  return [];
 }
 
 function barSeries(seed, points = 14) {
@@ -368,7 +449,11 @@ export const SLOS = [
     budgetSeries: sparkline(36, 9, 4),
     goodBad: barSeries(16),
   },
-];
+].map((slo, i) => ({
+  ...slo,
+  sparkline: sliObservedSeries(i + 1, slo.sli, slo.target, slo.status),
+  budgetSeries: budgetRemainingSeries(i + 21, slo.status),
+}));
 
 export function getSloById(id) {
   return SLOS.find((slo) => slo.id === id) || SLOS[4];
@@ -384,18 +469,86 @@ function hashSeed(str) {
   return h;
 }
 
-/** Metric series used by alert activity chart + table sparklines. */
-export function buildAlertActivitySeries(seed = 1, points = 36) {
+/**
+ * Metric series for alert activity: stays below threshold, then breaches and
+ * remains elevated so the trigger annotation can align with the crossing.
+ */
+export function buildAlertActivitySeries(seed = 1, points = 36, options = {}) {
+  const threshold = Number.isFinite(Number(options.threshold))
+    ? Number(options.threshold)
+    : 70;
+  const triggerAt = Math.min(
+    points - 3,
+    Math.max(4, options.triggerAt ?? Math.floor(points * 0.55))
+  );
+
   const values = [];
-  let v = 42;
+  let v = threshold * 0.55;
+
   for (let i = 0; i < points; i += 1) {
     const n = Math.sin(seed * 9.1 + i * 4.7) * 10000;
     const r = n - Math.floor(n);
-    const climb = i > points * 0.45 ? (i - points * 0.45) * 1.8 : 0;
-    v = Math.max(10, Math.min(120, v + (r - 0.48) * 8 + climb * 0.15));
+
+    if (i < triggerAt) {
+      const ceil = threshold - 1.5;
+      const floor = Math.max(threshold * 0.25, 5);
+      v = Math.min(ceil, Math.max(floor, v + (r - 0.5) * threshold * 0.08));
+      // Ramp toward the threshold just before the breach.
+      if (i >= triggerAt - 3) {
+        v += (threshold - 1 - v) * 0.45;
+        v = Math.min(ceil, v);
+      }
+    } else if (i === triggerAt) {
+      v = threshold + 1.5 + r * threshold * 0.08;
+    } else {
+      const floor = threshold + 0.75;
+      const ceil = threshold * 1.55;
+      v = Math.max(floor, Math.min(ceil, v + (r - 0.42) * threshold * 0.1));
+    }
+
     values.push(Number(v.toFixed(2)));
   }
+
+  // Hard-guarantee a clean crossing at triggerAt.
+  if (triggerAt > 0) {
+    values[triggerAt - 1] = Number(
+      Math.min(values[triggerAt - 1], threshold - 0.75).toFixed(2)
+    );
+  }
+  values[triggerAt] = Number(
+    Math.max(values[triggerAt], threshold + 1).toFixed(2)
+  );
+
   return values;
+}
+
+/** First index where the series crosses the alert threshold. */
+export function findAlertTriggerIndex(
+  values = [],
+  threshold,
+  comparator = 'above'
+) {
+  if (!values.length || !Number.isFinite(Number(threshold))) {
+    return Math.floor(values.length * 0.55);
+  }
+  const t = Number(threshold);
+  const below =
+    comparator === 'below' || comparator === 'below_or_eq';
+
+  for (let i = 1; i < values.length; i += 1) {
+    const prev = values[i - 1];
+    const curr = values[i];
+    if (below) {
+      if (prev > t && curr <= t) return i;
+    } else if (prev < t && curr >= t) {
+      return i;
+    }
+  }
+
+  const fallback = below
+    ? values.findIndex((y) => y <= t)
+    : values.findIndex((y) => y >= t);
+  return fallback >= 0 ? fallback : Math.floor(values.length * 0.55);
 }
 
 export function getAlertsForSlo(slo) {
@@ -434,7 +587,7 @@ export function getAlertsForSlo(slo) {
       reason: reasons[(seed + i * 2) % reasons.length],
       triggeredAt: `${hour}:${minute}:00 14-08-23`,
       duration: `${1 + ((seed + i) % 12)}h`,
-      sparkline: buildAlertActivitySeries(seriesSeed, 24),
+      sparkline: buildAlertActivitySeries(seriesSeed, 24, { threshold: 70 }),
       guideStepsCompleted:
         statuses[(seed + i) % statuses.length] === 'acknowledged'
           ? 2 + ((seed + i) % 4)

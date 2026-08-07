@@ -49,13 +49,22 @@ function SloBadges({ status, alerts, onAlertsClick }) {
           color="danger"
           fill
           iconType="warning"
-          style={{ pointerEvents: 'auto', cursor: 'pointer' }}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onAlertsClick?.(e);
+          style={{
+            pointerEvents: onAlertsClick ? 'auto' : 'none',
+            cursor: onAlertsClick ? 'pointer' : 'default',
           }}
-          onClickAriaLabel={`View ${alerts} alerts`}
+          onClick={
+            onAlertsClick
+              ? (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onAlertsClick?.(e);
+                }
+              : undefined
+          }
+          onClickAriaLabel={
+            onAlertsClick ? `View ${alerts} alerts` : undefined
+          }
         >
           {alerts}
         </EuiBadge>
@@ -64,7 +73,17 @@ function SloBadges({ status, alerts, onAlertsClick }) {
   );
 }
 
-export function SloCard({ slo, onOpen, onAlertsClick }) {
+/**
+ * Shared SLO metric tile (list + dashboards).
+ * `height` defaults to list size; dashboards pass a shorter height.
+ */
+export function SloCard({
+  slo,
+  onOpen,
+  onAlertsClick,
+  height = 180,
+  interactive = Boolean(onOpen),
+}) {
   const chartBaseTheme = useChartBaseTheme();
   const meta = STATUS_META[slo.status] || STATUS_META.healthy;
 
@@ -81,28 +100,34 @@ export function SloCard({ slo, onOpen, onAlertsClick }) {
     <EuiPanel
       paddingSize="none"
       hasBorder
-      onClick={() => onOpen(slo.id)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onOpen(slo.id);
-        }
-      }}
-      role="button"
-      tabIndex={0}
-      aria-label={`Open ${slo.name}`}
+      onClick={interactive ? () => onOpen?.(slo.id) : undefined}
+      onKeyDown={
+        interactive
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpen?.(slo.id);
+              }
+            }
+          : undefined
+      }
+      role={interactive ? 'button' : undefined}
+      tabIndex={interactive ? 0 : undefined}
+      aria-label={interactive ? `Open ${slo.name}` : undefined}
       css={css`
         display: block;
         width: 100%;
         min-width: 0;
-        height: 180px;
+        height: ${height}px;
         overflow: hidden;
         padding: 0;
         text-align: left;
-        cursor: pointer;
+        cursor: ${interactive ? 'pointer' : 'default'};
         border-radius: 6px !important;
         transition: box-shadow 120ms ease, transform 120ms ease;
 
+        ${interactive
+          ? `
         &:hover {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
           transform: translateY(-1px);
@@ -112,6 +137,8 @@ export function SloCard({ slo, onOpen, onAlertsClick }) {
           outline: 2px solid #07c;
           outline-offset: 2px;
         }
+        `
+          : ''}
 
         .echChart,
         .echMetricContainer,
@@ -121,8 +148,8 @@ export function SloCard({ slo, onOpen, onAlertsClick }) {
         }
       `}
     >
-      <div style={{ width: '100%', height: 180, pointerEvents: 'none' }}>
-        <Chart size={{ width: '100%', height: 180 }}>
+      <div style={{ width: '100%', height, pointerEvents: 'none' }}>
+        <Chart size={{ width: '100%', height }}>
           <Settings baseTheme={chartBaseTheme} />
           <Metric
             id={slo.id}

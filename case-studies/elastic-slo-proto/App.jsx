@@ -172,6 +172,7 @@ export default function App() {
       <DashboardDetailPage
         dashboard={dashboard}
         onBack={navigateDashboards}
+        onOpenSlo={openSlo}
         assistantOpen={assistantOpen}
         onAssistantOpenChange={setAssistantOpen}
       />

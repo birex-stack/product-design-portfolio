@@ -1,5 +1,7 @@
 /** Mock Kibana-style dashboards for the Dashboards listing page */
 
+import { SLOS } from './data';
+
 const CREATORS = [
   'elastic',
   'maciej',
@@ -243,14 +245,14 @@ export function getDashboardPanels(dashboard) {
               s2: 'Alerts by severity',
             }
           : {
-              m1: 'Avg CPU',
-              m2: 'Avg memory',
+              m1: 'CPU P95',
+              m2: 'Memory P95',
               m3: 'Disk used',
               m4: 'Hosts online',
-              c1: 'CPU usage over time',
-              c2: 'Memory usage over time',
+              c1: 'CPU usage over time P95',
+              c2: 'Memory usage over time P95',
               c3: 'Hosts by status',
-              table: 'Top hosts by CPU',
+              table: 'Top hosts by CPU P95',
               s1: 'Disk usage distribution',
               s2: 'Network throughput',
             };
@@ -339,10 +341,10 @@ export function getDashboardPanels(dashboard) {
     status: rand(seed, 70 + i) > 0.75 ? 'degraded' : 'healthy',
   }));
 
-  const sloSli = Number((97.5 + rand(seed, 90) * 2.4).toFixed(2));
-  const sloTarget = 99;
-  const sloStatus =
-    sloSli >= sloTarget ? 'healthy' : sloSli >= sloTarget - 0.5 ? 'degrading' : 'violated';
+  const availabilitySlo =
+    SLOS.find((s) => s.id === 'payment-availability') ||
+    SLOS.find((s) => (s.tags || []).includes('availability')) ||
+    SLOS[0];
   const alertCount = Math.round(2 + rand(seed, 91) * 28);
 
   const heatmapServices = ['checkout', 'payments', 'auth', 'search'];
@@ -412,14 +414,15 @@ export function getDashboardPanels(dashboard) {
         {
           id: 'slo-tile',
           type: 'sloTile',
+          sloId: availabilitySlo.id,
           title: 'Availability SLO',
-          subtitle: `${sloStatus} · target ${sloTarget}%`,
-          value: sloSli,
-          target: sloTarget,
-          status: sloStatus,
-          valueFormatter: (d) => `${Number(d).toFixed(2)}%`,
-          domain: [90, 100],
+          value: availabilitySlo.sli,
+          target: availabilitySlo.target,
+          status: availabilitySlo.status,
+          alerts: availabilitySlo.alerts,
+          sparkline: availabilitySlo.sparkline,
           w: 6,
+          height: 140,
         },
         {
           id: 'alerts-metric',
@@ -449,6 +452,9 @@ export function getDashboardPanels(dashboard) {
           id: 'chart-heatmap',
           type: 'heatmap',
           title: 'Latency heatmap by service',
+          metricName: 'Latency',
+          xLabelName: 'Percentile',
+          yLabelName: 'Service',
           w: 6,
           data: heatmapData,
         },
@@ -509,8 +515,8 @@ export function getDashboardPanels(dashboard) {
                 ]
               : [
                   { field: 'name', name: 'Host' },
-                  { field: 'metric', name: 'CPU' },
-                  { field: 'secondary', name: 'Memory %' },
+                  { field: 'metric', name: 'CPU P95' },
+                  { field: 'secondary', name: 'Memory P95 %' },
                   { field: 'status', name: 'Status' },
                 ],
       rows: tableRows,

@@ -32,21 +32,36 @@ import {
   ScaleType,
   Settings,
   Tooltip,
+  TooltipContainer,
+  TooltipHeader,
+  TooltipTable,
+  TooltipTableBody,
+  TooltipTableCell,
+  TooltipTableRow,
 } from '@elastic/charts';
 import {
   ALERT_THRESHOLD_LINE_STYLE,
+  ALERT_THRESHOLD_MARKER_POSITION,
+  AlertThresholdAnnotationMarker,
+  getYDomainIncludingThreshold,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
-import {
-  getSloStatusHealthSoft,
-  useChartColorTokens,
-} from '../chart_colors';
+import { useChartColorTokens } from '../chart_colors';
 import { getDashboardPanels, loadInvestigationEvents } from '../dashboards_data';
 import { buildDependencyTimeline } from '../assistant_context';
+import { SLOS } from '../data';
 import { useChartBaseTheme } from '../use_chart_base_theme';
+import { useShortChartLoading } from '../use_short_chart_loading';
 import { AiAssistantFlyout } from './AiAssistantFlyout';
+import { AlertsFlyout } from './AlertsFlyout';
+import { ChartLoadingState } from './ChartLoadingState';
 import { DashboardActionsMenu } from './DashboardActionsMenu';
+import { SloCard } from './SloCard';
 import { TimelineEventChart } from './TimelineEventChart';
+
+/** Staggered chart load — lighter delay than SLO detail. */
+const DASH_LOAD_STEP_MS = 250;
+const DASH_LOAD_FIRST_MS = 250;
 
 const GRID = {
   display: 'grid',
@@ -59,7 +74,14 @@ function panelSpan(w) {
   return { gridColumn: `span ${w}` };
 }
 
-function DashboardPanelShell({ title, children, height, paddingSize = 's' }) {
+function DashboardPanelShell({
+  title,
+  children,
+  height,
+  paddingSize = 's',
+  loading = false,
+  chartHeight = 180,
+}) {
   return (
     <EuiPanel
       hasBorder
@@ -74,13 +96,25 @@ function DashboardPanelShell({ title, children, height, paddingSize = 's' }) {
           <EuiSpacer size="s" />
         </>
       )}
-      <div style={{ flex: 1, minHeight: 0 }}>{children}</div>
+      <div style={{ flex: 1, minHeight: 0 }}>
+        {loading ? (
+          <ChartLoadingState height={chartHeight} size="xl" />
+        ) : (
+          children
+        )}
+      </div>
     </EuiPanel>
   );
 }
 
-function MetricPanel({ metric, color }) {
+function MetricPanel({ metric, color, loadIndex = 0, resetKey }) {
   const chartBaseTheme = useChartBaseTheme();
+  const loading = useShortChartLoading(
+    loadIndex,
+    resetKey,
+    DASH_LOAD_STEP_MS,
+    DASH_LOAD_FIRST_MS
+  );
   const height = 120;
 
   const datum = useMemo(() => {
@@ -114,53 +148,69 @@ function MetricPanel({ metric, color }) {
   return (
     <div style={panelSpan(metric.w || 3)}>
       <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
-        <Chart size={['100%', height]}>
-          <Settings baseTheme={chartBaseTheme} />
-          <Metric id={metric.id} data={[[datum]]} />
-        </Chart>
+        {loading ? (
+          <ChartLoadingState height={height} size="l" />
+        ) : (
+          <Chart size={['100%', height]}>
+            <Settings baseTheme={chartBaseTheme} />
+            <Metric id={metric.id} data={[[datum]]} />
+          </Chart>
+        )}
       </EuiPanel>
     </div>
   );
 }
 
-function SloTilePanel({ panel }) {
-  const chartBaseTheme = useChartBaseTheme();
-  const tokens = useChartColorTokens();
-  const height = 140;
-  const color = getSloStatusHealthSoft(panel.status, tokens);
-
-  const datum = useMemo(
-    () => ({
-      color,
-      title: panel.title,
-      subtitle: panel.subtitle,
-      value: panel.value,
-      valueFormatter: panel.valueFormatter,
-      domainMin: panel.domain?.[0] ?? 90,
-      domainMax: panel.domain?.[1] ?? 100,
-      progressBarDirection: LayoutDirection.Horizontal,
-      extra: (
-        <span>
-          Target <strong>{panel.target}%</strong>
-        </span>
-      ),
-    }),
-    [panel, color]
-  );
+function SloTilePanel({
+  panel,
+  loading = false,
+  onOpenSlo,
+  onAlertsClick,
+}) {
+  const height = panel.height || 140;
+  const slo = useMemo(() => {
+    const fromList = SLOS.find((item) => item.id === panel.sloId);
+    if (fromList) {
+      return {
+        ...fromList,
+        // Keep dashboard label; navigate/alerts still use the real SLO id.
+        name: panel.title || fromList.name,
+      };
+    }
+    return {
+      id: panel.sloId || panel.id,
+      name: panel.title,
+      status: panel.status === 'degrading' ? 'warning' : panel.status,
+      alerts: panel.alerts ?? 0,
+      target: panel.target,
+      sli: panel.value,
+      sparkline: panel.sparkline || [],
+    };
+  }, [panel]);
 
   return (
-    <div style={panelSpan(panel.w || 3)}>
-      <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
-        <Chart size={['100%', height]}>
-          <Settings baseTheme={chartBaseTheme} />
-          <Metric id={panel.id} data={[[datum]]} />
-        </Chart>
-      </EuiPanel>
+    <div style={panelSpan(panel.w || 6)}>
+      {loading ? (
+        <EuiPanel
+          hasBorder
+          paddingSize="none"
+          style={{ height, borderRadius: 6, overflow: 'hidden' }}
+        >
+          <ChartLoadingState height={height} size="l" />
+        </EuiPanel>
+      ) : (
+        <SloCard
+          slo={slo}
+          height={height}
+          onOpen={onOpenSlo}
+          onAlertsClick={() => onAlertsClick?.(slo)}
+        />
+      )}
     </div>
   );
 }
 
-function AlertsMetricPanel({ panel }) {
+function AlertsMetricPanel({ panel, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const tokens = useChartColorTokens();
   const height = 140;
@@ -184,24 +234,37 @@ function AlertsMetricPanel({ panel }) {
   return (
     <div style={panelSpan(panel.w || 3)}>
       <EuiPanel hasBorder paddingSize="none" style={{ height, overflow: 'hidden' }}>
-        <Chart size={['100%', height]}>
-          <Settings baseTheme={chartBaseTheme} />
-          <Metric id={panel.id} data={[[datum]]} />
-        </Chart>
+        {loading ? (
+          <ChartLoadingState height={height} size="l" />
+        ) : (
+          <Chart size={['100%', height]}>
+            <Settings baseTheme={chartBaseTheme} />
+            <Metric id={panel.id} data={[[datum]]} />
+          </Chart>
+        )}
       </EuiPanel>
     </div>
   );
 }
 
-function HeatmapPanel({ panel }) {
+function HeatmapPanel({ panel, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const tokens = useChartColorTokens();
   const height = 280;
   const [healthy, warning, risk, danger] = tokens.statusBands;
+  const metricName = panel.metricName || 'Latency';
+  const xLabelName = panel.xLabelName || 'Percentile';
+  const yLabelName = panel.yLabelName || 'Service';
+  const formatLatency = (d) => `${Math.round(d)} ms`;
 
   return (
     <div style={panelSpan(panel.w || 6)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings
@@ -220,16 +283,49 @@ function HeatmapPanel({ panel }) {
                 },
               }}
             />
+            <Tooltip
+              customTooltip={({ values }) => {
+                const item = values?.find((v) => v?.datum) || values?.[0];
+                const datum = item?.datum;
+                if (!datum) return null;
+                const rows = [
+                  { name: yLabelName, value: String(datum.y ?? '—') },
+                  { name: xLabelName, value: String(datum.x ?? '—') },
+                  {
+                    name: metricName,
+                    value: formatLatency(datum.value),
+                  },
+                ];
+                return (
+                  <TooltipContainer>
+                    <TooltipHeader>{metricName}</TooltipHeader>
+                    <TooltipTable gridTemplateColumns="auto auto">
+                      <TooltipTableBody>
+                        {rows.map((row) => (
+                          <TooltipTableRow key={row.name}>
+                            <TooltipTableCell>{row.name}</TooltipTableCell>
+                            <TooltipTableCell>{row.value}</TooltipTableCell>
+                          </TooltipTableRow>
+                        ))}
+                      </TooltipTableBody>
+                    </TooltipTable>
+                  </TooltipContainer>
+                );
+              }}
+            />
             <Heatmap
               id={panel.id}
               data={panel.data}
+              name={metricName}
               xAccessor="x"
               yAccessor="y"
               valueAccessor="value"
-              valueFormatter={(d) => `${Math.round(d)} ms`}
+              valueFormatter={formatLatency}
               xScale={{ type: ScaleType.Ordinal }}
-              xAxisTitle=""
-              yAxisTitle=""
+              xAxisTitle={xLabelName}
+              yAxisTitle={yLabelName}
+              xAxisLabelName={xLabelName}
+              yAxisLabelName={yLabelName}
               colorScale={{
                 type: 'bands',
                 bands: [
@@ -247,7 +343,7 @@ function HeatmapPanel({ panel }) {
   );
 }
 
-function BulletPanel({ panel }) {
+function BulletPanel({ panel, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 280;
   const unit = panel.valueUnit || '';
@@ -256,7 +352,12 @@ function BulletPanel({ panel }) {
 
   return (
     <div style={panelSpan(panel.w || 6)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings baseTheme={chartBaseTheme} />
@@ -269,7 +370,8 @@ function BulletPanel({ panel }) {
               data={[
                 [
                   {
-                    title: panel.title,
+                    // Panel shell already shows the title — avoid duplicating it.
+                    title: '',
                     subtitle: panel.subtitle,
                     value: panel.value,
                     target: panel.target,
@@ -288,15 +390,32 @@ function BulletPanel({ panel }) {
   );
 }
 
-function LinePanel({ panel, color }) {
+function LinePanel({ panel, color, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 260;
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values: panel.data?.map((d) => d.y) || [],
+        alertThreshold,
+      }),
+    [panel.data, alertThreshold]
+  );
 
   return (
     <div style={panelSpan(panel.w || 6)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings baseTheme={chartBaseTheme} showLegend={false} />
@@ -312,6 +431,7 @@ function LinePanel({ panel, color }) {
               position={Position.Left}
               tickFormat={(d) => Number(d).toFixed(0)}
               ticks={4}
+              domain={yDomain}
             />
             {alertThreshold != null && (
               <LineAnnotation
@@ -324,6 +444,10 @@ function LinePanel({ panel, color }) {
                   },
                 ]}
                 style={ALERT_THRESHOLD_LINE_STYLE}
+                marker={
+                  <AlertThresholdAnnotationMarker label={alertThresholdLabel} />
+                }
+                markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
               />
             )}
             <LineSeries
@@ -346,15 +470,32 @@ function LinePanel({ panel, color }) {
   );
 }
 
-function AreaPanel({ panel, color }) {
+function AreaPanel({ panel, color, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 260;
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values: panel.data?.map((d) => d.y) || [],
+        alertThreshold,
+      }),
+    [panel.data, alertThreshold]
+  );
 
   return (
     <div style={panelSpan(panel.w || 6)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings baseTheme={chartBaseTheme} showLegend={false} />
@@ -370,6 +511,7 @@ function AreaPanel({ panel, color }) {
               position={Position.Left}
               tickFormat={(d) => Number(d).toFixed(1)}
               ticks={4}
+              domain={yDomain}
             />
             {alertThreshold != null && (
               <LineAnnotation
@@ -382,6 +524,10 @@ function AreaPanel({ panel, color }) {
                   },
                 ]}
                 style={ALERT_THRESHOLD_LINE_STYLE}
+                marker={
+                  <AlertThresholdAnnotationMarker label={alertThresholdLabel} />
+                }
+                markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
               />
             )}
             <AreaSeries
@@ -404,20 +550,37 @@ function AreaPanel({ panel, color }) {
   );
 }
 
-function BarPanel({ panel, color }) {
+function BarPanel({ panel, color, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 260;
-  const { tooltipActions, alertThreshold, alertThresholdDetails } =
-    useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdDetails,
+    alertThresholdLabel,
+  } = useChartTooltipActions({ seriesName: panel.title, valueUnit: '' });
   const labels = useMemo(() => {
     const map = new Map();
     panel.data.forEach((row) => map.set(row.x, row.label));
     return map;
   }, [panel.data]);
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values: panel.data?.map((d) => d.y) || [],
+        alertThreshold,
+      }),
+    [panel.data, alertThreshold]
+  );
 
   return (
     <div style={panelSpan(panel.w || 12)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings baseTheme={chartBaseTheme} showLegend={false} />
@@ -435,6 +598,7 @@ function BarPanel({ panel, color }) {
               position={Position.Left}
               tickFormat={(d) => Number(d).toLocaleString()}
               ticks={4}
+              domain={yDomain}
             />
             {alertThreshold != null && (
               <LineAnnotation
@@ -447,6 +611,10 @@ function BarPanel({ panel, color }) {
                   },
                 ]}
                 style={ALERT_THRESHOLD_LINE_STYLE}
+                marker={
+                  <AlertThresholdAnnotationMarker label={alertThresholdLabel} />
+                }
+                markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
               />
             )}
             <BarSeries
@@ -467,13 +635,18 @@ function BarPanel({ panel, color }) {
   );
 }
 
-function PiePanel({ panel, colors }) {
+function PiePanel({ panel, colors, loading = false }) {
   const chartBaseTheme = useChartBaseTheme();
   const height = 260;
 
   return (
     <div style={panelSpan(panel.w || 6)}>
-      <DashboardPanelShell title={panel.title} height={height + 48}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={height + 48}
+        loading={loading}
+        chartHeight={height}
+      >
         <div style={{ width: '100%', height }}>
           <Chart size={{ width: '100%', height }}>
             <Settings
@@ -517,7 +690,13 @@ function PiePanel({ panel, colors }) {
   );
 }
 
-function TablePanel({ panel }) {
+function TablePanel({ panel, loadIndex = 0, resetKey }) {
+  const loading = useShortChartLoading(
+    loadIndex,
+    resetKey,
+    DASH_LOAD_STEP_MS,
+    DASH_LOAD_FIRST_MS
+  );
   const columns = useMemo(
     () =>
       panel.columns.map((col) => ({
@@ -536,7 +715,12 @@ function TablePanel({ panel }) {
 
   return (
     <div style={panelSpan(panel.w || 12)}>
-      <DashboardPanelShell title={panel.title} height={320}>
+      <DashboardPanelShell
+        title={panel.title}
+        height={320}
+        loading={loading}
+        chartHeight={220}
+      >
         <EuiBasicTable
           items={panel.rows}
           columns={columns}
@@ -548,15 +732,51 @@ function TablePanel({ panel }) {
   );
 }
 
-function ChartPanel({ panel, colors }) {
-  if (panel.type === 'line') return <LinePanel panel={panel} color={colors[0]} />;
-  if (panel.type === 'area') return <AreaPanel panel={panel} color={colors[1]} />;
-  if (panel.type === 'bar') return <BarPanel panel={panel} color={colors[2]} />;
-  if (panel.type === 'pie') return <PiePanel panel={panel} colors={colors} />;
-  if (panel.type === 'heatmap') return <HeatmapPanel panel={panel} />;
-  if (panel.type === 'bullet') return <BulletPanel panel={panel} />;
-  if (panel.type === 'sloTile') return <SloTilePanel panel={panel} />;
-  if (panel.type === 'alertsMetric') return <AlertsMetricPanel panel={panel} />;
+function ChartPanel({
+  panel,
+  colors,
+  loadIndex = 0,
+  resetKey,
+  onOpenSlo,
+  onAlertsClick,
+}) {
+  const loading = useShortChartLoading(
+    loadIndex,
+    resetKey,
+    DASH_LOAD_STEP_MS,
+    DASH_LOAD_FIRST_MS
+  );
+  if (panel.type === 'line') {
+    return <LinePanel panel={panel} color={colors[0]} loading={loading} />;
+  }
+  if (panel.type === 'area') {
+    return <AreaPanel panel={panel} color={colors[1]} loading={loading} />;
+  }
+  if (panel.type === 'bar') {
+    return <BarPanel panel={panel} color={colors[2]} loading={loading} />;
+  }
+  if (panel.type === 'pie') {
+    return <PiePanel panel={panel} colors={colors} loading={loading} />;
+  }
+  if (panel.type === 'heatmap') {
+    return <HeatmapPanel panel={panel} loading={loading} />;
+  }
+  if (panel.type === 'bullet') {
+    return <BulletPanel panel={panel} loading={loading} />;
+  }
+  if (panel.type === 'sloTile') {
+    return (
+      <SloTilePanel
+        panel={panel}
+        loading={loading}
+        onOpenSlo={onOpenSlo}
+        onAlertsClick={onAlertsClick}
+      />
+    );
+  }
+  if (panel.type === 'alertsMetric') {
+    return <AlertsMetricPanel panel={panel} loading={loading} />;
+  }
   return null;
 }
 
@@ -569,7 +789,63 @@ const TIMELINE_TYPE_META = {
   deploy: { icon: 'package', label: 'Deploy', color: 'success' },
 };
 
-function InvestigationTimelineDashboard({ events }) {
+function InvestigationEventPanel({ event, loadIndex, resetKey }) {
+  const loading = useShortChartLoading(
+    loadIndex,
+    resetKey,
+    DASH_LOAD_STEP_MS,
+    DASH_LOAD_FIRST_MS
+  );
+  const meta = TIMELINE_TYPE_META[event.type] || TIMELINE_TYPE_META.log;
+
+  return (
+    <EuiPanel hasBorder paddingSize="m">
+      <EuiFlexGroup
+        gutterSize="s"
+        alignItems="center"
+        responsive={false}
+        wrap
+      >
+        <EuiFlexItem grow={false}>
+          <EuiBadge color={meta.color}>{meta.label}</EuiBadge>
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiText size="xs" color="subdued">
+            <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {event.time}
+              {event.date ? ` · ${event.date}` : ''}
+            </span>
+          </EuiText>
+        </EuiFlexItem>
+        {event.service && (
+          <EuiFlexItem grow={false}>
+            <EuiBadge color="hollow">{event.service}</EuiBadge>
+          </EuiFlexItem>
+        )}
+      </EuiFlexGroup>
+      <EuiSpacer size="xs" />
+      <EuiTitle size="xs">
+        <h2>{event.title}</h2>
+      </EuiTitle>
+      {event.detail && (
+        <>
+          <EuiSpacer size="xs" />
+          <EuiText size="s" color="subdued">
+            <p style={{ margin: 0 }}>{event.detail}</p>
+          </EuiText>
+        </>
+      )}
+      <EuiSpacer size="m" />
+      {loading ? (
+        <ChartLoadingState height={168} size="xl" />
+      ) : (
+        <TimelineEventChart event={event} />
+      )}
+    </EuiPanel>
+  );
+}
+
+function InvestigationTimelineDashboard({ events, resetKey }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <EuiText size="s" color="subdued">
@@ -578,63 +854,167 @@ function InvestigationTimelineDashboard({ events }) {
           correlated event from the dependency timeline.
         </p>
       </EuiText>
-      {events.map((event) => {
-        const meta = TIMELINE_TYPE_META[event.type] || TIMELINE_TYPE_META.log;
-        return (
-          <EuiPanel key={event.id} hasBorder paddingSize="m">
-            <EuiFlexGroup
-              gutterSize="s"
-              alignItems="center"
-              responsive={false}
-              wrap
-            >
-              <EuiFlexItem grow={false}>
-                <EuiBadge color={meta.color}>{meta.label}</EuiBadge>
-              </EuiFlexItem>
-              <EuiFlexItem grow={false}>
-                <EuiText size="xs" color="subdued">
-                  <span style={{ fontVariantNumeric: 'tabular-nums' }}>
-                    {event.time}
-                    {event.date ? ` · ${event.date}` : ''}
-                  </span>
-                </EuiText>
-              </EuiFlexItem>
-              {event.service && (
-                <EuiFlexItem grow={false}>
-                  <EuiBadge color="hollow">{event.service}</EuiBadge>
-                </EuiFlexItem>
-              )}
-            </EuiFlexGroup>
-            <EuiSpacer size="xs" />
-            <EuiTitle size="xs">
-              <h2>{event.title}</h2>
-            </EuiTitle>
-            {event.detail && (
-              <>
-                <EuiSpacer size="xs" />
-                <EuiText size="s" color="subdued">
-                  <p style={{ margin: 0 }}>{event.detail}</p>
-                </EuiText>
-              </>
-            )}
-            <EuiSpacer size="m" />
-            <TimelineEventChart event={event} />
-          </EuiPanel>
-        );
-      })}
+      {events.map((event, i) => (
+        <InvestigationEventPanel
+          key={event.id}
+          event={event}
+          loadIndex={i}
+          resetKey={resetKey}
+        />
+      ))}
     </div>
+  );
+}
+
+function DashboardPanelsGrid({
+  panels,
+  resetKey,
+  mode,
+  metricColor,
+  chartColors,
+  onOpenSlo,
+  onAlertsClick,
+}) {
+  const nMetrics = panels.metrics.length;
+  const nTiles = panels.showcase?.tiles.length ?? 0;
+  const nShowCharts = panels.showcase?.charts.length ?? 0;
+  const nPrimary = panels.primaryCharts.length;
+  const fullWidthIndex = nMetrics + nTiles + nShowCharts + nPrimary;
+  const tableIndex = fullWidthIndex + 1;
+  const sectionBase = tableIndex + 1;
+
+  return (
+    <>
+      {mode === 'edit' && (
+        <>
+          <EuiText size="xs" color="subdued">
+            <p style={{ margin: 0 }}>
+              Edit mode · panels snap to a 48-column grid (shown here as 12 CSS
+              columns). Metrics use quarter width; charts use half or full width.
+            </p>
+          </EuiText>
+          <EuiSpacer size="s" />
+        </>
+      )}
+
+      <div style={GRID}>
+        {panels.metrics.map((metric, i) => (
+          <MetricPanel
+            key={metric.id}
+            metric={metric}
+            color={metricColor}
+            loadIndex={i}
+            resetKey={resetKey}
+          />
+        ))}
+      </div>
+
+      {panels.showcase && (
+        <>
+          <EuiSpacer size="m" />
+          <div style={GRID}>
+            {panels.showcase.tiles.map((panel, i) => (
+              <ChartPanel
+                key={panel.id}
+                panel={panel}
+                colors={chartColors}
+                loadIndex={nMetrics + i}
+                resetKey={resetKey}
+                onOpenSlo={onOpenSlo}
+                onAlertsClick={onAlertsClick}
+              />
+            ))}
+          </div>
+          <EuiSpacer size="m" />
+          <div style={GRID}>
+            {panels.showcase.charts.map((panel, i) => (
+              <ChartPanel
+                key={panel.id}
+                panel={panel}
+                colors={chartColors}
+                loadIndex={nMetrics + nTiles + i}
+                resetKey={resetKey}
+                onOpenSlo={onOpenSlo}
+                onAlertsClick={onAlertsClick}
+              />
+            ))}
+          </div>
+        </>
+      )}
+
+      <EuiSpacer size="m" />
+
+      <div style={GRID}>
+        {panels.primaryCharts.map((panel, i) => (
+          <ChartPanel
+            key={panel.id}
+            panel={panel}
+            colors={chartColors}
+            loadIndex={nMetrics + nTiles + nShowCharts + i}
+            resetKey={resetKey}
+            onOpenSlo={onOpenSlo}
+            onAlertsClick={onAlertsClick}
+          />
+        ))}
+      </div>
+
+      <EuiSpacer size="m" />
+
+      <div style={GRID}>
+        <ChartPanel
+          panel={panels.fullWidth}
+          colors={chartColors}
+          loadIndex={fullWidthIndex}
+          resetKey={resetKey}
+          onOpenSlo={onOpenSlo}
+          onAlertsClick={onAlertsClick}
+        />
+      </div>
+
+      <EuiSpacer size="m" />
+
+      <div style={GRID}>
+        <TablePanel
+          panel={panels.table}
+          loadIndex={tableIndex}
+          resetKey={resetKey}
+        />
+      </div>
+
+      <EuiSpacer size="m" />
+
+      <EuiTitle size="xs">
+        <h2>{panels.section.title}</h2>
+      </EuiTitle>
+      <EuiSpacer size="m" />
+      <div style={GRID}>
+        {panels.section.panels.map((panel, i) => (
+          <ChartPanel
+            key={panel.id}
+            panel={panel}
+            colors={chartColors}
+            loadIndex={sectionBase + i}
+            resetKey={resetKey}
+            onOpenSlo={onOpenSlo}
+            onAlertsClick={onAlertsClick}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 
 export function DashboardDetailPage({
   dashboard,
   onBack,
+  onOpenSlo,
   assistantOpen,
   onAssistantOpenChange,
 }) {
   const tokens = useChartColorTokens();
   const [mode, setMode] = useState('view');
   const [starred, setStarred] = useState(Boolean(dashboard?.starred));
+  const [alertsSlo, setAlertsSlo] = useState(null);
   const [localAssistantOpen, setLocalAssistantOpen] = useState(false);
   const isAssistantOpen =
     assistantOpen != null ? assistantOpen : localAssistantOpen;
@@ -655,8 +1035,8 @@ export function DashboardDetailPage({
   if (!dashboard) return null;
   if (!isInvestigation && !panels) return null;
 
-  // Neutral vis soft fills for generic metric tiles (not health/severity).
-  const metricColors = tokens.visSoft;
+  // Same soft grey as Memory P95 for all infra metric tiles.
+  const metricColor = tokens.graySoft[1];
   // Neutral categorical series for non-status charts.
   const chartColors = tokens.vis;
 
@@ -747,80 +1127,24 @@ export function DashboardDetailPage({
       <EuiSpacer size="m" />
 
       {isInvestigation ? (
-        <InvestigationTimelineDashboard events={investigationEvents} />
+        <InvestigationTimelineDashboard
+          events={investigationEvents}
+          resetKey={dashboard.id}
+        />
       ) : (
-        <>
-          {mode === 'edit' && (
-            <>
-              <EuiText size="xs" color="subdued">
-                <p style={{ margin: 0 }}>
-                  Edit mode · panels snap to a 48-column grid (shown here as 12 CSS
-                  columns). Metrics use quarter width; charts use half or full width.
-                </p>
-              </EuiText>
-              <EuiSpacer size="s" />
-            </>
-          )}
+        <DashboardPanelsGrid
+          panels={panels}
+          resetKey={dashboard.id}
+          mode={mode}
+          metricColor={metricColor}
+          chartColors={chartColors}
+          onOpenSlo={onOpenSlo}
+          onAlertsClick={setAlertsSlo}
+        />
+      )}
 
-          <div style={GRID}>
-            {panels.metrics.map((metric, i) => (
-              <MetricPanel
-                key={metric.id}
-                metric={metric}
-                color={metricColors[i % metricColors.length]}
-              />
-            ))}
-          </div>
-
-          {panels.showcase && (
-            <>
-              <EuiSpacer size="m" />
-              <div style={GRID}>
-                {panels.showcase.tiles.map((panel) => (
-                  <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-                ))}
-              </div>
-              <EuiSpacer size="m" />
-              <div style={GRID}>
-                {panels.showcase.charts.map((panel) => (
-                  <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-                ))}
-              </div>
-            </>
-          )}
-
-          <EuiSpacer size="m" />
-
-          <div style={GRID}>
-            {panels.primaryCharts.map((panel) => (
-              <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-            ))}
-          </div>
-
-          <EuiSpacer size="m" />
-
-          <div style={GRID}>
-            <ChartPanel panel={panels.fullWidth} colors={chartColors} />
-          </div>
-
-          <EuiSpacer size="m" />
-
-          <div style={GRID}>
-            <TablePanel panel={panels.table} />
-          </div>
-
-          <EuiSpacer size="m" />
-
-          <EuiTitle size="xs">
-            <h2>{panels.section.title}</h2>
-          </EuiTitle>
-          <EuiSpacer size="m" />
-          <div style={GRID}>
-            {panels.section.panels.map((panel) => (
-              <ChartPanel key={panel.id} panel={panel} colors={chartColors} />
-            ))}
-          </div>
-        </>
+      {alertsSlo && (
+        <AlertsFlyout slo={alertsSlo} onClose={() => setAlertsSlo(null)} />
       )}
 
       <AiAssistantFlyout

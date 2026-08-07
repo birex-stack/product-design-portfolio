@@ -42,6 +42,9 @@ const HEALTH_SOFT_FALLBACK = {
   neutral: '#D9F0F5',
 };
 
+/** Soft greyscale fills for generic infra metric tiles (CPU, memory, disk…). */
+const GRAY_SOFT_FALLBACK = ['#D3DAE6', '#E0E5EE', '#C5CDD8', '#EDF0F5'];
+
 function pickSeverity(euiTheme, key) {
   return euiTheme?.colors?.severity?.[key] || SEVERITY_FALLBACK[key];
 }
@@ -78,6 +81,18 @@ export function getChartColorTokens(euiTheme) {
   // Prefer odd (lighter) pairs for soft metric tile fills — still from vis palette.
   const visSoft = [1, 3, 5, 7, 9, 0, 2, 4, 6, 8].map((i) => vis[i]);
 
+  const lightShade = euiTheme?.colors?.lightShade || GRAY_SOFT_FALLBACK[0];
+  const lightestShade = euiTheme?.colors?.lightestShade || GRAY_SOFT_FALLBACK[3];
+  const subdued =
+    euiTheme?.colors?.backgroundBaseSubdued || GRAY_SOFT_FALLBACK[1];
+  // Soft greys only — keep fills light enough for Metric’s dark text.
+  const graySoft = [
+    lightShade,
+    subdued,
+    GRAY_SOFT_FALLBACK[2],
+    lightestShade,
+  ];
+
   return {
     health,
     healthSoft: {
@@ -90,6 +105,8 @@ export function getChartColorTokens(euiTheme) {
     },
     vis,
     visSoft,
+    /** Greyscale soft fills for non-status metric tiles */
+    graySoft,
     /** Status / latency band scale: healthy → warning → risk → danger */
     statusBands: [health.success, health.warning, health.risk, health.danger],
   };

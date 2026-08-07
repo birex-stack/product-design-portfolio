@@ -1,4 +1,5 @@
 import { createElement, useCallback, useMemo, useState } from 'react';
+import { Position } from '@elastic/charts';
 import { useAssistantBridge } from './assistant_bridge';
 import { useToasts } from './toast_context';
 
@@ -82,7 +83,10 @@ export function getSelectedNumericValue(selected) {
     item.datum?.y ??
     item.datum?.good ??
     item.datum?.bad ??
-    item.datum?.count;
+    item.datum?.count ??
+    item.datum?.error ??
+    item.datum?.warn ??
+    item.datum?.info;
   if (typeof datumY === 'number' && Number.isFinite(datumY)) {
     return datumY;
   }
@@ -107,6 +111,114 @@ export const ALERT_THRESHOLD_LINE_STYLE = {
     opacity: 1,
   },
 };
+
+/** Left edge of the plot, under the threshold stroke. */
+export const ALERT_THRESHOLD_MARKER_POSITION = Position.Left;
+
+const COMPARATOR_SYMBOL = {
+  above: '>',
+  above_or_eq: '≥',
+  below: '<',
+  below_or_eq: '≤',
+};
+
+/** Visible chart label, e.g. `Alert when > 90%`. */
+export function formatAlertThresholdLabel(
+  threshold,
+  comparator = 'above',
+  valueUnit = ''
+) {
+  if (threshold == null || !Number.isFinite(Number(threshold))) return null;
+  const symbol = COMPARATOR_SYMBOL[comparator] || '>';
+  return `Alert when ${symbol} ${formatThresholdValue(threshold, valueUnit)}`;
+}
+
+/**
+ * Marker under the threshold line, inside the plot on the left.
+ * Elastic Charts Left markers hang outside the Y-axis; shift by the label's
+ * own width so the text starts just inside the plot under the stroke.
+ */
+export function AlertThresholdAnnotationMarker({ label }) {
+  if (!label) return null;
+  return createElement(
+    'div',
+    {
+      style: {
+        display: 'inline-block',
+        fontSize: 10,
+        lineHeight: 1.15,
+        color: THRESHOLD_STROKE,
+        whiteSpace: 'nowrap',
+        fontWeight: 600,
+        pointerEvents: 'none',
+        // Own-width shift: brings a left-hanging marker fully into the plot.
+        transform: 'translate(calc(100% + 8px), 6px)',
+      },
+    },
+    label
+  );
+}
+
+/**
+ * Expand the Y-axis domain so an alert threshold (and optional markers)
+ * stay visible when they sit above/below the series extrema.
+ */
+export function getYDomainIncludingThreshold({
+  values = [],
+  alertThreshold,
+  yMin,
+  yMax,
+  extraValues = [],
+} = {}) {
+  const finite = (n) => Number.isFinite(Number(n));
+  const series = values.map(Number).filter(finite);
+  // Don't coerce null → 0 (Number(null) === 0).
+  const markers = [alertThreshold, ...extraValues]
+    .filter((v) => v != null && finite(v))
+    .map(Number);
+  const hasFixedMin = yMin != null && finite(yMin);
+  const hasFixedMax = yMax != null && finite(yMax);
+
+  let min = hasFixedMin ? Number(yMin) : undefined;
+  let max = hasFixedMax ? Number(yMax) : undefined;
+
+  // No threshold/markers → keep author domain, or leave auto-scaling alone.
+  if (!markers.length) {
+    return hasFixedMin && hasFixedMax ? { min, max } : undefined;
+  }
+
+  if (series.length) {
+    min = min ?? Math.min(...series);
+    max = max ?? Math.max(...series);
+  }
+
+  if (min == null) min = Math.min(...markers, 0);
+  if (max == null) max = Math.max(...markers);
+
+  for (const v of markers) {
+    min = Math.min(min, v);
+    max = Math.max(max, v);
+  }
+
+  // Keep the threshold slightly inside the plot so it isn't clipped.
+  const span = Math.max(max - min, 1);
+  const pad = span * 0.06;
+  if (markers.some((v) => v >= max - 1e-9)) max += pad;
+  if (markers.some((v) => v <= min + 1e-9)) {
+    min -= pad;
+    if (
+      series.length &&
+      series.every((v) => v >= 0) &&
+      markers.every((v) => v >= 0)
+    ) {
+      min = Math.max(0, min);
+    }
+  }
+
+  if (min === max) max = min + 1;
+
+  return { min, max };
+}
 
 /**
  * Elastic Charts Tooltip `actions` — pin tooltip (right-click / prompt), then pick an action.
@@ -194,10 +306,17 @@ export function useChartTooltipActions({
     below_or_eq: '≤',
   }[alertComparator] || 'above';
 
+  const alertThresholdLabel = formatAlertThresholdLabel(
+    alertThreshold,
+    alertComparator,
+    valueUnit
+  );
+
   return {
     tooltipActions,
     alertThreshold,
     alertComparator,
+    alertThresholdLabel,
     alertThresholdDetails:
       alertThreshold == null
         ? null

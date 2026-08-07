@@ -14,10 +14,17 @@ import {
 import { EuiSpacer, EuiText, EuiTitle } from '@elastic/eui';
 import {
   ALERT_THRESHOLD_LINE_STYLE,
+  ALERT_THRESHOLD_MARKER_POSITION,
+  AlertThresholdAnnotationMarker,
+  formatAlertThresholdLabel,
+  getYDomainIncludingThreshold,
   useChartTooltipActions,
 } from '../chart_tooltip_actions';
 import { useChartColorTokens } from '../chart_colors';
-import { buildAlertActivitySeries } from '../data';
+import {
+  buildAlertActivitySeries,
+  findAlertTriggerIndex,
+} from '../data';
 import { useChartBaseTheme } from '../use_chart_base_theme';
 
 /** Space for top LineAnnotation marker — charts don't auto-size for custom markers. */
@@ -59,23 +66,47 @@ export function AlertActivityChart({ alert, slo }) {
   const chartBaseTheme = useChartBaseTheme();
   const tokens = useChartColorTokens();
   const danger = tokens.health.danger;
-  const { tooltipActions, alertThreshold } = useChartTooltipActions({
+  const {
+    tooltipActions,
+    alertThreshold,
+    alertThresholdLabel,
+    alertComparator,
+  } = useChartTooltipActions({
     seriesName: alert?.name || 'Alert activity',
     valueUnit: '',
   });
   const threshold = alertThreshold ?? 70;
+  const comparator = alertComparator || 'above';
+  const thresholdLabel =
+    alertThresholdLabel ||
+    formatAlertThresholdLabel(threshold, comparator, '');
 
   const { data, triggerX, activeEndX } = useMemo(() => {
     const seed = (slo?.id?.length || 1) + (alert?.id?.length || 1);
-    const series = buildAlertActivitySeries(seed).map((y, x) => ({ x, y }));
+    const values = buildAlertActivitySeries(seed, 36, { threshold });
+    const series = values.map((y, x) => ({ x, y }));
     const points = series.length;
-    const trigger = Math.floor(points * 0.55);
+    const trigger = findAlertTriggerIndex(values, threshold, comparator);
     const hours = parseDurationHours(alert?.duration);
-    const span = Math.max(2, Math.min(points - trigger - 1, Math.round(hours * 1.5)));
+    const span = Math.max(
+      2,
+      Math.min(points - trigger - 1, Math.round(hours * 1.5))
+    );
     const end =
-      alert?.status === 'active' ? points - 1 : Math.min(points - 1, trigger + span);
+      alert?.status === 'active'
+        ? points - 1
+        : Math.min(points - 1, trigger + span);
     return { data: series, triggerX: trigger, activeEndX: end };
-  }, [alert, slo]);
+  }, [alert, slo, threshold, comparator]);
+
+  const yDomain = useMemo(
+    () =>
+      getYDomainIncludingThreshold({
+        values: data.map((d) => d.y),
+        alertThreshold: threshold,
+      }),
+    [data, threshold]
+  );
 
   return (
     <div>
@@ -113,6 +144,7 @@ export function AlertActivityChart({ alert, slo }) {
             id="left"
             position={Position.Left}
             tickFormat={(d) => Number(d).toFixed(0)}
+            domain={yDomain}
           />
 
           <RectAnnotation
@@ -143,10 +175,12 @@ export function AlertActivityChart({ alert, slo }) {
             dataValues={[
               {
                 dataValue: threshold,
-                details: `Alert rule threshold ${threshold}`,
+                details: thresholdLabel,
               },
             ]}
             style={ALERT_THRESHOLD_LINE_STYLE}
+            marker={<AlertThresholdAnnotationMarker label={thresholdLabel} />}
+            markerPosition={ALERT_THRESHOLD_MARKER_POSITION}
           />
 
           <LineAnnotation
