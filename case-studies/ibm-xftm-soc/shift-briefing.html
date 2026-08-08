@@ -156,58 +156,50 @@
                     <h3 class="soc-chart-title">Alert severity mix</h3>
                     <p class="soc-chart-sub">128 alerts by severity</p>
                     <div class="soc-donut-wrap">
-                      <!-- stroke=4, gap=4, step=8; total=128 -->
+                      <!-- Single stacked donut; total=128; r=50; C≈314.16 -->
                       <svg
-                        class="soc-radial soc-radial--lg"
+                        class="soc-donut soc-donut--lg"
                         viewBox="0 0 120 120"
                         role="img"
                         aria-label="128 alerts. Critical 8, High 24, Medium 51, Low 45"
                       >
-                        <circle class="soc-radial-track" cx="60" cy="60" r="54" />
+                        <circle class="soc-donut-track" cx="60" cy="60" r="50" />
                         <circle
-                          class="soc-radial-arc soc-radial-arc--all"
+                          class="soc-donut-seg soc-donut-seg--critical"
                           cx="60"
                           cy="60"
-                          r="54"
-                          stroke-dasharray="339.3 0"
+                          r="50"
+                          stroke-dasharray="19.6 294.6"
+                          stroke-dashoffset="0"
                         />
-                        <circle class="soc-radial-track" cx="60" cy="60" r="46" />
                         <circle
-                          class="soc-radial-arc soc-radial-arc--low"
+                          class="soc-donut-seg soc-donut-seg--high"
                           cx="60"
                           cy="60"
-                          r="46"
-                          stroke-dasharray="101.6 289"
+                          r="50"
+                          stroke-dasharray="58.9 255.3"
+                          stroke-dashoffset="-19.6"
                         />
-                        <circle class="soc-radial-track" cx="60" cy="60" r="38" />
                         <circle
-                          class="soc-radial-arc soc-radial-arc--medium"
+                          class="soc-donut-seg soc-donut-seg--medium"
                           cx="60"
                           cy="60"
-                          r="38"
-                          stroke-dasharray="95.1 238.8"
+                          r="50"
+                          stroke-dasharray="125.2 189"
+                          stroke-dashoffset="-78.5"
                         />
-                        <circle class="soc-radial-track" cx="60" cy="60" r="30" />
                         <circle
-                          class="soc-radial-arc soc-radial-arc--high"
+                          class="soc-donut-seg soc-donut-seg--low"
                           cx="60"
                           cy="60"
-                          r="30"
-                          stroke-dasharray="35.3 188.5"
+                          r="50"
+                          stroke-dasharray="110.4 203.8"
+                          stroke-dashoffset="-203.7"
                         />
-                        <circle class="soc-radial-track" cx="60" cy="60" r="22" />
-                        <circle
-                          class="soc-radial-arc soc-radial-arc--critical"
-                          cx="60"
-                          cy="60"
-                          r="22"
-                          stroke-dasharray="8.6 138.2"
-                        />
-                        <text class="soc-radial-center-value" x="60" y="56" text-anchor="middle">128</text>
-                        <text class="soc-radial-center-label" x="60" y="72" text-anchor="middle">alerts</text>
+                        <text class="soc-donut-center-value" x="60" y="56" text-anchor="middle">128</text>
+                        <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">alerts</text>
                       </svg>
                       <ul class="soc-donut-legend">
-                        <li><i class="soc-radial-legend-all" aria-hidden="true"></i>All <strong>128</strong></li>
                         <li><i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical <strong>8</strong></li>
                         <li><i class="soc-sev soc-sev--high" aria-hidden="true"></i>High <strong>24</strong></li>
                         <li><i class="soc-sev soc-sev--medium" aria-hidden="true"></i>Medium <strong>51</strong></li>

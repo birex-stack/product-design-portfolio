@@ -135,7 +135,72 @@
                     aria-label="Magnitude 4 of 10"
                     id="incident-magnitude"
                   >
-                    <h3 class="soc-magnitude__title">Magnitude</h3>
+                    <h3 class="soc-magnitude__title">
+                      Magnitude
+                      <span class="soc-info-tip-wrap">
+                        <button
+                          type="button"
+                          class="soc-info-tip"
+                          aria-expanded="false"
+                          aria-controls="magnitude-tip"
+                          data-soc-info-tip
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 32 32"
+                            fill="currentColor"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <!-- Carbon Information (16) -->
+                            <path
+                              d="M17 22v-8h-4v2h2v6h-2v2h6v-2h-2zM16 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
+                            />
+                            <path
+                              d="M16 30a14 14 0 1114-14 14.016 14.016 0 01-14 14zM16 4a12 12 0 1012 12A12.014 12.014 0 0016 4z"
+                            />
+                          </svg>
+                          <span class="soc-visually-hidden">About Magnitude</span>
+                        </button>
+                        <div
+                          id="magnitude-tip"
+                          class="soc-info-tip__popover"
+                          role="tooltip"
+                          hidden
+                        >
+                          <p class="soc-info-tip__lead">
+                            Magnitude is a 0–10 priority score for the case
+                            (offense). Higher values should be investigated
+                            first.
+                          </p>
+                          <p>
+                            It is derived from three inputs (each also scored
+                            0–10):
+                          </p>
+                          <ul>
+                            <li>
+                              <strong>Severity</strong> — potential impact of
+                              the threat relative to the target.
+                            </li>
+                            <li>
+                              <strong>Relevance</strong> — importance of the
+                              affected asset or network to the organization.
+                            </li>
+                            <li>
+                              <strong>Credibility</strong> — how trustworthy the
+                              evidence and detection sources are.
+                            </li>
+                          </ul>
+                          <p>
+                            The overall Magnitude blends these factors and can
+                            be influenced by related event volume, offense age,
+                            and asset context. It is not the same as a single
+                            alert’s severity tag.
+                          </p>
+                        </div>
+                      </span>
+                    </h3>
                     <svg
                       class="soc-radial soc-radial--magnitude"
                       viewBox="0 0 120 120"
@@ -719,6 +784,38 @@
         if (typeof window.socEnhanceSeverity === "function") {
           window.socEnhanceSeverity();
         }
+
+        // Carbon-style informational toggletips
+        document.querySelectorAll("[data-soc-info-tip]").forEach(function (btn) {
+          var tipId = btn.getAttribute("aria-controls");
+          var tip = tipId ? document.getElementById(tipId) : null;
+          if (!tip) return;
+
+          function closeTip() {
+            btn.setAttribute("aria-expanded", "false");
+            tip.hidden = true;
+          }
+
+          function openTip() {
+            btn.setAttribute("aria-expanded", "true");
+            tip.hidden = false;
+          }
+
+          btn.addEventListener("click", function (event) {
+            event.stopPropagation();
+            if (btn.getAttribute("aria-expanded") === "true") closeTip();
+            else openTip();
+          });
+
+          document.addEventListener("click", function (event) {
+            if (btn.contains(event.target) || tip.contains(event.target)) return;
+            closeTip();
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") closeTip();
+          });
+        });
       })();
     </script>
   </body>

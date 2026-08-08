@@ -84,64 +84,53 @@
             <p class="soc-chart-sub">15 open · Critical 2 · High 5 · Medium 5 · Low 3</p>
             <div class="soc-donut-wrap">
               <!--
-                stroke=4, gap=4 ⇒ radius step=8
-                r54 all · r46 low · r38 med · r30 high · r22 critical
-                total=15; C=2πr; arc = count/total × C
+                Single stacked donut — severities share one ring = 100%.
+                total=15; r=50; C≈314.16
+                Critical 2/15 · High 5/15 · Medium 5/15 · Low 3/15
               -->
               <svg
-                class="soc-radial soc-radial--lg"
+                class="soc-donut soc-donut--lg"
                 viewBox="0 0 120 120"
                 role="img"
                 aria-label="15 open alerts. Critical 2, High 5, Medium 5, Low 3"
               >
-                <circle class="soc-radial-track" cx="60" cy="60" r="54" />
+                <circle class="soc-donut-track" cx="60" cy="60" r="50" />
                 <circle
-                  class="soc-radial-arc soc-radial-arc--all"
+                  class="soc-donut-seg soc-donut-seg--critical"
                   cx="60"
                   cy="60"
-                  r="54"
-                  stroke-dasharray="339.3 0"
+                  r="50"
+                  stroke-dasharray="41.9 272.3"
+                  stroke-dashoffset="0"
                 />
-                <circle class="soc-radial-track" cx="60" cy="60" r="46" />
                 <circle
-                  class="soc-radial-arc soc-radial-arc--low"
+                  class="soc-donut-seg soc-donut-seg--high"
                   cx="60"
                   cy="60"
-                  r="46"
-                  stroke-dasharray="57.8 289"
+                  r="50"
+                  stroke-dasharray="104.7 209.5"
+                  stroke-dashoffset="-41.9"
                 />
-                <circle class="soc-radial-track" cx="60" cy="60" r="38" />
                 <circle
-                  class="soc-radial-arc soc-radial-arc--medium"
+                  class="soc-donut-seg soc-donut-seg--medium"
                   cx="60"
                   cy="60"
-                  r="38"
-                  stroke-dasharray="79.6 238.8"
+                  r="50"
+                  stroke-dasharray="104.7 209.5"
+                  stroke-dashoffset="-146.6"
                 />
-                <circle class="soc-radial-track" cx="60" cy="60" r="30" />
                 <circle
-                  class="soc-radial-arc soc-radial-arc--high"
+                  class="soc-donut-seg soc-donut-seg--low"
                   cx="60"
                   cy="60"
-                  r="30"
-                  stroke-dasharray="62.8 188.5"
+                  r="50"
+                  stroke-dasharray="62.8 251.4"
+                  stroke-dashoffset="-251.3"
                 />
-                <circle class="soc-radial-track" cx="60" cy="60" r="22" />
-                <circle
-                  class="soc-radial-arc soc-radial-arc--critical"
-                  cx="60"
-                  cy="60"
-                  r="22"
-                  stroke-dasharray="18.4 138.2"
-                />
-                <text class="soc-radial-center-value" x="60" y="56" text-anchor="middle">15</text>
-                <text class="soc-radial-center-label" x="60" y="72" text-anchor="middle">open</text>
+                <text class="soc-donut-center-value" x="60" y="56" text-anchor="middle">15</text>
+                <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">open</text>
               </svg>
               <ul class="soc-donut-legend">
-                <li>
-                  <i class="soc-radial-legend-all" aria-hidden="true"></i>All
-                  <strong>15</strong>
-                </li>
                 <li>
                   <i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical
                   <strong>2</strong>
