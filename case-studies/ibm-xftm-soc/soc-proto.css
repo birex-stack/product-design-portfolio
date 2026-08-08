@@ -267,37 +267,55 @@ p {
   min-height: calc(100vh - 37px - var(--cds-header-h));
 }
 
+/*
+ * Carbon UI shell left panel
+ * @see https://carbondesignsystem.com/components/UI-shell-left-panel/style/
+ * Link: h 32 · pad L/R 16 ($spacing-05) · selected border 4px
+ */
 .soc-nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 0 8px;
+  gap: 0;
+  padding: 0;
   flex: 1;
 }
 
 .soc-nav a {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 16px;
   color: var(--cds-text-secondary);
   text-decoration: none;
-  border-left: 3px solid transparent;
   font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.125rem;
 }
 
 .soc-nav a:hover {
-  /* $background-hover / hover-ui on g100 */
+  /* $background-hover */
   background: #353535;
   color: var(--cds-text);
   text-decoration: none;
 }
 
 .soc-nav a.is-active {
-  /* $background-selected / selected-ui on g100 */
+  /* $background-selected */
   background: #393939;
   color: var(--cds-text);
-  border-left-color: var(--cds-interactive);
+}
+
+.soc-nav a.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--cds-interactive); /* $border-interactive */
 }
 
 .soc-nav-badge {
