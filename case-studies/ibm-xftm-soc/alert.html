@@ -53,7 +53,7 @@
         <nav class="soc-nav">
           <a href="./shift-briefing.html">Briefing</a>
           <a class="is-active" href="./alerts.html"
-            >Alerts <span class="soc-nav-badge">12</span></a
+            >Alerts <span class="soc-nav-badge">156</span></a
           >
           <a href="./cases.html">Cases</a>
           <a href="#">Threat intel</a>
@@ -93,8 +93,8 @@
         </div>
 
         <div class="soc-detail-layout">
-          <div>
-            <section class="soc-card" style="margin-bottom: 16px">
+          <div class="soc-alert-split">
+            <section class="soc-card">
               <div class="soc-card__head">
                 <h2>Alert details</h2>
               </div>
@@ -145,48 +145,59 @@
               </div>
             </section>
 
-            <section class="soc-card" style="margin-bottom: 16px">
-              <div class="soc-card__head">
-                <h2>Event summary</h2>
-              </div>
-              <div class="soc-card__body">
-                <ul class="soc-takeaways" id="alert-summary">
-                  <li>
-                    Encoded PowerShell launched from explorer.exe on
-                    endpoint-fin-04.
-                  </li>
-                  <li>
-                    Command line overlaps closed case SOCJ233244 (IT automation).
-                  </li>
-                  <li>
-                    User j.doe@finance.com has approved change ticket CHG-9921.
-                  </li>
-                  <li>No outbound C2 confirmed for this host in last 24h.</li>
-                </ul>
-              </div>
-            </section>
-
             <section class="soc-card">
               <div class="soc-card__head">
                 <h2>Activity</h2>
               </div>
               <div class="soc-card__body">
-                <div class="soc-timeline" id="alert-activity">
-                  <div class="soc-timeline-item">
-                    <time>08:41 · System</time>
-                    <p>Alert ALT-88421 created and scored by ATDS.</p>
-                  </div>
-                  <div class="soc-timeline-item">
-                    <time>08:41 · ATDS</time>
-                    <p>
-                      Historical match suggests false positive — recommend
-                      associate with closed case SOCJ233244.
-                    </p>
-                  </div>
-                </div>
+                <div class="soc-timeline" id="alert-activity"></div>
               </div>
             </section>
           </div>
+
+          <section class="soc-card">
+            <div class="soc-card__head">
+              <h2>Event summary</h2>
+            </div>
+            <div class="soc-card__body">
+              <ul class="soc-takeaways" id="alert-summary">
+                <li>
+                  Encoded PowerShell launched from explorer.exe on
+                  endpoint-fin-04.
+                </li>
+                <li>
+                  Command line overlaps closed case SOCJ233244 (IT automation).
+                </li>
+                <li>
+                  User j.doe@finance.com has approved change ticket CHG-9921.
+                </li>
+                <li>No outbound C2 confirmed for this host in last 24h.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section
+            class="soc-runbook"
+            aria-labelledby="runbook-heading"
+            id="alert-runbook"
+          >
+            <div class="soc-runbook__head">
+              <div>
+                <p class="soc-runbook__eyebrow">SOAR runbook</p>
+                <h2 id="runbook-heading">Investigation guide</h2>
+              </div>
+              <span class="soc-tag soc-tag--count" id="runbook-id"
+                >RB-EP-PS-01</span
+              >
+            </div>
+            <p class="soc-runbook__name" id="runbook-name">
+              Suspicious PowerShell — FP validation
+            </p>
+            <p class="soc-runbook__meta" id="runbook-meta">
+              2 of 5 steps complete · Playbook suggested by ATDS
+            </p>
+            <ol class="soc-runbook__steps" id="runbook-steps"></ol>
+          </section>
         </div>
 
         <section class="soc-atds-panel" aria-labelledby="atds-heading">
@@ -320,14 +331,193 @@
       </main>
     </div>
     <script type="module" src="./soc-ip-flyout.js"></script>
+    <script src="./soc-demo-data.js"></script>
     <script>
       (function () {
+        var RUNBOOKS = {
+          powershell_fp: {
+            id: "RB-EP-PS-01",
+            name: "Suspicious PowerShell — FP validation",
+            steps: [
+              {
+                type: "auto",
+                status: "done",
+                title: "Enrich process & command line",
+                body: "Pull parent process, decoded args, hash, and signed-binary status from EDR.",
+              },
+              {
+                type: "auto",
+                status: "done",
+                title: "Match historical FP corpus",
+                body: "Compare command-line fingerprint against closed IT-automation cases (SOCJ233244).",
+              },
+              {
+                type: "manual",
+                status: "current",
+                title: "Verify change ticket & owner",
+                body: "Confirm CHG-9921 covers this host/user and the scheduled window matches first-seen time.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "Check outbound / C2 signals",
+                body: "Review 24h network connections from the host for rare destinations or beaconing.",
+              },
+              {
+                type: "decision",
+                status: "pending",
+                title: "Disposition",
+                body: "If ticket + history align and no C2: associate with SOCJ233244. Otherwise escalate as new case.",
+              },
+            ],
+          },
+          identity_travel: {
+            id: "RB-ID-GEO-02",
+            name: "Impossible travel / anomalous auth",
+            steps: [
+              {
+                type: "auto",
+                status: "done",
+                title: "Enrich geo & ASN",
+                body: "Resolve source IP reputation, ASN type, and distance from prior successful login.",
+              },
+              {
+                type: "auto",
+                status: "done",
+                title: "Map concurrent sessions",
+                body: "List overlapping VPN/IdP sessions for the same identity in the last 6 hours.",
+              },
+              {
+                type: "manual",
+                status: "current",
+                title: "Confirm travel or device",
+                body: "Check travel desk / user out-of-band. Validate whether the new device was expected.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "Review MFA & risk signals",
+                body: "Inspect MFA challenges, failed attempts, and whether Tor/VPN anonymizers were used.",
+              },
+              {
+                type: "decision",
+                status: "pending",
+                title: "Contain or clear",
+                body: "If unconfirmed: force password reset + revoke sessions. If confirmed travel: close with note.",
+              },
+            ],
+          },
+          phishing_mailbox: {
+            id: "RB-EM-PHISH-03",
+            name: "Phishing → mailbox compromise",
+            steps: [
+              {
+                type: "auto",
+                status: "done",
+                title: "Detonate / classify URL",
+                body: "Sandbox the credential-harvest URL and extract hosting IOC + kit family.",
+              },
+              {
+                type: "auto",
+                status: "current",
+                title: "Block IOC at edge",
+                body: "Push domain/IP block to proxy and mail gateway; confirm hit count after publish.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "Inspect mailbox rules & forwards",
+                body: "Remove rogue inbox rules, check sent items, and audit OAuth grants on the mailbox.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "User outreach & password reset",
+                body: "Notify the user, reset credentials, and revoke refresh tokens for the session window.",
+              },
+              {
+                type: "decision",
+                status: "pending",
+                title: "Escalate or monitor",
+                body: "If rules/forwards found or kit confirmed: escalate as mailbox compromise. Else monitor 24h.",
+              },
+            ],
+          },
+          ransomware_stage: {
+            id: "RB-EP-RANSOM-04",
+            name: "Ransomware staging / lateral movement",
+            steps: [
+              {
+                type: "auto",
+                status: "done",
+                title: "Correlate sibling alerts",
+                body: "Group PowerShell, SMB, scheduled-task, and lateral-auth alerts on the same asset.",
+              },
+              {
+                type: "manual",
+                status: "current",
+                title: "Validate staging indicators",
+                body: "Check uncommon SMB share access, tool drops, and privilege changes on the host.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "Scope peer authentication",
+                body: "Identify target workstations from lateral attempts; freeze accounts if spread continues.",
+              },
+              {
+                type: "decision",
+                status: "pending",
+                title: "Isolate & escalate",
+                body: "If staging confirmed: isolate host, preserve forensics, escalate to IR with the draft case.",
+              },
+            ],
+          },
+          dns_oauth: {
+            id: "RB-NET-ANOM-05",
+            name: "DNS / OAuth anomaly triage",
+            steps: [
+              {
+                type: "auto",
+                status: "done",
+                title: "Enrich indicator context",
+                body: "Resolve destination reputation, query volume baseline, and app publisher metadata.",
+              },
+              {
+                type: "manual",
+                status: "current",
+                title: "Validate business purpose",
+                body: "Confirm whether the DNS pattern or OAuth app is expected for this user/role.",
+              },
+              {
+                type: "manual",
+                status: "pending",
+                title: "Contain if unexpected",
+                body: "Block resolver path or revoke OAuth grant; capture evidence for the case note.",
+              },
+              {
+                type: "decision",
+                status: "pending",
+                title: "Close or escalate",
+                body: "Benign business use → close with justification. Unknown publisher / tunneling → escalate.",
+              },
+            ],
+          },
+        };
+
+        var TYPE_LABEL = {
+          auto: "Automated",
+          manual: "Manual",
+          decision: "Decision",
+        };
+
         var alerts = {
           "ALT-88421": {
             title: "Suspicious PowerShell",
             severity: "High",
             severityClass: "soc-tag--high",
             caseId: "INC-2025-4821",
+            runbook: "powershell_fp",
             source: "endpoint-fin-04",
             atds: "Close / Associate · 72% FP confidence",
             risk: 28,
@@ -362,6 +552,7 @@
             severity: "High",
             severityClass: "soc-tag--high",
             caseId: "INC-2025-4821",
+            runbook: "powershell_fp",
             source: "endpoint-fin-04",
             atds: "Close / Associate · 68% FP confidence",
             risk: 32,
@@ -394,6 +585,7 @@
             severity: "Medium",
             severityClass: "soc-tag--medium",
             caseId: "INC-2025-4821",
+            runbook: "powershell_fp",
             source: "endpoint-fin-04",
             atds: "Investigate · 54% FP confidence",
             risk: 46,
@@ -426,6 +618,7 @@
             severity: "Low",
             severityClass: "soc-tag--low",
             caseId: "INC-2025-4821",
+            runbook: "ransomware_stage",
             source: "endpoint-fin-04",
             atds: "Monitor · 41% FP confidence",
             risk: 59,
@@ -456,6 +649,7 @@
             severity: "Low",
             severityClass: "soc-tag--low",
             caseId: "INC-2025-4821",
+            runbook: "powershell_fp",
             source: "endpoint-fin-04",
             atds: "Close / Associate · 70% FP confidence",
             risk: 30,
@@ -487,6 +681,7 @@
             severity: "High",
             severityClass: "soc-tag--high",
             caseId: "INC-2025-4818",
+            runbook: "identity_travel",
             source: "vpn-gateway",
             atds: "Investigate · 71% confidence",
             risk: 62,
@@ -520,6 +715,7 @@
             severity: "Medium",
             severityClass: "soc-tag--medium",
             caseId: "INC-2025-4818",
+            runbook: "identity_travel",
             source: "idp-sso",
             atds: "Monitor · 54% FP confidence",
             risk: 46,
@@ -552,6 +748,7 @@
             severity: "Medium",
             severityClass: "soc-tag--medium",
             caseId: "INC-2025-4818",
+            runbook: "identity_travel",
             source: "vpn-gateway",
             atds: "Investigate · 62% confidence",
             risk: 55,
@@ -582,6 +779,7 @@
             severity: "High",
             severityClass: "soc-tag--high",
             caseId: "INC-2025-4812",
+            runbook: "phishing_mailbox",
             source: "m365",
             atds: "Escalate · 79% confidence",
             risk: 72,
@@ -613,6 +811,7 @@
             severity: "Critical",
             severityClass: "soc-tag--critical",
             caseId: "INC-2025-4812",
+            runbook: "phishing_mailbox",
             source: "mail-gateway",
             atds: "Escalate · 81% confidence",
             risk: 78,
@@ -645,6 +844,7 @@
             severity: "Low",
             severityClass: "soc-tag--low",
             caseId: "INC-2025-4812",
+            runbook: "phishing_mailbox",
             source: "m365",
             atds: "Monitor · 48% FP confidence",
             risk: 52,
@@ -675,6 +875,7 @@
             severity: "Critical",
             severityClass: "soc-tag--critical",
             caseId: "INC-2025-4812",
+            runbook: "phishing_mailbox",
             source: "proxy",
             atds: "Investigate · 66% confidence",
             risk: 58,
@@ -705,6 +906,7 @@
             severity: "High",
             severityClass: "soc-tag--high",
             caseId: "INC-2025-4821",
+            runbook: "ransomware_stage",
             source: "endpoint-fin-04",
             atds: "Escalate · 84% confidence",
             risk: 74,
@@ -735,6 +937,7 @@
             severity: "Medium",
             severityClass: "soc-tag--medium",
             caseId: "—",
+            runbook: "dns_oauth",
             source: "dns-sensor",
             atds: "Investigate · 61% confidence",
             risk: 55,
@@ -765,6 +968,7 @@
             severity: "Medium",
             severityClass: "soc-tag--medium",
             caseId: "—",
+            runbook: "dns_oauth",
             source: "m365",
             atds: "Investigate · 58% confidence",
             risk: 48,
@@ -792,10 +996,79 @@
           },
         };
 
+        var FAMILY_RUNBOOK = {
+          endpoint: "powershell_fp",
+          identity: "identity_travel",
+          phishing: "phishing_mailbox",
+          network: "dns_oauth",
+        };
+
+        function fromDemoAlert(demo) {
+          var risk =
+            demo.severity === "critical"
+              ? 78
+              : demo.severity === "high"
+                ? 62
+                : demo.severity === "medium"
+                  ? 48
+                  : 30;
+          return {
+            title: demo.title,
+            severity: demo.severityLabel,
+            severityClass: demo.severityTag,
+            caseId: demo.caseId || demo.draftId || "—",
+            runbook: FAMILY_RUNBOOK[demo.family] || "powershell_fp",
+            source: demo.source,
+            atds: demo.atds,
+            risk: risk,
+            fp: demo.confidence || 55,
+            first: "May 28, 2025 · " + demo.lastSeen + " UTC",
+            last: "May 28, 2025 · " + demo.lastSeen + " UTC",
+            rep:
+              (demo.ip.flag || "") +
+              " " +
+              demo.ip.country +
+              " · " +
+              demo.ip.score +
+              "/10",
+            ip: {
+              ip: demo.ip.ip,
+              country: demo.ip.country,
+              flag: demo.ip.flag,
+              score: String(demo.ip.score),
+              asn: demo.ip.asn,
+              org: demo.ip.org,
+              type: demo.ip.type,
+              categories: demo.ip.categories,
+              firstSeen: "2024-01-01",
+              lastSeen: "2025-05-28",
+            },
+            summary: [
+              demo.title + " detected on " + demo.source + ".",
+              "Source IP " +
+                demo.ip.ip +
+                " (" +
+                demo.ip.country +
+                ") reputation " +
+                demo.ip.score +
+                "/10.",
+              "ATDS disposition path: " + demo.atds + ".",
+            ],
+            recHtml: "Recommendation: ATDS suggests " + demo.atdsVerb + ".",
+          };
+        }
+
         var params = new URLSearchParams(window.location.search);
         var id = params.get("id") || "ALT-88421";
-        var data = alerts[id] || alerts["ALT-88421"];
-        id = alerts[id] ? id : "ALT-88421";
+        var data = alerts[id];
+        if (!data && window.SocDemoData) {
+          var demo = SocDemoData.getAlert(id);
+          if (demo) data = fromDemoAlert(demo);
+        }
+        if (!data) {
+          data = alerts["ALT-88421"];
+          id = "ALT-88421";
+        }
 
         document.title = id + " — XFTM SOC Prototype";
         document.getElementById("alert-crumb").textContent = id;
@@ -845,17 +1118,378 @@
           })
           .join("");
 
-        document.getElementById("alert-activity").innerHTML =
-          '<div class="soc-timeline-item"><time>' +
-          data.last.split(" · ")[1].replace(" UTC", "") +
-          " · System</time><p>Alert " +
-          id +
-          " created and scored by ATDS.</p></div>" +
-          '<div class="soc-timeline-item"><time>' +
-          data.last.split(" · ")[1].replace(" UTC", "") +
-          " · ATDS</time><p>" +
-          data.atds +
-          "</p></div>";
+        function activityTime(data, offsetMin) {
+          var part = (data.last || "").split(" · ")[1] || "08:00 UTC";
+          var hm = part.replace(" UTC", "").trim();
+          var bits = hm.split(":");
+          var h = Number(bits[0]) || 0;
+          var m = Number(bits[1]) || 0;
+          var total = h * 60 + m + (offsetMin || 0);
+          if (total < 0) total += 24 * 60;
+          var rh = Math.floor(total / 60) % 24;
+          var rm = total % 60;
+          return (
+            String(rh).padStart(2, "0") + ":" + String(rm).padStart(2, "0")
+          );
+        }
+
+        function offenseIdFor(alertId) {
+          var digits = String(alertId).replace(/\D/g, "");
+          return "QRO-" + digits.slice(-6);
+        }
+
+        function buildActivity(alertId, data) {
+          var t0 = activityTime(data, -3);
+          var t1 = activityTime(data, -1);
+          var t2 = activityTime(data, 0);
+          var offense = offenseIdFor(alertId);
+          var host = data.source || "unknown-host";
+          var ipAddr = (data.ip && data.ip.ip) || "—";
+          var caseRef =
+            data.caseId && data.caseId !== "—"
+              ? data.caseId
+              : "ungrouped queue";
+
+          var byRunbook = {
+            powershell_fp: [
+              {
+                time: t0,
+                actor: "QRadar",
+                body:
+                  "Offense <strong>" +
+                  offense +
+                  "</strong> opened from rule <em>" +
+                  data.title +
+                  "</em>. Normalized event: Windows process create · host <strong>" +
+                  host +
+                  "</strong> · src IP " +
+                  ipAddr +
+                  ".",
+                links: [
+                  {
+                    label: "Offense in QRadar",
+                    href: "#qradar-offense-" + offense,
+                  },
+                  {
+                    label: "Raw events (AQL)",
+                    href: "#qradar-aql-" + offense,
+                  },
+                ],
+              },
+              {
+                time: t1,
+                actor: "EDR",
+                body:
+                  "Process tree captured: <code>explorer.exe → powershell.exe -enc …</code>. File hash and signer pulled; command line decoded for ATDS scoring.",
+                links: [
+                  {
+                    label: "EDR process tree",
+                    href: "#edr-tree-" + host,
+                  },
+                  {
+                    label: "Decoded command line",
+                    href: "#edr-cmdline-" + alertId,
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "ATDS",
+                body:
+                  "Fingerprint matches closed case <a href=\"./cases.html\">SOCJ233244</a> (IT automation). Disposition path: <strong>" +
+                  data.atds +
+                  "</strong>. Correlated into " +
+                  caseRef +
+                  ".",
+                links: [
+                  {
+                    label: "Historical match detail",
+                    href: "./cases.html",
+                  },
+                  {
+                    label: "Change ticket CHG-9921",
+                    href: "#itsm-chg-9921",
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "XFTM",
+                body:
+                  "Alert <strong>" +
+                  alertId +
+                  "</strong> published to SOC queue with severity " +
+                  data.severity +
+                  ". Runbook <em>" +
+                  (RUNBOOKS[data.runbook] && RUNBOOKS[data.runbook].id) +
+                  "</em> attached for analyst follow-up.",
+                links: [
+                  {
+                    label: "Open related case",
+                    href:
+                      "./incident.html?case=" +
+                      encodeURIComponent(data.caseId || ""),
+                  },
+                ],
+              },
+            ],
+            identity_travel: [
+              {
+                time: t0,
+                actor: "QRadar",
+                body:
+                  "Offense <strong>" +
+                  offense +
+                  "</strong> from identity / VPN correlation. Prior login geo vs current source <strong>" +
+                  ipAddr +
+                  "</strong> (" +
+                  (data.ip && data.ip.country) +
+                  ") exceeds travel threshold.",
+                links: [
+                  {
+                    label: "Offense in QRadar",
+                    href: "#qradar-offense-" + offense,
+                  },
+                  {
+                    label: "VPN session logs",
+                    href: "#qradar-vpn-" + offense,
+                  },
+                ],
+              },
+              {
+                time: t1,
+                actor: "IdP",
+                body:
+                  "Authentication audit: new device / concurrent session signals for the user. MFA challenge outcome and risk score attached to the offense.",
+                links: [
+                  {
+                    label: "IdP sign-in logs",
+                    href: "#idp-signin-" + alertId,
+                  },
+                  {
+                    label: "Device inventory",
+                    href: "#idp-device-" + alertId,
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "ATDS",
+                body:
+                  "Risk scored at <strong>" +
+                  data.risk +
+                  "%</strong>. Recommendation: <strong>" +
+                  data.atds +
+                  "</strong>. Pending travel-desk confirmation before containment.",
+                links: [
+                  {
+                    label: "Threat intel on source IP",
+                    href: "#xforce-" + ipAddr.replace(/\./g, "-"),
+                  },
+                ],
+              },
+            ],
+            phishing_mailbox: [
+              {
+                time: t0,
+                actor: "QRadar",
+                body:
+                  "Offense <strong>" +
+                  offense +
+                  "</strong> correlated mail-gateway + mailbox events. Lead IOC hosted at <strong>" +
+                  ipAddr +
+                  "</strong>.",
+                links: [
+                  {
+                    label: "Offense in QRadar",
+                    href: "#qradar-offense-" + offense,
+                  },
+                  {
+                    label: "Mail flow events",
+                    href: "#qradar-mail-" + offense,
+                  },
+                ],
+              },
+              {
+                time: t1,
+                actor: "Mail gateway",
+                body:
+                  "Message quarantined / URL rewritten. Click telemetry confirms user navigation to credential-harvest path tied to this alert.",
+                links: [
+                  {
+                    label: "Gateway message detail",
+                    href: "#mail-gw-" + alertId,
+                  },
+                  {
+                    label: "URL detonation report",
+                    href: "#sandbox-" + alertId,
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "ATDS",
+                body:
+                  "Phishing chain confidence <strong>" +
+                  data.fp +
+                  "%</strong> on disposition path. Recommendation: <strong>" +
+                  data.atds +
+                  "</strong> within " +
+                  caseRef +
+                  ".",
+                links: [
+                  {
+                    label: "Mailbox audit (M365)",
+                    href: "#m365-mailbox-" + alertId,
+                  },
+                  {
+                    label: "Block IOC request",
+                    href: "#edge-block-" + alertId,
+                  },
+                ],
+              },
+            ],
+            ransomware_stage: [
+              {
+                time: t0,
+                actor: "QRadar",
+                body:
+                  "Offense <strong>" +
+                  offense +
+                  "</strong> escalated from staging indicators on <strong>" +
+                  host +
+                  "</strong> (SMB / lateral auth / task change).",
+                links: [
+                  {
+                    label: "Offense in QRadar",
+                    href: "#qradar-offense-" + offense,
+                  },
+                  {
+                    label: "Flow & auth events",
+                    href: "#qradar-flows-" + offense,
+                  },
+                ],
+              },
+              {
+                time: t1,
+                actor: "EDR",
+                body:
+                  "Endpoint sensor flagged peer authentication attempts and uncommon share access. Snapshot retained for IR if isolation is approved.",
+                links: [
+                  {
+                    label: "EDR host timeline",
+                    href: "#edr-host-" + host,
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "ATDS",
+                body:
+                  "Sibling alerts grouped into draft staging case. Recommendation: <strong>" +
+                  data.atds +
+                  "</strong> (risk " +
+                  data.risk +
+                  "%).",
+                links: [
+                  {
+                    label: "Open draft case",
+                    href:
+                      "./incident.html?case=" +
+                      encodeURIComponent(data.caseId || ""),
+                  },
+                ],
+              },
+            ],
+            dns_oauth: [
+              {
+                time: t0,
+                actor: "QRadar",
+                body:
+                  "Offense <strong>" +
+                  offense +
+                  "</strong> from DNS / SaaS anomaly rule. Destination context: <strong>" +
+                  ipAddr +
+                  "</strong>.",
+                links: [
+                  {
+                    label: "Offense in QRadar",
+                    href: "#qradar-offense-" + offense,
+                  },
+                  {
+                    label: "DNS query log",
+                    href: "#qradar-dns-" + offense,
+                  },
+                ],
+              },
+              {
+                time: t1,
+                actor: "Cloud audit",
+                body:
+                  "Related identity / OAuth or resolver telemetry attached. Baseline deviation calculated for the last 7 days.",
+                links: [
+                  {
+                    label: "Cloud audit events",
+                    href: "#cloud-audit-" + alertId,
+                  },
+                ],
+              },
+              {
+                time: t2,
+                actor: "ATDS",
+                body:
+                  "Scored for investigation. Recommendation: <strong>" +
+                  data.atds +
+                  "</strong>.",
+                links: [
+                  {
+                    label: "X-Force IP report",
+                    href: "#xforce-" + ipAddr.replace(/\./g, "-"),
+                  },
+                ],
+              },
+            ],
+          };
+
+          return byRunbook[data.runbook] || byRunbook.powershell_fp;
+        }
+
+        function renderActivity(items) {
+          return items
+            .map(function (item) {
+              var links = (item.links || [])
+                .map(function (link) {
+                  return (
+                    '<a href="' +
+                    link.href +
+                    '">' +
+                    link.label +
+                    "</a>"
+                  );
+                })
+                .join("");
+              return (
+                '<div class="soc-timeline-item">' +
+                "<time>" +
+                item.time +
+                " · " +
+                item.actor +
+                "</time>" +
+                "<p>" +
+                item.body +
+                "</p>" +
+                (links
+                  ? '<div class="soc-timeline-links">' + links + "</div>"
+                  : "") +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        document.getElementById("alert-activity").innerHTML = renderActivity(
+          buildActivity(id, data)
+        );
 
         document.getElementById("alert-atds-lead").innerHTML =
           "Basing on analytics of <a href=\"./cases.html\">145 correlated historical alerts</a>, ATDS recommends action with <strong>" +
@@ -873,6 +1507,45 @@
         document.getElementById("alert-close").href = complete;
         document.getElementById("alert-escalate").href = complete;
         document.getElementById("alert-associate").href = complete;
+
+        var rb =
+          RUNBOOKS[data.runbook] || RUNBOOKS.powershell_fp;
+        var doneCount = rb.steps.filter(function (s) {
+          return s.status === "done";
+        }).length;
+        document.getElementById("runbook-id").textContent = rb.id;
+        document.getElementById("runbook-name").textContent = rb.name;
+        document.getElementById("runbook-meta").textContent =
+          doneCount +
+          " of " +
+          rb.steps.length +
+          " steps complete · Playbook suggested by ATDS";
+        document.getElementById("runbook-steps").innerHTML = rb.steps
+          .map(function (step, index) {
+            return (
+              '<li class="soc-runbook__step soc-runbook__step--' +
+              step.status +
+              '">' +
+              '<div class="soc-runbook__rail" aria-hidden="true">' +
+              '<span class="soc-runbook__num">' +
+              (index + 1) +
+              "</span></div>" +
+              '<div class="soc-runbook__content">' +
+              '<div class="soc-runbook__step-head">' +
+              "<h3>" +
+              step.title +
+              "</h3>" +
+              '<span class="soc-runbook__type soc-runbook__type--' +
+              step.type +
+              '">' +
+              (TYPE_LABEL[step.type] || step.type) +
+              "</span></div>" +
+              "<p>" +
+              step.body +
+              "</p></div></li>"
+            );
+          })
+          .join("");
       })();
     </script>
   </body>

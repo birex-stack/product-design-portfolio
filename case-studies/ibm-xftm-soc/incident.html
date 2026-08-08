@@ -53,7 +53,7 @@
         <nav class="soc-nav">
           <a href="./shift-briefing.html">Briefing</a>
           <a href="./alerts.html"
-            >Alerts <span class="soc-nav-badge">12</span></a
+            >Alerts <span class="soc-nav-badge">156</span></a
           >
           <a class="is-active" href="./cases.html">Cases</a>
           <a href="#">Threat intel</a>
@@ -97,12 +97,12 @@
 
         <div class="soc-detail-layout">
           <div>
-            <section class="soc-card" style="margin-bottom: 16px">
-              <div class="soc-card__head">
-                <h2>Incident overview</h2>
-              </div>
-              <div class="soc-card__body">
-                <div class="soc-overview-row">
+            <div class="soc-alert-split" style="margin-bottom: 16px">
+              <section class="soc-card">
+                <div class="soc-card__head">
+                  <h2>Incident overview</h2>
+                </div>
+                <div class="soc-card__body">
                   <dl class="soc-kv">
                     <dt>Status</dt>
                     <dd>In progress · assigned to Alex Johnson</dd>
@@ -119,138 +119,136 @@
                     </dd>
                     <dt>Passdown note</dt>
                     <dd>
-                      Check against closed case SOCJ233244 — same tooling pattern
-                      previously marked benign IT automation.
+                      Check against closed case SOCJ233244 — same tooling
+                      pattern previously marked benign IT automation.
                     </dd>
                   </dl>
+                </div>
+              </section>
 
-                  <!--
-                    Outer ring = Magnitude (main score /10); remainder = dashed ticks
-                    (same color & stroke). Inner: Relevance, Credibility, Severity.
-                    stroke=4, gap=4, step=8 · rings pushed out for center text
-                    r54 score · r46 rel · r38 cred · r30 sev
-                  -->
-                  <aside
-                    class="soc-magnitude"
-                    aria-label="Magnitude 4 of 10"
-                    id="incident-magnitude"
-                  >
-                    <h3 class="soc-magnitude__title">
-                      Magnitude
-                      <span class="soc-info-tip-wrap">
-                        <button
-                          type="button"
-                          class="soc-info-tip"
-                          aria-expanded="false"
-                          aria-controls="magnitude-tip"
-                          data-soc-info-tip
+              <!--
+                Outer ring = Magnitude (main score /10); remainder = dashed ticks.
+                Inner: Relevance, Credibility, Severity.
+              -->
+              <section
+                class="soc-card"
+                aria-label="Magnitude 4 of 10"
+                id="incident-magnitude"
+              >
+                <div class="soc-card__head">
+                  <h2 class="soc-magnitude__title">
+                    Magnitude
+                    <span class="soc-info-tip-wrap">
+                      <button
+                        type="button"
+                        class="soc-info-tip"
+                        aria-expanded="false"
+                        aria-controls="magnitude-tip"
+                        data-soc-info-tip
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 32 32"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
                         >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 32 32"
-                            fill="currentColor"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <!-- Carbon Information (16) -->
-                            <path
-                              d="M17 22v-8h-4v2h2v6h-2v2h6v-2h-2zM16 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
-                            />
-                            <path
-                              d="M16 30a14 14 0 1114-14 14.016 14.016 0 01-14 14zM16 4a12 12 0 1012 12A12.014 12.014 0 0016 4z"
-                            />
-                          </svg>
-                          <span class="soc-visually-hidden">About Magnitude</span>
-                        </button>
-                        <div
-                          id="magnitude-tip"
-                          class="soc-info-tip__popover"
-                          role="tooltip"
-                          hidden
-                        >
-                          <p class="soc-info-tip__lead">
-                            Magnitude is a 0–10 priority score for the case
-                            (offense). Higher values should be investigated
-                            first.
-                          </p>
-                          <p>
-                            It is derived from three inputs (each also scored
-                            0–10):
-                          </p>
-                          <ul>
-                            <li>
-                              <strong>Severity</strong> — potential impact of
-                              the threat relative to the target.
-                            </li>
-                            <li>
-                              <strong>Relevance</strong> — importance of the
-                              affected asset or network to the organization.
-                            </li>
-                            <li>
-                              <strong>Credibility</strong> — how trustworthy the
-                              evidence and detection sources are.
-                            </li>
-                          </ul>
-                          <p>
-                            The overall Magnitude blends these factors and can
-                            be influenced by related event volume, offense age,
-                            and asset context. It is not the same as a single
-                            alert’s severity tag.
-                          </p>
-                        </div>
-                      </span>
-                    </h3>
+                          <!-- Carbon Information (16) -->
+                          <path
+                            d="M17 22v-8h-4v2h2v6h-2v2h6v-2h-2zM16 8a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"
+                          />
+                          <path
+                            d="M16 30a14 14 0 1114-14 14.016 14.016 0 01-14 14zM16 4a12 12 0 1012 12A12.014 12.014 0 0016 4z"
+                          />
+                        </svg>
+                        <span class="soc-visually-hidden">About Magnitude</span>
+                      </button>
+                      <div
+                        id="magnitude-tip"
+                        class="soc-info-tip__popover"
+                        role="tooltip"
+                        hidden
+                      >
+                        <p class="soc-info-tip__lead">
+                          Magnitude is a 0–10 priority score for the case
+                          (offense). Higher values should be investigated
+                          first.
+                        </p>
+                        <p>
+                          It is derived from three inputs (each also scored
+                          0–10):
+                        </p>
+                        <ul>
+                          <li>
+                            <strong>Severity</strong> — potential impact of the
+                            threat relative to the target.
+                          </li>
+                          <li>
+                            <strong>Relevance</strong> — importance of the
+                            affected asset or network to the organization.
+                          </li>
+                          <li>
+                            <strong>Credibility</strong> — how trustworthy the
+                            evidence and detection sources are.
+                          </li>
+                        </ul>
+                        <p>
+                          The overall Magnitude blends these factors and can be
+                          influenced by related event volume, offense age, and
+                          asset context. It is not the same as a single alert’s
+                          severity tag.
+                        </p>
+                      </div>
+                    </span>
+                  </h2>
+                </div>
+                <div class="soc-card__body">
+                  <div class="soc-magnitude">
                     <svg
                       class="soc-radial soc-radial--magnitude"
                       viewBox="0 0 120 120"
                       role="img"
                       aria-label="Magnitude 4 of 10. Relevance 5, Credibility 6, Severity 3"
+                      data-mag-chart
                     >
                       <circle class="soc-radial-track" cx="60" cy="60" r="54" />
-                      <!-- Dashed remainder of magnitude ring (full circle under solid) -->
                       <circle
                         class="soc-radial-arc soc-radial-arc--mag-score-ticks"
                         cx="60"
                         cy="60"
                         r="54"
                       />
-                      <!-- Solid magnitude arc (score/10) -->
-                      <circle
+                      <path
                         class="soc-radial-arc soc-radial-arc--mag-score"
-                        cx="60"
-                        cy="60"
-                        r="54"
-                        pathLength="100"
                         data-mag-ring="score"
-                        stroke-dasharray="40 60"
+                        data-mag-r="54"
+                        fill="none"
+                        d=""
                       />
                       <circle class="soc-radial-track" cx="60" cy="60" r="46" />
-                      <circle
+                      <path
                         class="soc-radial-arc soc-radial-arc--mag-relevance"
-                        cx="60"
-                        cy="60"
-                        r="46"
                         data-mag-ring="relevance"
-                        stroke-dasharray="144.5 289"
+                        data-mag-r="46"
+                        fill="none"
+                        d=""
                       />
                       <circle class="soc-radial-track" cx="60" cy="60" r="38" />
-                      <circle
+                      <path
                         class="soc-radial-arc soc-radial-arc--mag-credibility"
-                        cx="60"
-                        cy="60"
-                        r="38"
                         data-mag-ring="credibility"
-                        stroke-dasharray="143.3 238.8"
+                        data-mag-r="38"
+                        fill="none"
+                        d=""
                       />
                       <circle class="soc-radial-track" cx="60" cy="60" r="30" />
-                      <circle
+                      <path
                         class="soc-radial-arc soc-radial-arc--mag-severity"
-                        cx="60"
-                        cy="60"
-                        r="30"
                         data-mag-ring="severity"
-                        stroke-dasharray="56.5 188.5"
+                        data-mag-r="30"
+                        fill="none"
+                        d=""
                       />
                       <text
                         class="soc-radial-mag-value"
@@ -272,47 +270,90 @@
                     </svg>
                     <ul class="soc-magnitude__legend">
                       <li>
-                        <i class="soc-magnitude__swatch soc-magnitude__swatch--score" aria-hidden="true"></i>
+                        <i
+                          class="soc-magnitude__swatch soc-magnitude__swatch--score"
+                          aria-hidden="true"
+                        ></i>
                         <span data-mag-legend="score">4</span> Magnitude
                       </li>
                       <li>
-                        <i class="soc-magnitude__swatch soc-magnitude__swatch--relevance" aria-hidden="true"></i>
+                        <i
+                          class="soc-magnitude__swatch soc-magnitude__swatch--relevance"
+                          aria-hidden="true"
+                        ></i>
                         <span data-mag-legend="relevance">5</span> Relevance
                       </li>
                       <li>
-                        <i class="soc-magnitude__swatch soc-magnitude__swatch--credibility" aria-hidden="true"></i>
+                        <i
+                          class="soc-magnitude__swatch soc-magnitude__swatch--credibility"
+                          aria-hidden="true"
+                        ></i>
                         <span data-mag-legend="credibility">6</span> Credibility
                       </li>
                       <li>
-                        <i class="soc-magnitude__swatch soc-magnitude__swatch--severity" aria-hidden="true"></i>
+                        <i
+                          class="soc-magnitude__swatch soc-magnitude__swatch--severity"
+                          aria-hidden="true"
+                        ></i>
                         <span data-mag-legend="severity">3</span> Severity
                       </li>
                     </ul>
-                  </aside>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            </div>
 
-            <section class="soc-card" style="margin-bottom: 16px">
-              <div class="soc-card__head">
-                <h2>Investigation context</h2>
-              </div>
-              <div class="soc-card__body">
-                <ul class="soc-takeaways">
-                  <li>
-                    Pattern overlaps closed case SOCJ233244 (IT automation
-                    script).
-                  </li>
-                  <li>No outbound C2 confirmed for this host in last 24h.</li>
-                  <li>
-                    User j.doe@finance.com has approved change ticket CHG-9921.
-                  </li>
-                  <li>
-                    Review ATDS analysis below before choosing disposition.
-                  </li>
-                </ul>
-              </div>
-            </section>
+            <div class="soc-alert-split" style="margin-bottom: 16px">
+              <section class="soc-card">
+                <div class="soc-card__head">
+                  <h2>Investigation context</h2>
+                </div>
+                <div class="soc-card__body">
+                  <ul class="soc-takeaways">
+                    <li>
+                      Pattern overlaps closed case SOCJ233244 (IT automation
+                      script).
+                    </li>
+                    <li>No outbound C2 confirmed for this host in last 24h.</li>
+                    <li>
+                      User j.doe@finance.com has approved change ticket
+                      CHG-9921.
+                    </li>
+                    <li>
+                      Review ATDS analysis below before choosing disposition.
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              <section class="soc-card">
+                <div class="soc-card__head">
+                  <h2>Activity</h2>
+                </div>
+                <div class="soc-card__body">
+                  <div class="soc-timeline">
+                    <div class="soc-timeline-item">
+                      <time>08:41 · System</time>
+                      <p>New alert ALT-88421 correlated into this incident.</p>
+                    </div>
+                    <div class="soc-timeline-item">
+                      <time>08:12 · Sam Taylor</time>
+                      <p>
+                        Passdown: compare with closed case SOCJ233244 before
+                        escalating.
+                      </p>
+                    </div>
+                    <div class="soc-timeline-item">
+                      <time>07:54 · ATDS</time>
+                      <p>
+                        Historical match suggests false positive — recommend
+                        associate with closed case.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
 
             <section class="soc-card" style="margin-bottom: 16px">
               <div class="soc-card__head">
@@ -504,34 +545,6 @@
                 </tbody>
               </table>
             </section>
-
-            <section class="soc-card">
-              <div class="soc-card__head">
-                <h2>Activity</h2>
-              </div>
-              <div class="soc-card__body">
-                <div class="soc-timeline">
-                  <div class="soc-timeline-item">
-                    <time>08:41 · System</time>
-                    <p>New alert ALT-88421 correlated into this incident.</p>
-                  </div>
-                  <div class="soc-timeline-item">
-                    <time>08:12 · Sam Taylor</time>
-                    <p>
-                      Passdown: compare with closed case SOCJ233244 before
-                      escalating.
-                    </p>
-                  </div>
-                  <div class="soc-timeline-item">
-                    <time>07:54 · ATDS</time>
-                    <p>
-                      Historical match suggests false positive — recommend
-                      associate with closed case.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
           </div>
         </div>
 
@@ -657,11 +670,60 @@
     <script type="module" src="./soc-ip-flyout.js"></script>
     <script>
       (function () {
-        var MAG_RINGS = {
-          relevance: { r: 46, c: 289 },
-          credibility: { r: 38, c: 238.8 },
-          severity: { r: 30, c: 188.5 },
-        };
+        /** Arc from 12 o'clock, clockwise. value 0–10 → fraction of full circle. */
+        function magnitudeArcPath(cx, cy, r, value) {
+          var v = Math.max(0, Math.min(10, Number(value) || 0));
+          if (v <= 0) return "";
+          if (v >= 10) {
+            // Full circle as two semicircles (SVG can't close a single full arc)
+            return (
+              "M " +
+              cx +
+              " " +
+              (cy - r) +
+              " A " +
+              r +
+              " " +
+              r +
+              " 0 1 1 " +
+              cx +
+              " " +
+              (cy + r) +
+              " A " +
+              r +
+              " " +
+              r +
+              " 0 1 1 " +
+              cx +
+              " " +
+              (cy - r)
+            );
+          }
+          var start = -Math.PI / 2;
+          var sweep = (v / 10) * Math.PI * 2;
+          var end = start + sweep;
+          var x1 = cx + r * Math.cos(start);
+          var y1 = cy + r * Math.sin(start);
+          var x2 = cx + r * Math.cos(end);
+          var y2 = cy + r * Math.sin(end);
+          var large = sweep > Math.PI ? 1 : 0;
+          return (
+            "M " +
+            x1.toFixed(3) +
+            " " +
+            y1.toFixed(3) +
+            " A " +
+            r +
+            " " +
+            r +
+            " 0 " +
+            large +
+            " 1 " +
+            x2.toFixed(3) +
+            " " +
+            y2.toFixed(3)
+          );
+        }
 
         function applyMagnitude(mag) {
           var score = Math.max(0, Math.min(10, Number(mag.score) || 0));
@@ -670,7 +732,7 @@
           aside.setAttribute("aria-label", "Magnitude " + score + " of 10");
           var scoreEl = aside.querySelector("[data-mag-score]");
           if (scoreEl) scoreEl.textContent = String(score);
-          var svg = aside.querySelector("svg");
+          var svg = aside.querySelector("[data-mag-chart]");
           if (svg) {
             svg.setAttribute(
               "aria-label",
@@ -685,28 +747,17 @@
             );
           }
 
-          // Outer ring: solid magnitude + dashed ticks for the rest (pathLength=100)
-          var scoreArc = aside.querySelector('[data-mag-ring="score"]');
-          if (scoreArc) {
-            var fillPct = score * 10;
-            scoreArc.setAttribute(
-              "stroke-dasharray",
-              fillPct + " " + (100 - fillPct)
-            );
-          }
-          var scoreLegend = aside.querySelector('[data-mag-legend="score"]');
-          if (scoreLegend) scoreLegend.textContent = String(score);
-
-          ["relevance", "credibility", "severity"].forEach(function (key) {
-            var value = Number(mag[key]) || 0;
-            var meta = MAG_RINGS[key];
+          ["score", "relevance", "credibility", "severity"].forEach(function (
+            key
+          ) {
+            var value =
+              key === "score"
+                ? score
+                : Math.max(0, Math.min(10, Number(mag[key]) || 0));
             var arc = aside.querySelector('[data-mag-ring="' + key + '"]');
-            if (arc && meta) {
-              var fill = (value / 10) * meta.c;
-              arc.setAttribute(
-                "stroke-dasharray",
-                fill.toFixed(1) + " " + meta.c
-              );
+            if (arc) {
+              var r = Number(arc.getAttribute("data-mag-r")) || 30;
+              arc.setAttribute("d", magnitudeArcPath(60, 60, r, value));
             }
             var legend = aside.querySelector('[data-mag-legend="' + key + '"]');
             if (legend) legend.textContent = String(value);

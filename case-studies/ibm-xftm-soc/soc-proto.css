@@ -486,6 +486,12 @@ p {
   text-transform: uppercase;
 }
 
+/*
+ * Sticky ack bar → Carbon low-contrast actionable notification (g100)
+ * @see https://carbondesignsystem.com/components/notification/style/
+ * Low contrast info: $notification-background-info + ghost/tertiary action.
+ * (High contrast on g100 would be $background-inverse #f4f4f4 — too loud for SOC chrome.)
+ */
 .soc-ack {
   position: fixed;
   z-index: 40;
@@ -497,22 +503,25 @@ p {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 14px 24px;
-  background: #001d6c;
-  border-top: 1px solid #002d9c;
+  padding: 12px 24px 12px 21px;
+  background: #001d6c; /* $notification-background-info on g100 */
+  border-top: none;
+  border-left: 3px solid #4589ff; /* $support-info */
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.35);
+  color: #f4f4f4;
 }
 
 .soc-ack-copy {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #d0e2ff;
+  color: #f4f4f4;
   font-size: 0.875rem;
 }
 
 .soc-ack-copy svg {
   flex-shrink: 0;
+  color: #4589ff;
 }
 
 .soc-ack-actions {
@@ -520,6 +529,28 @@ p {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+/* Actionable toast → tertiary (outline), not filled primary on info blue */
+.soc-ack .soc-btn--primary {
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.soc-ack .soc-btn--primary:hover {
+  background: #ffffff;
+  color: #161616;
+}
+
+.soc-ack .soc-btn--secondary {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.soc-ack .soc-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
 }
 
 /* Room for the pinned acknowledge bar on Shift Briefing */
@@ -677,6 +708,7 @@ body:has(.soc-ack) .soc-main {
   border-radius: 50%;
   border: 4px solid var(--cds-layer-02);
   border-top-color: var(--cds-interactive);
+  box-sizing: border-box;
   display: grid;
   place-items: center;
   font-size: 0.875rem;
@@ -757,7 +789,7 @@ body:has(.soc-ack) .soc-main {
 }
 
 .soc-chart-row--alerts {
-  grid-template-columns: 1.35fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .soc-chart-row > .soc-chart-panel {
@@ -795,6 +827,23 @@ body:has(.soc-ack) .soc-main {
   width: 100%;
 }
 
+/* Standard XFTM time-series: gradient area + 4px line + 8px points */
+.soc-chart-area {
+  pointer-events: none;
+}
+
+.soc-chart-line {
+  fill: none;
+  stroke-width: 4px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
+.soc-chart-point {
+  r: 4px; /* 8px diameter in screen pixels */
+}
+
 .soc-chart-svg {
   width: 100%;
   height: auto;
@@ -809,6 +858,68 @@ body:has(.soc-ack) .soc-main {
   font-size: 0.625rem;
   color: var(--cds-text-helper);
   font-family: var(--font-mono);
+}
+
+/*
+ * Carbon proportional meter (part-to-whole of a single total)
+ * @see https://charts.carbondesignsystem.com/meter
+ */
+.soc-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 120px;
+  justify-content: center;
+  padding: 8px 0 4px;
+}
+
+.soc-meter__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+.soc-meter__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.soc-meter__track {
+  display: flex;
+  width: 100%;
+  height: 8px;
+  background: var(--cds-layer-02);
+  overflow: hidden;
+}
+
+.soc-meter__seg {
+  min-width: 2px;
+  height: 100%;
+}
+
+.soc-meter__seg--closed {
+  background: var(--cds-support-success);
+}
+
+.soc-meter__seg--open {
+  background: var(--cds-support-info);
+}
+
+.soc-meter__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  font-size: 0.75rem;
+  color: var(--cds-text-helper);
+}
+
+.soc-meter__footer span:first-child {
+  color: var(--cds-text);
+  font-weight: 500;
 }
 
 .soc-vbars {
@@ -948,7 +1059,9 @@ body:has(.soc-ack) .soc-main {
   min-height: 168px;
 }
 
-/* Single stacked severity donut — segments sum to 100% */
+/* Single stacked severity donut — segments sum to 100%.
+   Do NOT use vector-effect:non-scaling-stroke here — it breaks
+   stroke-dasharray and splits each arc into many short dashes. */
 .soc-donut-track {
   fill: none;
   stroke: var(--cds-layer-02);
@@ -962,19 +1075,25 @@ body:has(.soc-ack) .soc-main {
 }
 
 .soc-donut-seg--critical {
-  stroke: #ff8389;
+  stroke: #da1e28; /* Carbon red-60 */
 }
 
 .soc-donut-seg--high {
-  stroke: var(--status-red);
+  stroke: #fa4d56; /* Carbon red-50 / $status-red */
 }
 
 .soc-donut-seg--medium {
-  stroke: var(--status-orange);
+  stroke: #ff832b; /* Carbon orange-40 / $status-orange */
 }
 
 .soc-donut-seg--low {
-  stroke: var(--status-yellow);
+  stroke: #f1c21b; /* Carbon yellow-30 / $status-yellow */
+}
+
+.soc-radial-track,
+.soc-radial-arc {
+  stroke-width: 4px;
+  vector-effect: non-scaling-stroke;
 }
 
 .soc-donut-center-value,
@@ -1002,12 +1121,10 @@ body:has(.soc-ack) .soc-main {
 .soc-radial-track {
   fill: none;
   stroke: #2a2a2a;
-  stroke-width: 4;
 }
 
 .soc-radial-arc {
   fill: none;
-  stroke-width: 4;
   stroke-linecap: butt;
 }
 
@@ -1095,7 +1212,7 @@ body:has(.soc-ack) .soc-main {
 }
 
 .soc-bar-track {
-  height: 10px;
+  height: 4px;
   background: var(--cds-layer-02);
 }
 
@@ -1269,7 +1386,8 @@ button.soc-item.soc-watch-link span {
   word-break: break-all;
 }
 
-.soc-item span {
+/* Direct child only — avoid overriding severity shapes inside <strong> */
+.soc-item > span {
   color: var(--cds-text-helper);
   font-size: 0.75rem;
 }
@@ -1387,44 +1505,63 @@ button.soc-item.soc-watch-link span {
   outline-offset: -2px;
 }
 
+/* Carbon line tabs — transparent fill; active 2px bar overlays the gray rule */
 .soc-switcher {
   display: inline-flex;
   height: 40px;
-  border: 1px solid var(--cds-border);
-  background: var(--cds-layer);
+  border: none;
+  background: transparent;
   flex-shrink: 0;
+  position: relative;
+  box-shadow: inset 0 -2px 0 var(--cds-border); /* full-width gray rule */
 }
 
 .soc-switcher button {
   min-width: 0;
   height: 100%;
-  padding: 0 16px;
+  padding: 8px 16px;
   border: none;
-  border-left: 1px solid var(--cds-border);
   background: transparent;
   color: var(--cds-text-secondary);
   font-family: inherit;
   font-size: 0.875rem;
+  font-weight: 400;
   cursor: pointer;
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  position: relative;
+  box-shadow: none;
 }
 
-.soc-switcher button:first-child {
-  border-left: none;
+.soc-switcher button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: transparent;
 }
 
 .soc-switcher button:hover {
-  background: var(--cds-layer-hover);
+  background: transparent;
   color: var(--cds-text);
 }
 
+.soc-switcher button:hover::after {
+  background: #6f6f6f; /* $border-strong on g100 */
+}
+
 .soc-switcher button.is-active {
-  background: var(--cds-layer-02);
+  background: transparent;
   color: var(--cds-text);
-  box-shadow: inset 0 -2px 0 var(--cds-interactive);
+  font-weight: 600;
+}
+
+.soc-switcher button.is-active::after {
+  background: var(--cds-interactive); /* overlays gray rule, no layout shift */
 }
 
 .soc-switcher button:focus-visible {
@@ -1435,12 +1572,12 @@ button.soc-item.soc-watch-link span {
 
 .soc-ai-icon {
   flex-shrink: 0;
-  color: #be95ff;
+  color: #8d8d8d; /* $icon-secondary when tab unselected */
 }
 
 .soc-switcher button.is-active .soc-ai-icon,
 .soc-switcher button:hover .soc-ai-icon {
-  color: #d4bbff;
+  color: #be95ff;
 }
 
 .soc-callout {
@@ -1556,6 +1693,159 @@ button.soc-item.soc-watch-link span {
   font-size: 0.8125rem;
 }
 
+/* Carbon-style pagination (g100) */
+.soc-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-top: 1px solid var(--cds-border);
+  background: var(--cds-layer);
+  color: var(--cds-text-secondary);
+  font-size: 0.875rem;
+}
+
+.soc-pagination[hidden] {
+  display: none !important;
+}
+
+.soc-pagination__range {
+  color: var(--cds-text-secondary);
+}
+
+.soc-pagination__controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-left: auto;
+}
+
+.soc-pagination__page {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 8px;
+  color: var(--cds-text-secondary);
+}
+
+.soc-pagination__page-label {
+  color: var(--cds-text-helper);
+}
+
+.soc-pagination__page select {
+  appearance: none;
+  min-width: 4.5rem;
+  height: 32px;
+  padding: 0 28px 0 12px;
+  border: none;
+  border-radius: 0;
+  background-color: var(--cds-field);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23f4f4f4' d='M8 11 3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  color: var(--cds-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.soc-pagination__page select:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+
+.soc-pagination__btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-left: 1px solid var(--cds-border);
+  background: transparent;
+  color: var(--cds-text);
+}
+
+.soc-pagination__btn:hover:not(:disabled) {
+  background: var(--cds-layer-hover);
+}
+
+.soc-pagination__btn:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+
+.soc-pagination__btn:disabled {
+  color: var(--cds-text-helper);
+  cursor: not-allowed;
+}
+
+/*
+ * Shared column grid across stacked incident/draft groups so headers
+ * and cells align vertically from one case block to the next.
+ */
+.soc-incident-group .soc-alert-table {
+  table-layout: fixed;
+}
+
+.soc-incident-group .soc-alert-table th,
+.soc-incident-group .soc-alert-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* IP chips / short columns — never truncate with "…" */
+.soc-incident-group .soc-alert-table th:nth-child(4),
+.soc-incident-group .soc-alert-table td:nth-child(4),
+.soc-incident-group .soc-alert-table th:nth-child(5),
+.soc-incident-group .soc-alert-table td:nth-child(5),
+.soc-incident-group .soc-alert-table th:nth-child(6),
+.soc-incident-group .soc-alert-table td:nth-child(6),
+.soc-incident-group .soc-alert-table th:nth-child(7),
+.soc-incident-group .soc-alert-table td:nth-child(7) {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(1),
+.soc-incident-group .soc-alert-table td:nth-child(1) {
+  width: 22%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(2),
+.soc-incident-group .soc-alert-table td:nth-child(2) {
+  width: 17%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(3),
+.soc-incident-group .soc-alert-table td:nth-child(3) {
+  width: 13%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(4),
+.soc-incident-group .soc-alert-table td:nth-child(4) {
+  width: 18%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(5),
+.soc-incident-group .soc-alert-table td:nth-child(5) {
+  width: 8%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(6),
+.soc-incident-group .soc-alert-table td:nth-child(6) {
+  width: 12%;
+}
+
+.soc-incident-group .soc-alert-table th:nth-child(7),
+.soc-incident-group .soc-alert-table td:nth-child(7) {
+  width: 10%;
+}
+
 .soc-alert-table th {
   text-align: left;
   padding: 8px 16px;
@@ -1648,15 +1938,13 @@ button.soc-item.soc-watch-link span {
   font-size: 0.75rem;
 }
 
-.soc-ip-link.soc-ip-entity:hover,
-.soc-watch-link:hover > .soc-ip-entity {
+.soc-ip-link.soc-ip-entity:hover {
   background: var(--cds-layer-hover);
   color: inherit;
   text-decoration: none;
 }
 
-.soc-ip-link.soc-ip-entity:hover .soc-ip-entity__value,
-.soc-watch-link:hover > .soc-ip-entity .soc-ip-entity__value {
+.soc-ip-link.soc-ip-entity:hover .soc-ip-entity__value {
   color: #a6c8ff;
 }
 
@@ -1766,7 +2054,7 @@ strong > .soc-sev {
   height: 12px;
 }
 
-/* Watchlist rows reuse .soc-ip-link but keep list layout */
+/* Watchlist IP rows: same plain list style as user/hash (no entity chip) */
 button.soc-item.soc-watch-link.soc-ip-link {
   display: block;
   width: 100%;
@@ -1779,21 +2067,18 @@ button.soc-item.soc-watch-link.soc-ip-link {
   white-space: normal;
   text-decoration: none;
   vertical-align: baseline;
+  border: none;
+  border-top: 1px solid var(--cds-border);
+}
+
+button.soc-item.soc-watch-link.soc-ip-link:first-of-type {
+  border-top: none;
 }
 
 button.soc-item.soc-watch-link.soc-ip-link:hover {
   background: var(--cds-layer-hover);
   color: inherit;
   text-decoration: none;
-}
-
-button.soc-item.soc-watch-link.soc-ip-link > .soc-ip-entity {
-  margin-bottom: 4px;
-  max-width: 100%;
-}
-
-button.soc-item.soc-watch-link.soc-ip-link > .soc-ip-entity .soc-ip-entity__value {
-  font-size: 0.8125rem;
 }
 
 .soc-ip-score {
@@ -2119,6 +2404,214 @@ body.soc-flyout-open {
   align-items: start;
 }
 
+.soc-alert-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 0;
+}
+
+.soc-alert-split > .soc-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.soc-alert-split > .soc-card .soc-card__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.soc-alert-split .soc-kv {
+  grid-template-columns: minmax(96px, 38%) minmax(0, 1fr);
+}
+
+/* SOAR-style investigation runbook (alert detail) */
+.soc-runbook {
+  background: var(--cds-layer);
+  border: 1px solid var(--cds-border);
+  padding: 16px;
+  width: 100%;
+}
+
+.soc-runbook__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.soc-runbook__eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cds-text-helper);
+  margin-bottom: 2px;
+}
+
+.soc-runbook__head h2 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cds-text);
+}
+
+.soc-runbook__name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--cds-text);
+  margin-bottom: 4px;
+}
+
+.soc-runbook__meta {
+  font-size: 0.75rem;
+  color: var(--cds-text-helper);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--cds-border);
+}
+
+.soc-runbook__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.soc-runbook__step {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.soc-runbook__step:last-child {
+  padding-bottom: 0;
+}
+
+.soc-runbook__rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.soc-runbook__rail::after {
+  content: "";
+  flex: 1;
+  width: 1px;
+  background: var(--cds-border-subtle);
+  margin-top: 4px;
+  min-height: 12px;
+}
+
+.soc-runbook__step:last-child .soc-runbook__rail::after {
+  display: none;
+}
+
+.soc-runbook__num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  background: var(--cds-layer-02);
+  color: var(--cds-text-secondary);
+  border: 1px solid var(--cds-border-subtle);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.soc-runbook__step--done .soc-runbook__num {
+  background: #042311;
+  border-color: var(--cds-support-success);
+  color: var(--cds-support-success);
+}
+
+.soc-runbook__step--current .soc-runbook__num {
+  background: #001d6c;
+  border-color: var(--cds-support-info);
+  color: #a6c8ff;
+}
+
+.soc-runbook__step--pending .soc-runbook__num {
+  color: var(--cds-text-helper);
+}
+
+.soc-runbook__step--done .soc-runbook__rail::after {
+  background: var(--cds-support-success);
+  opacity: 0.45;
+}
+
+.soc-runbook__content h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--cds-text);
+  margin: 0;
+}
+
+.soc-runbook__step--pending .soc-runbook__content h3,
+.soc-runbook__step--pending .soc-runbook__content p {
+  color: var(--cds-text-helper);
+}
+
+.soc-runbook__step-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-bottom: 4px;
+}
+
+.soc-runbook__content p {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--cds-text-secondary);
+  margin: 0;
+}
+
+.soc-runbook__type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 0 6px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 1px solid var(--cds-border-subtle);
+  color: var(--cds-text-helper);
+  background: transparent;
+}
+
+.soc-runbook__type--auto {
+  border-color: #0043ce;
+  color: #a6c8ff;
+  background: #001d6c;
+}
+
+.soc-runbook__type--manual {
+  border-color: #5e4400;
+  color: #fddc69;
+  background: #2e1c00;
+}
+
+.soc-runbook__type--decision {
+  border-color: #31135e;
+  color: #d4bbff;
+  background: #1c0f30;
+}
+
 .soc-overview-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2138,19 +2631,16 @@ body.soc-flyout-open {
 }
 
 .soc-magnitude {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 16px;
-  row-gap: 8px;
-  align-items: start;
-  justify-content: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 24px;
   min-width: 0;
   max-width: 100%;
 }
 
 .soc-magnitude__title {
-  grid-column: 1 / -1;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -2158,6 +2648,12 @@ body.soc-flyout-open {
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--cds-text);
+}
+
+#incident-magnitude .soc-card__head h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .soc-visually-hidden {
@@ -2271,13 +2767,21 @@ body.soc-flyout-open {
 .soc-radial--magnitude {
   width: 168px;
   height: 168px;
-  grid-column: 1;
-  grid-row: 2;
+  flex-shrink: 0;
+  /* Arcs are explicit paths from 12 o'clock — do not rotate the SVG */
+  transform: none;
+}
+
+.soc-radial--magnitude .soc-radial-track,
+.soc-radial--magnitude .soc-radial-arc {
+  vector-effect: none;
+  stroke-width: 3.5;
 }
 
 /*
  * Magnitude rings — Carbon purple, skip adjacent steps for contrast on g100
  * Score $purple-80 · Relevance $purple-60 · Credibility $purple-40 · Severity $purple-30
+ * Paths drawn from 12 o'clock clockwise (see magnitudeArcPath in incident.html).
  */
 .soc-radial-arc--mag-score,
 .soc-radial-arc--mag-score-ticks {
@@ -2285,8 +2789,7 @@ body.soc-flyout-open {
 }
 
 .soc-radial-arc--mag-score-ticks {
-  stroke-width: 4; /* same as solid rings */
-  stroke-dasharray: 1 1; /* 1px dash, 1px gap along the path */
+  stroke-dasharray: 1 1;
   opacity: 0.95;
 }
 
@@ -2305,8 +2808,7 @@ body.soc-flyout-open {
 .soc-radial-mag-value,
 .soc-radial-mag-denom {
   fill: var(--cds-text);
-  transform: rotate(90deg);
-  transform-origin: 60px 60px;
+  transform: none;
   font-family: var(--font-mono);
   font-weight: 600;
 }
@@ -2322,9 +2824,6 @@ body.soc-flyout-open {
 }
 
 .soc-magnitude__legend {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: center;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -2426,6 +2925,43 @@ body.soc-flyout-open {
 .soc-timeline-item p {
   font-size: 0.8125rem;
   color: var(--cds-text-secondary);
+  line-height: 1.45;
+}
+
+.soc-timeline-item p code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cds-text);
+  background: var(--cds-layer-02);
+  padding: 1px 4px;
+}
+
+.soc-timeline-item p a {
+  color: var(--cds-link);
+}
+
+.soc-timeline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 8px;
+}
+
+.soc-timeline-links a {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--cds-link);
+  text-decoration: none;
+}
+
+.soc-timeline-links a:hover {
+  text-decoration: underline;
+}
+
+.soc-timeline-links a::after {
+  content: " ↗";
+  font-size: 0.65em;
+  opacity: 0.75;
 }
 
 .soc-atds {
@@ -3062,6 +3598,7 @@ body.soc-flyout-open {
 @media (max-width: 1100px) {
   .soc-grid-2,
   .soc-detail-layout,
+  .soc-alert-split,
   .soc-passdown-grid,
   .soc-grid-4 {
     grid-template-columns: 1fr;
@@ -3088,7 +3625,7 @@ body.soc-flyout-open {
   }
 
   .soc-magnitude {
-    grid-template-columns: auto 1fr;
+    justify-content: flex-start;
   }
 }
 

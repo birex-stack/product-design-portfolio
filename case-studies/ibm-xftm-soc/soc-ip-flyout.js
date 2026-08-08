@@ -52,6 +52,7 @@ import {
   }
 
   function enhanceIpEntityChips() {
+    // Table / inline IP chips only — watchlist rows stay plain link + description
     document
       .querySelectorAll(".soc-ip-link[data-ip]:not(.soc-watch-link)")
       .forEach(function (btn) {
@@ -61,28 +62,6 @@ import {
         btn.classList.add("soc-ip-entity");
         btn.setAttribute("aria-label", parts.aria);
         btn.innerHTML = parts.html;
-      });
-
-    // Watchlist rows: same chip visual on the IP line, keep description below
-    document
-      .querySelectorAll(".soc-watch-link.soc-ip-link[data-ip]")
-      .forEach(function (btn) {
-        var ip = btn.getAttribute("data-ip");
-        if (!ip) return;
-        var parts = ipEntityParts(ip, btn.getAttribute("data-score"));
-        btn.setAttribute("aria-label", parts.aria);
-        var chipHost = btn.querySelector(".soc-ip-entity");
-        if (!chipHost) {
-          var strong = btn.querySelector("strong");
-          chipHost = document.createElement("span");
-          chipHost.className = "soc-ip-entity";
-          chipHost.setAttribute("aria-hidden", "true");
-          if (strong) strong.replaceWith(chipHost);
-          else btn.insertBefore(chipHost, btn.firstChild);
-        }
-        chipHost.className = "soc-ip-entity";
-        chipHost.setAttribute("aria-hidden", "true");
-        chipHost.innerHTML = parts.html;
       });
   }
 
