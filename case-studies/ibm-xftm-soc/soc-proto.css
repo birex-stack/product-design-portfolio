@@ -943,48 +943,63 @@ body:has(.soc-ack) .soc-main {
   }
 }
 
-.soc-metric {
-  text-align: center;
-  padding: 8px 4px;
+/*
+ * BigNumber (Carbon for IBM Products — formerly Security ICA)
+ * @see https://carbon-for-ibm-products.netlify.app/?path=/docs/ibm-products-components-big-number-bignumber--overview
+ */
+.soc-bignum {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 0;
 }
 
-.soc-metric-ring {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 8px;
-  border-radius: 50%;
-  border: 4px solid var(--cds-layer-02);
-  border-top-color: var(--cds-interactive);
-  box-sizing: border-box;
-  display: grid;
-  place-items: center;
+.soc-bignum__label {
   font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.soc-metric-ring--warn {
-  border-top-color: var(--cds-support-warning);
-}
-
-.soc-metric-ring--ok {
-  border-top-color: var(--cds-support-success);
-}
-
-.soc-metric-ring--error {
-  border-top-color: var(--cds-support-error);
-}
-
-.soc-metric span {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--cds-text-helper);
-  margin-bottom: 2px;
-}
-
-.soc-metric small {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  line-height: 1.125rem;
+  font-weight: 400;
   color: var(--cds-text-secondary);
+}
+
+.soc-bignum__value-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.soc-bignum__value {
+  font-family: var(--font-sans);
+  font-size: 2.625rem; /* lg */
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--cds-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.soc-bignum__trend {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  color: var(--cds-text-secondary);
+}
+
+.soc-bignum__trend--up {
+  color: var(--cds-support-error);
+}
+
+.soc-bignum__trend--down {
+  color: var(--cds-support-success);
+}
+
+.soc-bignum__hint {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--cds-text-helper);
 }
 
 .soc-delta--up {
@@ -1006,15 +1021,16 @@ body:has(.soc-ack) .soc-main {
   min-height: 0;
 }
 
-.soc-kpi-row {
+.soc-kpi-row,
+.soc-bignum-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: space-around;
-  align-items: stretch;
+  gap: 16px 32px;
+  align-items: flex-start;
 }
 
-.soc-kpi-row .soc-metric {
+.soc-kpi-row .soc-bignum,
+.soc-bignum-row .soc-bignum {
   flex: 1 1 140px;
   min-width: 120px;
   max-width: 100%;
@@ -1089,6 +1105,94 @@ body:has(.soc-ack) .soc-main {
 
 .soc-chart-point {
   r: 4px; /* 8px diameter in screen pixels */
+  pointer-events: none;
+}
+
+.soc-chart-hit {
+  fill: transparent;
+  stroke: none;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.soc-chart-ruler {
+  stroke: var(--cds-text-helper);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+}
+
+/*
+ * Carbon Charts tooltip (cds--cc--tooltip)
+ * @see https://charts.carbondesignsystem.com/api/interfaces/tooltipoptions
+ * Defaults: enabled, showTotal; combo uses ruler / multi-series items.
+ */
+.cds--cc--tooltip.soc-cc-tooltip {
+  position: absolute;
+  z-index: 20;
+  max-width: 16rem;
+  pointer-events: none;
+  color: var(--cds-text);
+  background: var(--cds-layer-02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: opacity 70ms cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+.cds--cc--tooltip.soc-cc-tooltip.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .content-box {
+  padding: 4px 8px;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .title-tooltip {
+  margin: 0 0 2px;
+  padding: 0 0 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.125rem;
+  color: var(--cds-text);
+  border-bottom: 1px solid var(--cds-border);
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .multi-tooltip {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .datapoint-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .tooltip-color {
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 1px;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .label {
+  flex: 1;
+  margin: 0;
+  color: var(--cds-text-secondary);
+  white-space: nowrap;
+}
+
+.cds--cc--tooltip.soc-cc-tooltip .value {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--cds-text);
+  white-space: nowrap;
 }
 
 .soc-chart-svg {
@@ -1105,6 +1209,94 @@ body:has(.soc-ack) .soc-main {
   font-size: 0.625rem;
   color: var(--cds-text-helper);
   font-family: var(--font-mono);
+}
+
+/* Dual-axis combo: alerts (L) + MTTR (R), same 8h timeframe */
+.soc-chart--dual {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  min-height: 168px;
+}
+
+.soc-chart__y {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 2.75rem;
+  padding-bottom: 22px;
+  text-align: right;
+}
+
+.soc-chart__y--right {
+  text-align: left;
+}
+
+.soc-chart__y-label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  line-height: 1;
+  color: var(--cds-text-secondary);
+}
+
+.soc-chart__y-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 140px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1;
+  color: var(--cds-text-helper);
+}
+
+.soc-chart__plot {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.soc-chart--dual .soc-chart-svg {
+  height: 140px;
+  flex: 1;
+}
+
+.soc-chart--dual .soc-chart-axis {
+  margin-top: 4px;
+}
+
+.soc-chart-series-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+.soc-chart-series-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.soc-chart-series-swatch {
+  width: 12px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+.soc-chart-series-swatch--alerts {
+  background: #78a9ff;
+}
+
+.soc-chart-series-swatch--mttr {
+  background: #c6c6c6;
 }
 
 /*
@@ -1334,6 +1526,123 @@ body:has(.soc-ack) .soc-main {
 
 /* Severity legend markers use Carbon shape indicators (.soc-sev) */
 
+/*
+ * Carbon Charts Gauge (semi) — AlertCon 1–4
+ * @see https://charts.carbondesignsystem.com/api/interfaces/gaugechartoptions
+ */
+.soc-gauge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  min-height: 168px;
+}
+
+.soc-gauge {
+  width: 168px;
+  height: auto;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.soc-gauge__track,
+.soc-gauge__value {
+  stroke-width: 12;
+  stroke-linecap: butt;
+}
+
+.soc-gauge__track {
+  stroke: var(--cds-layer-02);
+}
+
+.soc-gauge__value--success {
+  stroke: var(--cds-support-success);
+}
+
+.soc-gauge__value--warning {
+  stroke: var(--cds-support-warning);
+}
+
+.soc-gauge__value--orange {
+  stroke: #ff832b;
+}
+
+.soc-gauge__value--danger {
+  stroke: var(--cds-support-error);
+}
+
+.soc-gauge__value-num {
+  fill: var(--cds-text);
+  font-family: var(--font-sans);
+  font-size: 2.625rem; /* match .soc-bignum__value (Alerts triggered) */
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.soc-gauge__value-label {
+  fill: var(--cds-text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.soc-gauge-legend {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+  min-width: 0;
+}
+
+.soc-gauge-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.25;
+}
+
+.soc-gauge-legend li.is-current {
+  color: var(--cds-text);
+  font-weight: 600;
+}
+
+.soc-gauge-legend strong {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  min-width: 0.75rem;
+}
+
+.soc-gauge-swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.soc-gauge-swatch--1 {
+  background: var(--cds-support-success);
+}
+
+.soc-gauge-swatch--2 {
+  background: var(--cds-support-warning);
+}
+
+.soc-gauge-swatch--3 {
+  background: #ff832b;
+}
+
+.soc-gauge-swatch--4 {
+  background: var(--cds-support-error);
+}
+
 .soc-donut-wrap {
   display: flex;
   align-items: center;
@@ -1379,17 +1688,18 @@ body:has(.soc-ack) .soc-main {
 }
 
 /* Single stacked severity donut — segments sum to 100%.
+   Stroke 8px; ~1px gaps via shortened arcs (track = panel bg).
    Do NOT use vector-effect:non-scaling-stroke here — it breaks
    stroke-dasharray and splits each arc into many short dashes. */
 .soc-donut-track {
   fill: none;
-  stroke: var(--cds-layer-02);
-  stroke-width: 4;
+  stroke: var(--cds-bg);
+  stroke-width: 8;
 }
 
 .soc-donut-seg {
   fill: none;
-  stroke-width: 4;
+  stroke-width: 8;
   stroke-linecap: butt;
 }
 
@@ -1517,9 +1827,14 @@ body:has(.soc-ack) .soc-main {
   gap: 8px;
 }
 
-.soc-bars--typed {
+.soc-bars--typed,
+.soc-bars--industry {
   gap: 12px;
   padding-top: 4px;
+}
+
+.soc-bars--industry .soc-bar-row {
+  grid-template-columns: minmax(120px, 160px) 1fr 24px;
 }
 
 .soc-bar-row {
@@ -1554,6 +1869,31 @@ body:has(.soc-ack) .soc-main {
 
 .soc-bar-fill--exfil {
   background: #33b1ff;
+}
+
+.soc-bar-fill--ransom {
+  background: #ff7eb6;
+}
+
+/* X-Force industry categories */
+.soc-bar-fill--mfg {
+  background: #a56eff;
+}
+
+.soc-bar-fill--finance {
+  background: #4589ff;
+}
+
+.soc-bar-fill--energy {
+  background: #f1c21b;
+}
+
+.soc-bar-fill--edu {
+  background: #08bdba;
+}
+
+.soc-bar-fill--health {
+  background: #ff832b;
 }
 
 .soc-alert-summary {

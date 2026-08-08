@@ -38,17 +38,32 @@
       { sel: ".soc-donut-seg--medium", n: sevCounts.medium },
       { sel: ".soc-donut-seg--low", n: sevCounts.low },
     ];
+    /* ~1px gap at r=50, pathLength=100. Last arc absorbs float remainder. */
+    var GAP = 0.25;
+    var activeIdx = [];
+    segs.forEach(function (s, i) {
+      if (s.n > 0) activeIdx.push(i);
+    });
+    var available = Math.max(0, 100 - activeIdx.length * GAP);
+    var remaining = available;
     var offset = 0;
-    segs.forEach(function (s) {
+    segs.forEach(function (s, i) {
       var el = donut.querySelector(s.sel);
       if (!el) return;
-      var pct = totalN ? (s.n / totalN) * 100 : 0;
+      var pct = 0;
+      if (totalN && s.n > 0) {
+        var isLast = i === activeIdx[activeIdx.length - 1];
+        pct = isLast
+          ? remaining
+          : Math.min(remaining, (s.n / totalN) * available);
+        remaining = Math.max(0, remaining - pct);
+      }
       el.setAttribute(
         "stroke-dasharray",
         pct.toFixed(2) + " " + (100 - pct).toFixed(2)
       );
       el.setAttribute("stroke-dashoffset", String(-offset));
-      offset += pct;
+      if (pct > 0) offset += pct + GAP;
     });
     var center = donut.querySelector(".soc-donut-center-value");
     if (center) center.textContent = String(totalN);
