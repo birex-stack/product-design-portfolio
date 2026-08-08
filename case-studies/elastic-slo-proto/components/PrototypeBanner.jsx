@@ -27,8 +27,8 @@ export function PrototypeBanner() {
 
   return (
     <div ref={ref} className="slo-proto-banner">
-      <span>Elastic Observability (with improvements ideas)</span>
       <a href="../elastic-slo.html">← Back to Elastic SLO case study</a>
+      <span>Elastic Observability (with improvements ideas)</span>
     </div>
   );
 }

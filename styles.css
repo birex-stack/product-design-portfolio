@@ -29,9 +29,9 @@
   --border-on-dark: #393939;
   --surface: var(--carbon-g10);
   --bg-decisions: #f0f3f8;
-  --bg-insights: var(--bg-decisions);
+  --bg-insights: var(--carbon-g10);
   --bg-impact: #f0f2e8;
-  --bg-problem: #faf8ef;
+  --bg-problem: #edf5ff;
   --ibm-project-bg: #252525;
   --headline-gradient: linear-gradient(
     125deg,
@@ -740,7 +740,7 @@ p {
 }
 
 .story-band--grid.is-grid-hover .grid-pixel-spotlight {
-  opacity: 1;
+  opacity: 0.5;
 }
 
 .story-band--g100.story-band--grid .grid-pixel-spotlight,

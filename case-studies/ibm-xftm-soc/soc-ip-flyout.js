@@ -19,6 +19,82 @@
     return "low";
   }
 
+  /**
+   * Carbon shape indicators for IP threat severity (1–10 scale).
+   * @see https://carbondesignsystem.com/patterns/status-indicator-pattern/
+   */
+  var STATUS_SHAPE_SVG = {
+    critical:
+      // Critical — right-angle wedge (square with cut corner)
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2 2h12v8.2L10.2 14H2V2z"/></svg>',
+    high:
+      // High — solid upward triangle
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 2.2 14.6 14H1.4L8 2.2z"/></svg>',
+    medium:
+      // Medium — solid diamond
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 1.5 14.5 8 8 14.5 1.5 8 8 1.5z"/></svg>',
+    low:
+      // Low — solid square
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3" y="3" width="10" height="10" fill="currentColor"/></svg>',
+    cautious:
+      // Cautious — outlined upward triangle
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M8 3.2 13.8 13.5H2.2L8 3.2z"/></svg>',
+    stable:
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="5" fill="currentColor"/></svg>',
+    undefined:
+      '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 1.5 14.5 8 8 14.5 1.5 8 8 1.5z"/></svg>',
+  };
+
+  var STATUS_SHAPE_LABEL = {
+    critical: "Critical severity",
+    high: "High severity",
+    medium: "Medium severity",
+    low: "Low severity",
+    cautious: "Cautious",
+    stable: "Stable",
+    undefined: "Undefined",
+  };
+
+  function enhanceIpEntityChips() {
+    var buttons = document.querySelectorAll(
+      ".soc-ip-link[data-ip]:not(.soc-watch-link)"
+    );
+    buttons.forEach(function (btn) {
+      var ip = btn.getAttribute("data-ip");
+      if (!ip) return;
+      var score = btn.getAttribute("data-score");
+      var tier = score != null && score !== "" ? scoreTier(score) : "low";
+      var shape = STATUS_SHAPE_SVG[tier] || STATUS_SHAPE_SVG.low;
+      var severityLabel = STATUS_SHAPE_LABEL[tier] || STATUS_SHAPE_LABEL.low;
+
+      btn.classList.add("soc-ip-entity");
+      btn.setAttribute(
+        "aria-label",
+        "IP " +
+          ip +
+          ", " +
+          severityLabel +
+          (score != null && score !== "" ? ", score " + score + " of 10" : "")
+      );
+      btn.innerHTML =
+        '<span class="soc-ip-entity__status" title="' +
+        escapeHtml(severityLabel) +
+        '">' +
+        '<span class="soc-status-shape soc-status-shape--' +
+        tier +
+        '">' +
+        shape +
+        "</span></span>" +
+        '<span class="soc-ip-entity__type">IP</span>' +
+        '<span class="soc-ip-entity__value">' +
+        escapeHtml(ip) +
+        "</span>";
+    });
+  }
+
+  // Allow pages that mutate IP buttons after load (e.g. alert detail) to refresh chips.
+  window.socEnhanceIpEntityChips = enhanceIpEntityChips;
+
   function escapeHtml(value) {
     return String(value)
       .replace(/&/g, "&amp;")
@@ -551,4 +627,10 @@
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") closeFlyout();
   });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", enhanceIpEntityChips);
+  } else {
+    enhanceIpEntityChips();
+  }
 })();

@@ -1549,6 +1549,57 @@ button.soc-item.soc-watch-link span {
   vertical-align: middle;
 }
 
+/* Carbon shape-indicator entity chip: [status] | IP | address
+   @see https://carbondesignsystem.com/patterns/status-indicator-pattern/ */
+.soc-ip-link.soc-ip-entity {
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--cds-border);
+  background: var(--cds-layer-02);
+}
+
+.soc-ip-entity__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  align-self: stretch;
+  border-right: 1px solid var(--cds-border);
+}
+
+.soc-ip-entity__type {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-right: 1px solid var(--cds-border);
+  color: var(--cds-text-helper);
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.soc-ip-entity__value {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--cds-link);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.soc-ip-link.soc-ip-entity:hover {
+  background: var(--cds-layer-hover);
+  color: inherit;
+  text-decoration: none;
+}
+
+.soc-ip-link.soc-ip-entity:hover .soc-ip-entity__value {
+  color: #a6c8ff;
+}
+
 .soc-ip-link:hover {
   color: #a6c8ff;
   text-decoration: none;
@@ -1558,6 +1609,45 @@ button.soc-item.soc-watch-link span {
 .soc-ip-link:focus-visible {
   outline: 2px solid var(--cds-focus);
   outline-offset: -2px;
+}
+
+/* Carbon status shape indicators (security 1–10 scale for IP objects) */
+.soc-status-shape {
+  display: inline-flex;
+  width: 12px;
+  height: 12px;
+  color: var(--cds-text-helper);
+}
+
+.soc-status-shape svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.soc-status-shape--critical,
+.soc-status-shape--high {
+  color: #fa4d56; /* $status-red (dark) */
+}
+
+.soc-status-shape--medium {
+  color: #ff832b; /* $status-orange */
+}
+
+.soc-status-shape--low {
+  color: #f1c21b; /* $status-yellow */
+}
+
+.soc-status-shape--cautious {
+  color: #f1c21b;
+}
+
+.soc-status-shape--stable {
+  color: #42be65; /* $status-green */
+}
+
+.soc-status-shape--undefined {
+  color: #a56eff; /* $status-purple */
 }
 
 /* Watchlist rows reuse .soc-ip-link but keep list layout */

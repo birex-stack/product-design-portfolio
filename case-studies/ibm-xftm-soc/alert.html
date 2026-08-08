@@ -730,7 +730,6 @@
 
         var btn = document.getElementById("alert-ip-btn");
         var ip = data.ip;
-        btn.textContent = ip.ip;
         btn.dataset.ip = ip.ip;
         btn.dataset.country = ip.country;
         btn.dataset.flag = ip.flag;
@@ -743,6 +742,11 @@
         btn.dataset.lastSeen = ip.lastSeen;
         if (ip.notes) btn.dataset.notes = ip.notes;
         else delete btn.dataset.notes;
+        if (typeof window.socEnhanceIpEntityChips === "function") {
+          window.socEnhanceIpEntityChips();
+        } else {
+          btn.textContent = ip.ip;
+        }
 
         var summary = document.getElementById("alert-summary");
         summary.innerHTML = data.summary

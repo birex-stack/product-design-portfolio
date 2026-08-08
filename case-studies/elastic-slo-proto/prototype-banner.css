@@ -26,11 +26,14 @@
   font-weight: 600;
 }
 
+.slo-proto-banner span {
+  margin-left: auto;
+}
+
 .slo-proto-banner a {
   color: #ffffff !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
   text-decoration: none !important;
-  margin-left: auto;
   flex-shrink: 0;
 }
 
