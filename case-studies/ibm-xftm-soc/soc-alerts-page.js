@@ -80,13 +80,14 @@
     }
   }
 
+  /* Carbon blue 10→60, light → dark by rank */
   var barColors = [
-    "soc-bar-fill--phishing",
-    "soc-bar-fill--unauth",
-    "soc-bar-fill--malware",
-    "",
-    "soc-bar-fill--exfil",
-    "",
+    "soc-bar-fill--blue-10",
+    "soc-bar-fill--blue-20",
+    "soc-bar-fill--blue-30",
+    "soc-bar-fill--blue-40",
+    "soc-bar-fill--blue-50",
+    "soc-bar-fill--blue-60",
   ];
 
   function paintBars(panel, rows) {
@@ -192,7 +193,33 @@
   paintBars(document.getElementById("summary-drafts-bars"), topDrafts);
 
   var draftsRoot = document.getElementById("draft-cases-root");
-  if (draftsRoot) {
+  if (draftsRoot && SocDemoData.bindCarbonPagination) {
+    SocDemoData.bindCarbonPagination({
+      pager: document.getElementById("drafts-pagination"),
+      rangeEl: document.getElementById("drafts-page-range"),
+      sizeEl: document.getElementById("drafts-page-size"),
+      selectEl: document.getElementById("drafts-page-select"),
+      ofEl: document.getElementById("drafts-page-of"),
+      prevBtn: document.getElementById("drafts-page-prev"),
+      nextBtn: document.getElementById("drafts-page-next"),
+      pageSize: 10,
+      getItems: function () {
+        return data.drafts;
+      },
+      renderRows: function (pageItems) {
+        draftsRoot.innerHTML = pageItems
+          .map(function (d) {
+            return SocDemoData.renderDraftRow
+              ? SocDemoData.renderDraftRow(d)
+              : SocDemoData.renderDraftGroup(d);
+          })
+          .join("");
+        if (typeof window.socEnhanceSeverity === "function") {
+          window.socEnhanceSeverity();
+        }
+      },
+    }).render();
+  } else if (draftsRoot) {
     draftsRoot.innerHTML = data.drafts
       .map(function (d) {
         return SocDemoData.renderDraftRow
@@ -205,76 +232,38 @@
     }
   }
 
-  var PAGE_SIZE = 50;
   var allBody = document.getElementById("alerts-all-body");
-  var pager = document.getElementById("alerts-pagination");
-  var rangeEl = document.getElementById("alerts-page-range");
-  var selectEl = document.getElementById("alerts-page-select");
-  var ofEl = document.getElementById("alerts-page-of");
-  var prevBtn = document.getElementById("alerts-page-prev");
-  var nextBtn = document.getElementById("alerts-page-next");
   var sorted = data.alerts.slice().sort(function (a, b) {
     return a.lastSeen.localeCompare(b.lastSeen);
   });
-  var pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  var currentPage = 1;
 
-  function enhancePage() {
-    if (typeof window.socEnhanceIpEntityChips === "function") {
-      window.socEnhanceIpEntityChips();
-    }
-  }
-
-  function renderPage(page) {
-    if (!allBody) return;
-    currentPage = Math.min(Math.max(1, page), pageCount);
-    var start = (currentPage - 1) * PAGE_SIZE;
-    var end = Math.min(start + PAGE_SIZE, sorted.length);
-    allBody.innerHTML = sorted
-      .slice(start, end)
-      .map(SocDemoData.renderAllAlertsRow)
-      .join("");
-
-    if (pager) {
-      pager.hidden = sorted.length <= PAGE_SIZE;
-      if (rangeEl) {
-        rangeEl.textContent =
-          sorted.length === 0
-            ? "0 items"
-            : start + 1 + "–" + end + " of " + sorted.length + " items";
-      }
-      if (ofEl) ofEl.textContent = "of " + pageCount;
-      if (selectEl) {
-        if (selectEl.options.length !== pageCount) {
-          selectEl.innerHTML = Array.from({ length: pageCount }, function (_, i) {
-            return '<option value="' + (i + 1) + '">' + (i + 1) + "</option>";
-          }).join("");
+  if (allBody && SocDemoData.bindCarbonPagination) {
+    SocDemoData.bindCarbonPagination({
+      pager: document.getElementById("alerts-pagination"),
+      rangeEl: document.getElementById("alerts-page-range"),
+      sizeEl: document.getElementById("alerts-page-size"),
+      selectEl: document.getElementById("alerts-page-select"),
+      ofEl: document.getElementById("alerts-page-of"),
+      prevBtn: document.getElementById("alerts-page-prev"),
+      nextBtn: document.getElementById("alerts-page-next"),
+      pageSize: 10,
+      getItems: function () {
+        return sorted;
+      },
+      renderRows: function (pageItems) {
+        allBody.innerHTML = pageItems
+          .map(SocDemoData.renderAllAlertsRow)
+          .join("");
+      },
+      onPage: function () {
+        if (typeof window.socEnhanceIpEntityChips === "function") {
+          window.socEnhanceIpEntityChips();
         }
-        selectEl.value = String(currentPage);
-      }
-      if (prevBtn) prevBtn.disabled = currentPage <= 1;
-      if (nextBtn) nextBtn.disabled = currentPage >= pageCount;
-    }
-
-    enhancePage();
-  }
-
-  renderPage(1);
-
-  if (selectEl) {
-    selectEl.addEventListener("change", function () {
-      renderPage(parseInt(selectEl.value, 10) || 1);
-    });
-  }
-  if (prevBtn) {
-    prevBtn.addEventListener("click", function () {
-      renderPage(currentPage - 1);
-    });
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener("click", function () {
-      renderPage(currentPage + 1);
-    });
+        if (typeof window.socEnhanceSeverity === "function") {
+          window.socEnhanceSeverity();
+        }
+      },
+    }).render();
   }
 
   var switcher = document.querySelector(".soc-switcher");

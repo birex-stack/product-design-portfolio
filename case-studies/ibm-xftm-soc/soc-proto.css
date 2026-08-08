@@ -1855,45 +1855,59 @@ body:has(.soc-ack) .soc-main {
   background: var(--cds-interactive);
 }
 
+/*
+ * Non-severity categorical bars — Carbon scales in steps of 10, light → dark
+ * @see https://carbondesignsystem.com/elements/color/overview/
+ */
+/* Sequential blue 10→60 (light → dark), also aliased for incident-type bars */
+.soc-bar-fill--blue-10,
 .soc-bar-fill--phishing {
-  background: #a56eff;
+  background: #edf5ff; /* blue-10 */
 }
 
+.soc-bar-fill--blue-20,
 .soc-bar-fill--malware {
-  background: #fa4d56;
+  background: #d0e2ff; /* blue-20 */
 }
 
+.soc-bar-fill--blue-30,
 .soc-bar-fill--unauth {
-  background: #ff832b;
+  background: #a6c8ff; /* blue-30 */
 }
 
+.soc-bar-fill--blue-40,
 .soc-bar-fill--exfil {
-  background: #33b1ff;
+  background: #78a9ff; /* blue-40 */
 }
 
+.soc-bar-fill--blue-50,
 .soc-bar-fill--ransom {
-  background: #ff7eb6;
+  background: #4589ff; /* blue-50 */
 }
 
-/* X-Force industry categories */
+.soc-bar-fill--blue-60 {
+  background: #0f62fe; /* blue-60 */
+}
+
+/* Incidents by industry → teal 10 / 20 / 30 / 40 / 50 */
 .soc-bar-fill--mfg {
-  background: #a56eff;
+  background: #d9fbfb; /* teal-10 */
 }
 
 .soc-bar-fill--finance {
-  background: #4589ff;
+  background: #9ef0f0; /* teal-20 */
 }
 
 .soc-bar-fill--energy {
-  background: #f1c21b;
+  background: #3ddbd9; /* teal-30 */
 }
 
 .soc-bar-fill--edu {
-  background: #08bdba;
+  background: #08bdba; /* teal-40 */
 }
 
 .soc-bar-fill--health {
-  background: #ff832b;
+  background: #009d9a; /* teal-50 */
 }
 
 .soc-alert-summary {
@@ -2147,8 +2161,11 @@ button.soc-item.soc-watch-link span {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
+  flex-shrink: 0;
   color: var(--cds-text-secondary);
   pointer-events: none;
+  /* Match Carbon .cds--search-magnifier-icon */
+  fill: currentColor;
 }
 
 .soc-search input {
@@ -2367,6 +2384,7 @@ button.soc-item.soc-watch-link span {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
 }
 
 .soc-chip {
@@ -2385,6 +2403,63 @@ button.soc-item.soc-watch-link span {
   border-color: var(--cds-interactive);
   color: var(--cds-text);
   box-shadow: inset 0 -2px 0 var(--cds-interactive);
+}
+
+/*
+ * Carbon selectable tag — filter chips (g100)
+ * @see https://carbondesignsystem.com/components/tag/usage/#selectable-tag
+ */
+.soc-chip--filter {
+  min-height: 24px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 24px;
+  background: var(--cds-layer-02);
+  color: var(--cds-text-secondary);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.125rem;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.soc-chip--filter:hover {
+  background: #4c4c4c; /* $background-hover on g100 */
+  color: var(--cds-text);
+}
+
+.soc-chip--filter:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: 1px;
+}
+
+.soc-chip--filter.is-active {
+  background: #f4f4f4; /* $background-inverse / gray-10 */
+  border: none;
+  color: #161616;
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.soc-chip--filter.is-active:hover {
+  background: #e8e8e8;
+  color: #161616;
+}
+
+.soc-filters--evidence {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.soc-toolbar--evidence {
+  gap: 12px 16px;
+}
+
+.soc-toolbar--evidence .soc-toolbar-tools {
+  flex: 0 1 16rem;
+  max-width: 20rem;
+  margin-left: auto;
 }
 
 /* Cases / draft lists — Carbon Data table row density (click → detail) */
@@ -2490,6 +2565,14 @@ button.soc-item.soc-watch-link span {
 
 .soc-pagination[hidden] {
   display: none !important;
+}
+
+.soc-pagination__left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  min-width: 0;
 }
 
 .soc-pagination__range {
@@ -3269,6 +3352,98 @@ button.soc-item.soc-watch-link.soc-ip-link:hover {
   text-transform: none;
   font-weight: 400;
   letter-spacing: 0;
+}
+
+/* Type + Risk score: compact equal-ish columns */
+.soc-evidence-table th:nth-child(1),
+.soc-evidence-table td:nth-child(1),
+.soc-evidence-table th:nth-child(2),
+.soc-evidence-table td:nth-child(2) {
+  width: 7.5rem;
+  white-space: nowrap;
+}
+
+.soc-evidence-table td {
+  vertical-align: middle;
+}
+
+/*
+ * Carbon Overflow menu (kebab) in data table rows — sm (24px)
+ * @see https://carbondesignsystem.com/components/overflow-menu/usage/
+ * Icon: overflow-menu--vertical
+ */
+.soc-table-col--actions {
+  width: 2rem;
+  padding-left: 0 !important;
+  padding-right: 0.5rem !important;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.soc-overflow {
+  position: relative;
+  display: inline-flex;
+  justify-content: flex-end;
+}
+
+.soc-overflow__trigger {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--cds-text-secondary);
+  cursor: pointer;
+}
+
+.soc-overflow__trigger:hover {
+  background: var(--cds-layer-hover);
+  color: var(--cds-text);
+}
+
+.soc-overflow__trigger:focus-visible {
+  outline: 2px solid var(--cds-focus);
+  outline-offset: -2px;
+}
+
+.soc-overflow.is-open .soc-overflow__trigger {
+  background: var(--cds-layer-hover);
+  color: var(--cds-text);
+}
+
+.soc-overflow.is-open {
+  z-index: 5;
+}
+
+.soc-case-evidence-card .soc-card__body {
+  overflow: visible;
+}
+
+.soc-evidence-table {
+  overflow: visible;
+}
+
+.soc-overflow__icon {
+  display: block;
+}
+
+.soc-overflow__menu {
+  right: 0;
+  left: auto;
+  top: calc(100% + 1px);
+  min-width: 12rem;
+}
+
+.soc-menu__item--danger {
+  color: var(--cds-support-error);
+}
+
+.soc-menu__item--danger:hover,
+.soc-menu__item--danger:focus {
+  color: var(--cds-support-error);
 }
 
 .soc-tag--ev-alert {

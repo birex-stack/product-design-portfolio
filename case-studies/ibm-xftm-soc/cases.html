@@ -201,16 +201,20 @@
         <div class="soc-toolbar">
           <div class="soc-toolbar-tools">
             <label class="soc-search" aria-label="Search cases">
+              <!-- @carbon/icons Search (16) — fill-rule evenodd for lens hole -->
               <svg
                 class="soc-search__icon"
                 width="16"
                 height="16"
-                viewBox="0 0 32 32"
+                viewBox="0 0 16 16"
                 fill="currentColor"
+                fill-rule="evenodd"
+                focusable="false"
+                preserveAspectRatio="xMidYMid meet"
                 aria-hidden="true"
               >
                 <path
-                  d="m30 28.59-8.46-8.46a11 11 0 1 0-1.41 1.41L28.59 30ZM5 14a9 9 0 1 1 9 9 9 9 0 0 1-9-9Z"
+                  d="M15 14.3 10.7 10c1.9-2.3 1.6-5.8-.7-7.7S4.2.7 2.3 3 .7 8.8 3 10.7c2 1.7 5 1.7 7 0l4.3 4.3.7-.7zM2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z"
                 />
               </svg>
               <input type="search" placeholder="Search cases" />
@@ -250,6 +254,59 @@
             </thead>
             <tbody id="cases-root"></tbody>
           </table>
+          <nav
+            class="soc-pagination"
+            id="cases-pagination"
+            aria-label="Cases pagination"
+            hidden
+          >
+            <div class="soc-pagination__left">
+              <label class="soc-pagination__page">
+                <span class="soc-pagination__page-label">Items per page:</span>
+                <select id="cases-page-size" aria-label="Items per page">
+                  <option value="10" selected>10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </label>
+              <span class="soc-pagination__range" id="cases-page-range"
+                >1–10 of 0 items</span
+              >
+            </div>
+            <div class="soc-pagination__controls">
+              <label class="soc-pagination__page">
+                <span class="soc-pagination__page-label">Page</span>
+                <select id="cases-page-select" aria-label="Page number"></select>
+                <span id="cases-page-of">of 1 pages</span>
+              </label>
+              <button
+                type="button"
+                class="soc-pagination__btn"
+                id="cases-page-prev"
+                aria-label="Previous page"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="M5 8 10.5 2.5 11.2 3.2 6.4 8l4.8 4.8-.7.7z"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="soc-pagination__btn"
+                id="cases-page-next"
+                aria-label="Next page"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path
+                    fill="currentColor"
+                    d="m11 8-5.5 5.5-.7-.7L9.6 8 4.8 3.2l.7-.7z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </nav>
         </div>
       </main>
     </div>

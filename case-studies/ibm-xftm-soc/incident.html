@@ -521,7 +521,7 @@
                         <span>Endpoint / EDR</span>
                         <div class="soc-bar-track">
                           <div
-                            class="soc-bar-fill soc-bar-fill--malware"
+                            class="soc-bar-fill soc-bar-fill--blue-10"
                             data-ev-bar="edr"
                             style="width: 100%"
                           ></div>
@@ -532,7 +532,7 @@
                         <span>QRadar / SIEM</span>
                         <div class="soc-bar-track">
                           <div
-                            class="soc-bar-fill"
+                            class="soc-bar-fill soc-bar-fill--blue-20"
                             data-ev-bar="siem"
                             style="width: 50%"
                           ></div>
@@ -543,7 +543,7 @@
                         <span>Identity / IdP</span>
                         <div class="soc-bar-track">
                           <div
-                            class="soc-bar-fill soc-bar-fill--unauth"
+                            class="soc-bar-fill soc-bar-fill--blue-30"
                             data-ev-bar="idp"
                             style="width: 25%"
                           ></div>
@@ -554,7 +554,7 @@
                         <span>Mail / proxy</span>
                         <div class="soc-bar-track">
                           <div
-                            class="soc-bar-fill soc-bar-fill--phishing"
+                            class="soc-bar-fill soc-bar-fill--blue-40"
                             data-ev-bar="mail"
                             style="width: 25%"
                           ></div>
@@ -958,54 +958,82 @@
               <h2 id="case-evidence-heading">Evidence</h2>
             </div>
             <div class="soc-card__body" style="padding: 0">
-              <div class="soc-toolbar" style="margin: 0; padding: 12px 16px">
+              <div class="soc-toolbar soc-toolbar--evidence" style="margin: 0; padding: 12px 16px">
+                <!--
+                  Carbon selectable tags as single-select filters (not content tabs)
+                  @see https://carbondesignsystem.com/components/tag/usage/#selectable-tag
+                -->
                 <div
-                  class="soc-switcher soc-switcher--filter"
-                  role="tablist"
-                  aria-label="Evidence type filter"
+                  class="soc-filters soc-filters--evidence"
+                  role="group"
+                  aria-label="Filter evidence by type"
                   id="evidence-type-filter"
                 >
                   <button
                     type="button"
-                    class="is-active"
-                    role="tab"
-                    aria-selected="true"
+                    class="soc-chip soc-chip--filter is-active"
+                    aria-pressed="true"
                     data-ev-filter="all"
                   >
                     All
                   </button>
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected="false"
+                    class="soc-chip soc-chip--filter"
+                    aria-pressed="false"
                     data-ev-filter="alert"
                   >
                     Alerts
                   </button>
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected="false"
+                    class="soc-chip soc-chip--filter"
+                    aria-pressed="false"
                     data-ev-filter="event"
                   >
                     Events
                   </button>
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected="false"
+                    class="soc-chip soc-chip--filter"
+                    aria-pressed="false"
                     data-ev-filter="artifact"
                   >
                     Artifacts
                   </button>
                   <button
                     type="button"
-                    role="tab"
-                    aria-selected="false"
+                    class="soc-chip soc-chip--filter"
+                    aria-pressed="false"
                     data-ev-filter="enrichment"
                   >
                     Enrichments
                   </button>
+                </div>
+                <div class="soc-toolbar-tools">
+                  <label class="soc-search" aria-label="Search evidence">
+                    <!-- @carbon/icons Search (16) — fill-rule evenodd for lens hole -->
+                    <svg
+                      class="soc-search__icon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      focusable="false"
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M15 14.3 10.7 10c1.9-2.3 1.6-5.8-.7-7.7S4.2.7 2.3 3 .7 8.8 3 10.7c2 1.7 5 1.7 7 0l4.3 4.3.7-.7zM2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z"
+                      />
+                    </svg>
+                    <input
+                      type="search"
+                      id="evidence-search"
+                      placeholder="Search evidence"
+                    />
+                  </label>
                 </div>
               </div>
               <table class="soc-alert-table soc-evidence-table">
@@ -1016,10 +1044,76 @@
                     <th>Name</th>
                     <th>Source</th>
                     <th>Collected</th>
+                    <th class="soc-table-col--actions">
+                      <span class="soc-visually-hidden">Actions</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="case-evidence-body"></tbody>
               </table>
+              <!--
+                Carbon Pagination — items per page + range + page + prev/next
+                @see https://carbondesignsystem.com/components/pagination/usage/
+              -->
+              <nav
+                class="soc-pagination"
+                id="evidence-pagination"
+                aria-label="Evidence pagination"
+                hidden
+              >
+                <div class="soc-pagination__left">
+                  <label class="soc-pagination__page">
+                    <span class="soc-pagination__page-label">Items per page:</span>
+                    <select
+                      id="evidence-page-size"
+                      aria-label="Items per page"
+                    >
+                      <option value="10" selected>10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                    </select>
+                  </label>
+                  <span class="soc-pagination__range" id="evidence-page-range"
+                    >1–10 of 0 items</span
+                  >
+                </div>
+                <div class="soc-pagination__controls">
+                  <label class="soc-pagination__page">
+                    <span class="soc-pagination__page-label">Page</span>
+                    <select
+                      id="evidence-page-select"
+                      aria-label="Page number"
+                    ></select>
+                    <span id="evidence-page-of">of 1 pages</span>
+                  </label>
+                  <button
+                    type="button"
+                    class="soc-pagination__btn"
+                    id="evidence-page-prev"
+                    aria-label="Previous page"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                      <path
+                        fill="currentColor"
+                        d="M5 8 10.5 2.5 11.2 3.2 6.4 8l4.8 4.8-.7.7z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="soc-pagination__btn"
+                    id="evidence-page-next"
+                    aria-label="Next page"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                      <path
+                        fill="currentColor"
+                        d="m11 8-5.5 5.5-.7-.7L9.6 8 4.8 3.2l.7-.7z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </nav>
             </div>
           </section>
         </div>
@@ -1291,6 +1385,9 @@
 
         var evidenceItems = [];
         var evidenceFilter = "all";
+        var evidenceQuery = "";
+        var evidencePageSize = 10;
+        var evidencePage = 1;
 
         function buildEvidenceItems(ev, id) {
           var items = [];
@@ -1441,13 +1538,41 @@
           return items;
         }
 
+        function filteredEvidenceRows() {
+          var q = evidenceQuery.trim().toLowerCase();
+          return evidenceItems.filter(function (item) {
+            if (evidenceFilter !== "all" && item.type !== evidenceFilter) {
+              return false;
+            }
+            if (!q) return true;
+            var hay = [
+              item.name,
+              item.source,
+              item.typeLabel,
+              item.alertId,
+              item.collected,
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
+            return hay.indexOf(q) !== -1;
+          });
+        }
+
         function renderEvidenceTable() {
           var body = document.getElementById("case-evidence-body");
           if (!body) return;
-          var rows = evidenceItems.filter(function (item) {
-            return evidenceFilter === "all" || item.type === evidenceFilter;
-          });
-          body.innerHTML = rows
+          var rows = filteredEvidenceRows();
+          var pageCount = Math.max(
+            1,
+            Math.ceil(rows.length / evidencePageSize)
+          );
+          evidencePage = Math.min(Math.max(1, evidencePage), pageCount);
+          var start = (evidencePage - 1) * evidencePageSize;
+          var end = Math.min(start + evidencePageSize, rows.length);
+          var pageRows = rows.slice(start, end);
+
+          body.innerHTML = pageRows
             .map(function (item) {
               var nameCell = item.alertId
                 ? '<button type="button" class="soc-link-btn" data-alert-flyout="' +
@@ -1464,6 +1589,25 @@
                     item.riskScore +
                     "/10</span>"
                   : "—";
+              /* Carbon Overflow menu (kebab) — overflow-menu--vertical
+                 @see https://carbondesignsystem.com/components/overflow-menu/usage/ */
+              var overflow =
+                '<td class="soc-table-col--actions">' +
+                '<div class="soc-overflow" data-soc-overflow>' +
+                '<button type="button" class="soc-overflow__trigger" aria-haspopup="true" aria-expanded="false" aria-label="Actions for ' +
+                escapeHtml(item.name) +
+                '">' +
+                '<svg class="soc-overflow__icon" width="16" height="16" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">' +
+                '<circle cx="16" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="16" cy="24" r="2"/>' +
+                "</svg>" +
+                "</button>" +
+                '<ul class="soc-menu soc-overflow__menu" role="menu" hidden>' +
+                '<li role="none"><button type="button" class="soc-menu__item" role="menuitem">View details</button></li>' +
+                '<li role="none"><button type="button" class="soc-menu__item" role="menuitem">Copy name</button></li>' +
+                '<li role="separator" class="soc-menu__divider"></li>' +
+                '<li role="none"><button type="button" class="soc-menu__item soc-menu__item--danger" role="menuitem">Remove from case</button></li>' +
+                "</ul></div></td>";
+
               return (
                 "<tr data-ev-type=\"" +
                 item.type +
@@ -1485,10 +1629,54 @@
                 "<td>" +
                 escapeHtml(item.collected) +
                 "</td>" +
+                overflow +
                 "</tr>"
               );
             })
             .join("");
+
+          var pager = document.getElementById("evidence-pagination");
+          var rangeEl = document.getElementById("evidence-page-range");
+          var sizeEl = document.getElementById("evidence-page-size");
+          var selectEl = document.getElementById("evidence-page-select");
+          var ofEl = document.getElementById("evidence-page-of");
+          var prevBtn = document.getElementById("evidence-page-prev");
+          var nextBtn = document.getElementById("evidence-page-next");
+          if (pager) {
+            pager.hidden = rows.length === 0;
+            if (rangeEl) {
+              rangeEl.textContent =
+                rows.length === 0
+                  ? "0 items"
+                  : start +
+                    1 +
+                    "–" +
+                    end +
+                    " of " +
+                    rows.length +
+                    " items";
+            }
+            if (sizeEl) sizeEl.value = String(evidencePageSize);
+            if (ofEl) {
+              ofEl.textContent =
+                "of " + pageCount + (pageCount === 1 ? " page" : " pages");
+            }
+            if (selectEl) {
+              if (selectEl.options.length !== pageCount) {
+                selectEl.innerHTML = Array.from(
+                  { length: pageCount },
+                  function (_, i) {
+                    return (
+                      '<option value="' + (i + 1) + '">' + (i + 1) + "</option>"
+                    );
+                  }
+                ).join("");
+              }
+              selectEl.value = String(evidencePage);
+            }
+            if (prevBtn) prevBtn.disabled = evidencePage <= 1;
+            if (nextBtn) nextBtn.disabled = evidencePage >= pageCount;
+          }
         }
 
         function applyEvidence(ev) {
@@ -1551,6 +1739,7 @@
           var badge = document.getElementById("case-evidence-count");
           if (badge) badge.textContent = String(total);
           evidenceItems = buildEvidenceItems(ev, caseId);
+          evidencePage = 1;
           renderEvidenceTable();
         }
 
@@ -1750,14 +1939,102 @@
             var btn = event.target.closest("[data-ev-filter]");
             if (!btn || !evFilter.contains(btn)) return;
             evidenceFilter = btn.getAttribute("data-ev-filter") || "all";
-            evFilter.querySelectorAll("[data-ev-filter]").forEach(function (tab) {
-              var active = tab === btn;
-              tab.classList.toggle("is-active", active);
-              tab.setAttribute("aria-selected", active ? "true" : "false");
+            evidencePage = 1;
+            evFilter.querySelectorAll("[data-ev-filter]").forEach(function (chip) {
+              var active = chip === btn;
+              chip.classList.toggle("is-active", active);
+              chip.setAttribute("aria-pressed", active ? "true" : "false");
             });
             renderEvidenceTable();
           });
         }
+
+        var evSearch = document.getElementById("evidence-search");
+        if (evSearch) {
+          evSearch.addEventListener("input", function () {
+            evidenceQuery = evSearch.value || "";
+            evidencePage = 1;
+            renderEvidenceTable();
+          });
+        }
+
+        (function initEvidencePagination() {
+          var sizeEl = document.getElementById("evidence-page-size");
+          var selectEl = document.getElementById("evidence-page-select");
+          var prevBtn = document.getElementById("evidence-page-prev");
+          var nextBtn = document.getElementById("evidence-page-next");
+          if (sizeEl) {
+            sizeEl.addEventListener("change", function () {
+              evidencePageSize = parseInt(sizeEl.value, 10) || 10;
+              evidencePage = 1;
+              renderEvidenceTable();
+            });
+          }
+          if (selectEl) {
+            selectEl.addEventListener("change", function () {
+              evidencePage = parseInt(selectEl.value, 10) || 1;
+              renderEvidenceTable();
+            });
+          }
+          if (prevBtn) {
+            prevBtn.addEventListener("click", function () {
+              evidencePage -= 1;
+              renderEvidenceTable();
+            });
+          }
+          if (nextBtn) {
+            nextBtn.addEventListener("click", function () {
+              evidencePage += 1;
+              renderEvidenceTable();
+            });
+          }
+        })();
+
+        /* Carbon Overflow menu — evidence row kebab */
+        (function initEvidenceOverflow() {
+          var body = document.getElementById("case-evidence-body");
+          if (!body) return;
+
+          function closeAll(except) {
+            body.querySelectorAll("[data-soc-overflow]").forEach(function (root) {
+              if (except && root === except) return;
+              var trigger = root.querySelector(".soc-overflow__trigger");
+              var menu = root.querySelector(".soc-overflow__menu");
+              if (trigger) trigger.setAttribute("aria-expanded", "false");
+              if (menu) menu.hidden = true;
+              root.classList.remove("is-open");
+            });
+          }
+
+          body.addEventListener("click", function (event) {
+            var trigger = event.target.closest(".soc-overflow__trigger");
+            if (trigger && body.contains(trigger)) {
+              event.stopPropagation();
+              var root = trigger.closest("[data-soc-overflow]");
+              var menu = root.querySelector(".soc-overflow__menu");
+              var open = trigger.getAttribute("aria-expanded") === "true";
+              closeAll(root);
+              if (!open) {
+                trigger.setAttribute("aria-expanded", "true");
+                menu.hidden = false;
+                root.classList.add("is-open");
+              }
+              return;
+            }
+            var item = event.target.closest('.soc-overflow__menu [role="menuitem"]');
+            if (item && body.contains(item)) {
+              event.stopPropagation();
+              closeAll();
+            }
+          });
+
+          document.addEventListener("click", function () {
+            closeAll();
+          });
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") closeAll();
+          });
+        })();
 
         function escapeHtml(s) {
           return String(s)

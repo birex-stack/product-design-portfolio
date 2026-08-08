@@ -610,6 +610,107 @@
     return renderOpenCaseRow(c);
   }
 
+  /**
+   * Carbon Pagination — items per page (default 10) + range + page + prev/next
+   * @see https://carbondesignsystem.com/components/pagination/usage/
+   * @param {{
+   *   pager: HTMLElement|null,
+   *   rangeEl?: HTMLElement|null,
+   *   sizeEl?: HTMLSelectElement|null,
+   *   selectEl?: HTMLSelectElement|null,
+   *   ofEl?: HTMLElement|null,
+   *   prevBtn?: HTMLButtonElement|null,
+   *   nextBtn?: HTMLButtonElement|null,
+   *   getItems: () => any[],
+   *   renderRows: (pageItems: any[]) => void,
+   *   pageSize?: number,
+   *   onPage?: () => void
+   * }} opts
+   */
+  function bindCarbonPagination(opts) {
+    var pageSize = opts.pageSize || 10;
+    var page = 1;
+
+    function render() {
+      var items = opts.getItems() || [];
+      var pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+      page = Math.min(Math.max(1, page), pageCount);
+      var start = (page - 1) * pageSize;
+      var end = Math.min(start + pageSize, items.length);
+      opts.renderRows(items.slice(start, end));
+
+      if (opts.pager) {
+        opts.pager.hidden = items.length === 0;
+        if (opts.rangeEl) {
+          opts.rangeEl.textContent =
+            items.length === 0
+              ? "0 items"
+              : start + 1 + "–" + end + " of " + items.length + " items";
+        }
+        if (opts.sizeEl) opts.sizeEl.value = String(pageSize);
+        if (opts.ofEl) {
+          opts.ofEl.textContent =
+            "of " + pageCount + (pageCount === 1 ? " page" : " pages");
+        }
+        if (opts.selectEl) {
+          if (opts.selectEl.options.length !== pageCount) {
+            opts.selectEl.innerHTML = Array.from(
+              { length: pageCount },
+              function (_, i) {
+                return (
+                  '<option value="' + (i + 1) + '">' + (i + 1) + "</option>"
+                );
+              }
+            ).join("");
+          }
+          opts.selectEl.value = String(page);
+        }
+        if (opts.prevBtn) opts.prevBtn.disabled = page <= 1;
+        if (opts.nextBtn) opts.nextBtn.disabled = page >= pageCount;
+      }
+      if (typeof opts.onPage === "function") opts.onPage();
+    }
+
+    if (opts.sizeEl) {
+      opts.sizeEl.addEventListener("change", function () {
+        pageSize = parseInt(opts.sizeEl.value, 10) || 10;
+        page = 1;
+        render();
+      });
+    }
+    if (opts.selectEl) {
+      opts.selectEl.addEventListener("change", function () {
+        page = parseInt(opts.selectEl.value, 10) || 1;
+        render();
+      });
+    }
+    if (opts.prevBtn) {
+      opts.prevBtn.addEventListener("click", function () {
+        page -= 1;
+        render();
+      });
+    }
+    if (opts.nextBtn) {
+      opts.nextBtn.addEventListener("click", function () {
+        page += 1;
+        render();
+      });
+    }
+
+    return {
+      render: render,
+      reset: function () {
+        page = 1;
+        render();
+      },
+      setPageSize: function (n) {
+        pageSize = n || 10;
+        page = 1;
+        render();
+      },
+    };
+  }
+
   global.SocDemoData = {
     TOTAL_ALERTS: TOTAL_ALERTS,
     corpus: corpus,
@@ -622,6 +723,7 @@
     renderDraftRow: renderDraftRow,
     renderOpenCaseGroup: renderOpenCaseGroup,
     renderOpenCaseRow: renderOpenCaseRow,
+    bindCarbonPagination: bindCarbonPagination,
     getAlert: function (id) {
       return alertsById()[id] || null;
     },

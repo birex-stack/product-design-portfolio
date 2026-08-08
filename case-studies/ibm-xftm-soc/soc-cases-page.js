@@ -11,19 +11,7 @@
   var root = document.getElementById("cases-root");
   if (!root) return;
 
-  root.innerHTML = data.openCases
-    .map(function (c) {
-      return SocDemoData.renderOpenCaseRow
-        ? SocDemoData.renderOpenCaseRow(c)
-        : SocDemoData.renderOpenCaseGroup(c);
-    })
-    .join("");
-
-  if (typeof window.socEnhanceSeverity === "function") {
-    window.socEnhanceSeverity();
-  } else if (typeof window.socEnhanceIpEntityChips === "function") {
-    window.socEnhanceIpEntityChips();
-  }
+  var casesFilter = "mine";
 
   var mineCount = data.openCases.filter(function (c) {
     return c.assignee === "me";
@@ -94,13 +82,14 @@
     }
   }
 
+  /* Carbon blue 10→60, light → dark by rank */
   var barColors = [
-    "soc-bar-fill--phishing",
-    "soc-bar-fill--unauth",
-    "soc-bar-fill--malware",
-    "",
-    "soc-bar-fill--exfil",
-    "",
+    "soc-bar-fill--blue-10",
+    "soc-bar-fill--blue-20",
+    "soc-bar-fill--blue-30",
+    "soc-bar-fill--blue-40",
+    "soc-bar-fill--blue-50",
+    "soc-bar-fill--blue-60",
   ];
 
   function paintBars(panel, rows) {
@@ -193,18 +182,45 @@
     paintBars(document.getElementById("summary-cases-bars"), top);
   }
 
-  var switcher = document.querySelector(".soc-switcher");
+  var casesPager =
+    SocDemoData.bindCarbonPagination &&
+    SocDemoData.bindCarbonPagination({
+      pager: document.getElementById("cases-pagination"),
+      rangeEl: document.getElementById("cases-page-range"),
+      sizeEl: document.getElementById("cases-page-size"),
+      selectEl: document.getElementById("cases-page-select"),
+      ofEl: document.getElementById("cases-page-of"),
+      prevBtn: document.getElementById("cases-page-prev"),
+      nextBtn: document.getElementById("cases-page-next"),
+      pageSize: 10,
+      getItems: function () {
+        return casesForFilter(casesFilter);
+      },
+      renderRows: function (pageItems) {
+        root.innerHTML = pageItems
+          .map(function (c) {
+            return SocDemoData.renderOpenCaseRow
+              ? SocDemoData.renderOpenCaseRow(c)
+              : SocDemoData.renderOpenCaseGroup(c);
+          })
+          .join("");
+        if (typeof window.socEnhanceSeverity === "function") {
+          window.socEnhanceSeverity();
+        } else if (typeof window.socEnhanceIpEntityChips === "function") {
+          window.socEnhanceIpEntityChips();
+        }
+      },
+    });
 
   function applyFilter(filter) {
-    document.querySelectorAll(".soc-cases-row[data-assignee]").forEach(function (row) {
-      var assignee = row.getAttribute("data-assignee");
-      row.hidden = !(filter === "all" || assignee === "me");
-    });
-    renderSummary(filter);
+    casesFilter = filter || "mine";
+    renderSummary(casesFilter);
+    if (casesPager) casesPager.reset();
   }
 
+  var switcher = document.querySelector(".soc-switcher");
   if (!switcher) {
-    renderSummary("mine");
+    applyFilter("mine");
     return;
   }
 
