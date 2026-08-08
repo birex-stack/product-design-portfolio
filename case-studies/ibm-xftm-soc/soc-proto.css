@@ -2450,6 +2450,7 @@ button.soc-item.soc-watch-link span {
 .soc-filters--evidence {
   flex: 1 1 auto;
   min-width: 0;
+  justify-content: flex-end;
 }
 
 .soc-toolbar--evidence {
@@ -2459,7 +2460,7 @@ button.soc-item.soc-watch-link span {
 .soc-toolbar--evidence .soc-toolbar-tools {
   flex: 0 1 16rem;
   max-width: 20rem;
-  margin-left: auto;
+  margin-left: 0;
 }
 
 /* Cases / draft lists — Carbon Data table row density (click → detail) */

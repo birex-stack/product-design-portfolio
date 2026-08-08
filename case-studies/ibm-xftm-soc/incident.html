@@ -959,6 +959,31 @@
             </div>
             <div class="soc-card__body" style="padding: 0">
               <div class="soc-toolbar soc-toolbar--evidence" style="margin: 0; padding: 12px 16px">
+                <div class="soc-toolbar-tools">
+                  <label class="soc-search" aria-label="Search evidence">
+                    <!-- @carbon/icons Search (16) — fill-rule evenodd for lens hole -->
+                    <svg
+                      class="soc-search__icon"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      focusable="false"
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M15 14.3 10.7 10c1.9-2.3 1.6-5.8-.7-7.7S4.2.7 2.3 3 .7 8.8 3 10.7c2 1.7 5 1.7 7 0l4.3 4.3.7-.7zM2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z"
+                      />
+                    </svg>
+                    <input
+                      type="search"
+                      id="evidence-search"
+                      placeholder="Search evidence"
+                    />
+                  </label>
+                </div>
                 <!--
                   Carbon selectable tags as single-select filters (not content tabs)
                   @see https://carbondesignsystem.com/components/tag/usage/#selectable-tag
@@ -1009,31 +1034,6 @@
                   >
                     Enrichments
                   </button>
-                </div>
-                <div class="soc-toolbar-tools">
-                  <label class="soc-search" aria-label="Search evidence">
-                    <!-- @carbon/icons Search (16) — fill-rule evenodd for lens hole -->
-                    <svg
-                      class="soc-search__icon"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      focusable="false"
-                      preserveAspectRatio="xMidYMid meet"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M15 14.3 10.7 10c1.9-2.3 1.6-5.8-.7-7.7S4.2.7 2.3 3 .7 8.8 3 10.7c2 1.7 5 1.7 7 0l4.3 4.3.7-.7zM2 6.5C2 4 4 2 6.5 2S11 4 11 6.5 9 11 6.5 11 2 9 2 6.5z"
-                      />
-                    </svg>
-                    <input
-                      type="search"
-                      id="evidence-search"
-                      placeholder="Search evidence"
-                    />
-                  </label>
                 </div>
               </div>
               <table class="soc-alert-table soc-evidence-table">
