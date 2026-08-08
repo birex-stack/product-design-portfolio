@@ -34,6 +34,13 @@
   --status-green: #42be65;
   --status-blue: #4589ff;
   --status-purple: #a56eff;
+  /* Carbon purple scale — https://carbondesignsystem.com/elements/color/tokens/ */
+  --purple-30: #d4bbff;
+  --purple-40: #be95ff;
+  --purple-50: #a56eff;
+  --purple-60: #8a3ffc;
+  --purple-70: #6929c4;
+  --purple-80: #491d8b;
   --cds-sidebar-w: 256px;
   --cds-header-h: 48px;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -911,22 +918,26 @@ body:has(.soc-ack) .soc-main {
   min-height: 168px;
 }
 
-.soc-chart-row .soc-donut-center-value {
-  font-size: 20px;
+.soc-chart-row .soc-radial-center-value,
+.soc-alert-summary .soc-radial-center-value {
+  font-size: 18px;
 }
 
-.soc-chart-row .soc-donut-center-label {
-  font-size: 10px;
+.soc-chart-row .soc-radial-center-label,
+.soc-alert-summary .soc-radial-center-label {
+  font-size: 9px;
 }
 
-.soc-donut {
+.soc-donut,
+.soc-radial {
   width: 120px;
   height: 120px;
   flex-shrink: 0;
   transform: rotate(-90deg);
 }
 
-.soc-donut--lg {
+.soc-donut--lg,
+.soc-radial--lg {
   width: 168px;
   height: 168px;
 }
@@ -937,14 +948,7 @@ body:has(.soc-ack) .soc-main {
   min-height: 168px;
 }
 
-.soc-alert-summary .soc-donut-center-value {
-  font-size: 20px;
-}
-
-.soc-alert-summary .soc-donut-center-label {
-  font-size: 10px;
-}
-
+/* Legacy single-ring donut (kept for any remaining uses) */
 .soc-donut-track {
   fill: none;
   stroke: var(--cds-layer-02);
@@ -986,6 +990,71 @@ body:has(.soc-ack) .soc-main {
 .soc-donut-center-label {
   font-size: 9px;
   fill: var(--cds-text-helper);
+}
+
+/*
+ * Concentric severity rings — outer full = all; inward = higher severity.
+ * Stroke width = gap between rings ⇒ radius step = 2 × stroke-width.
+ */
+.soc-radial-track {
+  fill: none;
+  stroke: #2a2a2a;
+  stroke-width: 4;
+}
+
+.soc-radial-arc {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: butt;
+}
+
+.soc-radial-arc--all {
+  stroke: #8d8d8d;
+}
+
+.soc-radial-arc--low {
+  stroke: var(--status-yellow);
+}
+
+.soc-radial-arc--medium {
+  stroke: var(--status-orange);
+}
+
+.soc-radial-arc--high {
+  stroke: var(--status-red);
+}
+
+.soc-radial-arc--critical {
+  stroke: #ff8389; /* lighter red at center — distinguishable from High */
+}
+
+.soc-radial-center-value,
+.soc-radial-center-label {
+  fill: var(--cds-text);
+  transform: rotate(90deg);
+  transform-origin: 60px 60px;
+}
+
+.soc-radial-center-value {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.soc-radial-center-label {
+  font-size: 9px;
+  fill: var(--cds-text-helper);
+}
+
+.soc-radial-legend-all {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #8d8d8d;
+  background: transparent;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .soc-donut-legend {
@@ -2047,6 +2116,147 @@ body.soc-flyout-open {
   align-items: start;
 }
 
+.soc-overview-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px 32px;
+  align-items: start;
+}
+
+.soc-overview-row > .soc-kv {
+  min-width: 0;
+  grid-template-columns: minmax(88px, 32%) minmax(0, 1fr);
+}
+
+.soc-overview-row > .soc-kv dt,
+.soc-overview-row > .soc-kv dd {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.soc-magnitude {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  column-gap: 16px;
+  row-gap: 8px;
+  align-items: start;
+  justify-content: start;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.soc-magnitude__title {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cds-text);
+}
+
+.soc-radial--magnitude {
+  width: 168px;
+  height: 168px;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+/*
+ * Magnitude rings — Carbon purple, skip adjacent steps for contrast on g100
+ * Score $purple-80 · Relevance $purple-60 · Credibility $purple-40 · Severity $purple-30
+ */
+.soc-radial-arc--mag-score,
+.soc-radial-arc--mag-score-ticks {
+  stroke: var(--purple-80);
+}
+
+.soc-radial-arc--mag-score-ticks {
+  stroke-width: 4; /* same as solid rings */
+  stroke-dasharray: 1 1; /* 1px dash, 1px gap along the path */
+  opacity: 0.95;
+}
+
+.soc-radial-arc--mag-relevance {
+  stroke: var(--purple-60);
+}
+
+.soc-radial-arc--mag-credibility {
+  stroke: var(--purple-40);
+}
+
+.soc-radial-arc--mag-severity {
+  stroke: var(--purple-30);
+}
+
+.soc-radial-mag-value,
+.soc-radial-mag-denom {
+  fill: var(--cds-text);
+  transform: rotate(90deg);
+  transform-origin: 60px 60px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.soc-radial-mag-value {
+  font-size: 20px;
+}
+
+.soc-radial-mag-denom {
+  font-size: 10px;
+  fill: var(--cds-text-secondary);
+  font-weight: 500;
+}
+
+.soc-magnitude__legend {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.6875rem;
+  color: var(--cds-text-secondary);
+  white-space: nowrap;
+}
+
+.soc-magnitude__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.soc-magnitude__legend span {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--cds-text);
+  min-width: 1ch;
+}
+
+.soc-magnitude__swatch {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.soc-magnitude__swatch--score {
+  background: var(--purple-80);
+}
+
+.soc-magnitude__swatch--relevance {
+  background: var(--purple-60);
+}
+
+.soc-magnitude__swatch--credibility {
+  background: var(--purple-40);
+}
+
+.soc-magnitude__swatch--severity {
+  background: var(--purple-30);
+}
+
 .soc-kv {
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -2758,8 +2968,13 @@ body.soc-flyout-open {
   .soc-chart-row,
   .soc-chart-row--alerts,
   .soc-alert-summary,
-  .soc-summary-stats {
+  .soc-summary-stats,
+  .soc-overview-row {
     grid-template-columns: 1fr;
+  }
+
+  .soc-magnitude {
+    grid-template-columns: auto 1fr;
   }
 }
 

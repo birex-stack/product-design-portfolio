@@ -52,7 +52,7 @@
         <nav class="soc-nav">
           <a href="./shift-briefing.html">Briefing</a>
           <a class="is-active" href="./alerts.html"
-            >Alerts <span class="soc-nav-badge">12</span></a
+            >Alerts <span class="soc-nav-badge">15</span></a
           >
           <a href="./cases.html">Cases</a>
           <a href="#">Threat intel</a>
@@ -81,51 +81,82 @@
         <div class="soc-alert-summary">
           <div class="soc-chart-panel">
             <h3 class="soc-chart-title">Open alerts by severity</h3>
-            <p class="soc-chart-sub">12 open · High 5 · Medium 7</p>
+            <p class="soc-chart-sub">15 open · Critical 2 · High 5 · Medium 5 · Low 3</p>
             <div class="soc-donut-wrap">
+              <!--
+                stroke=4, gap=4 ⇒ radius step=8
+                r54 all · r46 low · r38 med · r30 high · r22 critical
+                total=15; C=2πr; arc = count/total × C
+              -->
               <svg
-                class="soc-donut soc-donut--lg"
+                class="soc-radial soc-radial--lg"
                 viewBox="0 0 120 120"
                 role="img"
-                aria-label="High 5, Medium 7"
+                aria-label="15 open alerts. Critical 2, High 5, Medium 5, Low 3"
               >
-                <circle class="soc-donut-track" cx="60" cy="60" r="50" />
-                <!-- circumference ≈ 314; High 5/12 ≈ 131, Medium 7/12 ≈ 183 -->
+                <circle class="soc-radial-track" cx="60" cy="60" r="54" />
                 <circle
-                  class="soc-donut-seg soc-donut-seg--high"
+                  class="soc-radial-arc soc-radial-arc--all"
                   cx="60"
                   cy="60"
-                  r="50"
-                  stroke-dasharray="131 183"
-                  stroke-dashoffset="0"
+                  r="54"
+                  stroke-dasharray="339.3 0"
                 />
+                <circle class="soc-radial-track" cx="60" cy="60" r="46" />
                 <circle
-                  class="soc-donut-seg soc-donut-seg--medium"
+                  class="soc-radial-arc soc-radial-arc--low"
                   cx="60"
                   cy="60"
-                  r="50"
-                  stroke-dasharray="183 131"
-                  stroke-dashoffset="-131"
+                  r="46"
+                  stroke-dasharray="57.8 289"
                 />
-                <text class="soc-donut-center-value" x="60" y="56" text-anchor="middle">12</text>
-                <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">open</text>
+                <circle class="soc-radial-track" cx="60" cy="60" r="38" />
+                <circle
+                  class="soc-radial-arc soc-radial-arc--medium"
+                  cx="60"
+                  cy="60"
+                  r="38"
+                  stroke-dasharray="79.6 238.8"
+                />
+                <circle class="soc-radial-track" cx="60" cy="60" r="30" />
+                <circle
+                  class="soc-radial-arc soc-radial-arc--high"
+                  cx="60"
+                  cy="60"
+                  r="30"
+                  stroke-dasharray="62.8 188.5"
+                />
+                <circle class="soc-radial-track" cx="60" cy="60" r="22" />
+                <circle
+                  class="soc-radial-arc soc-radial-arc--critical"
+                  cx="60"
+                  cy="60"
+                  r="22"
+                  stroke-dasharray="18.4 138.2"
+                />
+                <text class="soc-radial-center-value" x="60" y="56" text-anchor="middle">15</text>
+                <text class="soc-radial-center-label" x="60" y="72" text-anchor="middle">open</text>
               </svg>
               <ul class="soc-donut-legend">
+                <li>
+                  <i class="soc-radial-legend-all" aria-hidden="true"></i>All
+                  <strong>15</strong>
+                </li>
+                <li>
+                  <i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical
+                  <strong>2</strong>
+                </li>
                 <li>
                   <i class="soc-sev soc-sev--high" aria-hidden="true"></i>High
                   <strong>5</strong>
                 </li>
                 <li>
                   <i class="soc-sev soc-sev--medium" aria-hidden="true"></i>Medium
-                  <strong>7</strong>
-                </li>
-                <li>
-                  <i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical
-                  <strong>0</strong>
+                  <strong>5</strong>
                 </li>
                 <li>
                   <i class="soc-sev soc-sev--low" aria-hidden="true"></i>Low
-                  <strong>0</strong>
+                  <strong>3</strong>
                 </li>
               </ul>
             </div>
@@ -150,11 +181,11 @@
                 <span>3</span>
               </div>
               <div class="soc-bar-row">
-                <span title="Suspicious PowerShell">Suspicious PowerShell</span>
+                <span title="Suspicious PowerShell / lateral movement">Endpoint / malware</span>
                 <div class="soc-bar-track">
-                  <div class="soc-bar-fill soc-bar-fill--malware" style="width: 50%"></div>
+                  <div class="soc-bar-fill soc-bar-fill--malware" style="width: 75%"></div>
                 </div>
-                <span>2</span>
+                <span>3</span>
               </div>
               <div class="soc-bar-row">
                 <span title="Rare process tree">Rare process tree</span>
@@ -761,7 +792,7 @@
                   <td>08:22</td>
                 </tr>
                 <tr>
-                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td><span class="soc-tag soc-tag--low">Low</span></td>
                   <td>
                     <a href="./alert.html?id=ALT-88405">ALT-88405 · Unusual SMB shares</a>
                   </td>
@@ -797,7 +828,7 @@
                   <td>08:18</td>
                 </tr>
                 <tr>
-                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td><span class="soc-tag soc-tag--low">Low</span></td>
                   <td>
                     <a href="./alert.html?id=ALT-88398">ALT-88398 · Scheduled task update</a>
                   </td>
@@ -991,7 +1022,7 @@
                   <td>06:51</td>
                 </tr>
                 <tr>
-                  <td><span class="soc-tag soc-tag--high">High</span></td>
+                  <td><span class="soc-tag soc-tag--critical">Critical</span></td>
                   <td>
                     <a href="./alert.html?id=ALT-88340">ALT-88340 · Credential harvest URL</a>
                   </td>
@@ -1030,7 +1061,7 @@
                   <td>06:48</td>
                 </tr>
                 <tr>
-                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td><span class="soc-tag soc-tag--low">Low</span></td>
                   <td>
                     <a href="./alert.html?id=ALT-88338">ALT-88338 · Suspicious reply-all</a>
                   </td>
@@ -1069,7 +1100,7 @@
                   <td>06:44</td>
                 </tr>
                 <tr>
-                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td><span class="soc-tag soc-tag--critical">Critical</span></td>
                   <td>
                     <a href="./alert.html?id=ALT-88335">ALT-88335 · Lookalike domain click</a>
                   </td>
@@ -1103,6 +1134,120 @@
                     <span class="soc-ip-score soc-ip-score--high">8/10</span>
                   </td>
                   <td>06:40</td>
+                </tr>
+                <tr>
+                  <td><span class="soc-tag soc-tag--high">High</span></td>
+                  <td>
+                    <a href="./alert.html?id=ALT-88428">ALT-88428 · Lateral movement attempt</a>
+                  </td>
+                  <td>Escalate · 84%</td>
+                  <td>INC-2025-4821</td>
+                  <td>endpoint-fin-04</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="soc-ip-link"
+                      data-ip="10.48.12.104"
+                      data-country="Poland"
+                      data-flag="🇵🇱"
+                      data-score="2"
+                      data-asn="AS5617"
+                      data-org="Acme Finance Corp (internal)"
+                      data-type="Corporate LAN"
+                      data-categories="Internal, Whitelisted"
+                      data-first-seen="2023-02-14"
+                      data-last-seen="2025-05-28"
+                    >
+                      10.48.12.104
+                    </button>
+                  </td>
+                  <td>
+                    <span class="soc-ip-flag" title="Poland" aria-label="Poland"
+                      >🇵🇱</span
+                    >
+                  </td>
+                  <td>
+                    <span class="soc-ip-score soc-ip-score--low">2/10</span>
+                  </td>
+                  <td>08:44</td>
+                </tr>
+                <tr>
+                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td>
+                    <a href="./alert.html?id=ALT-88425">ALT-88425 · DNS tunneling spike</a>
+                  </td>
+                  <td>Investigate · 61%</td>
+                  <td>—</td>
+                  <td>dns-sensor</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="soc-ip-link"
+                      data-ip="45.33.32.156"
+                      data-country="United States"
+                      data-flag="🇺🇸"
+                      data-score="5"
+                      data-asn="AS63949"
+                      data-org="Akamai Connected Cloud"
+                      data-type="Cloud VPS"
+                      data-categories="Scanning, Suspicious DNS"
+                      data-first-seen="2025-05-22"
+                      data-last-seen="2025-05-28"
+                    >
+                      45.33.32.156
+                    </button>
+                  </td>
+                  <td>
+                    <span
+                      class="soc-ip-flag"
+                      title="United States"
+                      aria-label="United States"
+                      >🇺🇸</span
+                    >
+                  </td>
+                  <td>
+                    <span class="soc-ip-score soc-ip-score--medium">5/10</span>
+                  </td>
+                  <td>07:12</td>
+                </tr>
+                <tr>
+                  <td><span class="soc-tag soc-tag--medium">Medium</span></td>
+                  <td>
+                    <a href="./alert.html?id=ALT-88422">ALT-88422 · Anomalous OAuth consent</a>
+                  </td>
+                  <td>Investigate · 58%</td>
+                  <td>—</td>
+                  <td>m365</td>
+                  <td>
+                    <button
+                      type="button"
+                      class="soc-ip-link"
+                      data-ip="104.21.32.11"
+                      data-country="United States"
+                      data-flag="🇺🇸"
+                      data-score="3"
+                      data-asn="AS13335"
+                      data-org="Cloudflare, Inc."
+                      data-type="CDN / proxy"
+                      data-categories="Cloud SaaS"
+                      data-first-seen="2025-03-01"
+                      data-last-seen="2025-05-28"
+                    >
+                      104.21.32.11
+                    </button>
+                  </td>
+                  <td>
+                    <span
+                      class="soc-ip-flag"
+                      title="United States"
+                      aria-label="United States"
+                      >🇺🇸</span
+                    >
+                  </td>
+                  <td>
+                    <span class="soc-ip-score soc-ip-score--low">3/10</span>
+                  </td>
+                  <td>07:05</td>
                 </tr>
               </tbody>
             </table>
