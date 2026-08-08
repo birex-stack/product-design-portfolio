@@ -51,7 +51,13 @@
 
       <aside class="soc-sidebar" aria-label="Primary">
         <nav class="soc-nav">
-          <a href="./shift-briefing.html">Briefing</a>
+          <a href="./shift-briefing.html" aria-label="Briefing, completed"
+            >Briefing
+            <span class="soc-nav-done" title="Completed" aria-hidden="true"
+              ><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.7 12.3 2.5 8.1l1.1-1.1 3.1 3.1 6.5-6.5 1.1 1.1z" /></svg
+            ></span
+          ></a>
           <a href="./alerts.html"
             >Alerts <span class="soc-nav-badge">156</span></a
           >
@@ -68,33 +74,152 @@
 
       <main class="soc-main">
         <div class="soc-page-head">
-          <div>
-            <p
-              style="
-                font-family: var(--font-mono);
-                font-size: 0.75rem;
-                color: var(--cds-text-helper);
-                margin-bottom: 6px;
-              "
-            >
+          <div class="soc-page-head__main">
+            <p class="soc-page-head__crumb">
               <a href="./cases.html">← Back to cases</a>
             </p>
-            <h1>
-              <span
-                class="soc-tag soc-tag--medium"
-                id="incident-severity"
-                style="margin-right: 8px"
-                >Medium</span
-              >
-              <span id="incident-id">INC-2025-4821</span>
-            </h1>
-            <p id="incident-subtitle">
-              Suspicious PowerShell on finance workstation · correlated historical
-              pattern
-            </p>
+            <div class="soc-page-head__title-row">
+              <div class="soc-page-head__title-block">
+                <h1>
+                  <span id="incident-id">INC-2025-4821</span>
+                </h1>
+                <p class="soc-page-head__subtitle" id="incident-subtitle">
+                  Suspicious PowerShell on finance workstation · correlated
+                  historical pattern
+                </p>
+                <div class="soc-page-head__tags" aria-label="Case labels">
+                  <span
+                    class="soc-tag soc-tag--severity soc-tag--medium"
+                    id="incident-severity"
+                    >Medium</span
+                  >
+                </div>
+              </div>
+              <!-- Carbon Menu button — https://carbondesignsystem.com/components/button/usage/#menu-button -->
+              <div class="soc-menu-btn" data-soc-menu>
+                <button
+                  type="button"
+                  class="soc-btn soc-btn--primary soc-menu-btn__trigger"
+                  id="case-actions-btn"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  aria-controls="case-actions-menu"
+                >
+                  Actions
+                  <svg
+                    class="soc-menu-btn__chevron"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <!-- @carbon/icons ChevronDown16 -->
+                    <path d="M8 11 3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z" />
+                  </svg>
+                </button>
+                <ul
+                  class="soc-menu"
+                  id="case-actions-menu"
+                  role="menu"
+                  aria-labelledby="case-actions-btn"
+                  hidden
+                >
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html"
+                      data-case-action="close"
+                      >Close case</a
+                    >
+                  </li>
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html"
+                      data-case-action="escalate"
+                      >Escalate to IR</a
+                    >
+                  </li>
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html"
+                      data-case-action="associate"
+                      >Associate with other case</a
+                    >
+                  </li>
+                  <li role="separator" class="soc-menu__divider"></li>
+                  <li role="none">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      class="soc-menu__item"
+                      data-case-action="assign"
+                    >
+                      Reassign…
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
+        <div class="soc-case-tabs">
+          <div
+            class="soc-switcher"
+            role="tablist"
+            aria-label="Case detail views"
+            id="case-tablist"
+          >
+            <button
+              type="button"
+              class="is-active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="view-overview"
+              id="tab-overview"
+              data-view="overview"
+            >
+              Overview
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="view-evidence"
+              id="tab-evidence"
+              data-view="evidence"
+            >
+              Evidence
+              <span class="soc-tag soc-tag--count" id="case-evidence-count"
+                >149</span
+              >
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="view-comments"
+              id="tab-comments"
+              data-view="comments"
+            >
+              Comments
+              <span class="soc-tag soc-tag--count" id="case-comments-count">4</span>
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="view-overview"
+          role="tabpanel"
+          aria-labelledby="tab-overview"
+        >
         <div class="soc-detail-layout">
           <div>
             <div class="soc-alert-split" style="margin-bottom: 16px">
@@ -302,6 +427,149 @@
                 </div>
               </section>
             </div>
+
+            <!--
+              Carbon proportional meter — part-to-whole evidence inventory
+              @see https://charts.carbondesignsystem.com/meter
+            -->
+            <section
+              class="soc-card"
+              style="margin-bottom: 16px"
+              id="incident-evidence"
+              aria-labelledby="evidence-heading"
+            >
+              <div class="soc-card__head">
+                <h2 id="evidence-heading">Evidence summary</h2>
+              </div>
+              <div class="soc-card__body">
+                <div class="soc-evidence">
+                  <div class="soc-evidence__block">
+                    <h3 class="soc-chart-title">Evidence inventory</h3>
+                    <p class="soc-chart-sub">
+                      Correlated alerts, raw events, artifacts, and enrichments
+                    </p>
+                    <div
+                      class="soc-meter soc-meter--evidence"
+                      id="evidence-meter"
+                      role="img"
+                      aria-label="149 evidence items. 5 alerts, 128 events, 4 artifacts, 12 enrichments."
+                    >
+                      <div class="soc-meter__legend" id="evidence-legend">
+                        <span
+                          ><i
+                            class="soc-legend-swatch soc-legend-swatch--alerts"
+                            aria-hidden="true"
+                          ></i
+                          >Alerts <strong data-ev-count="alerts">5</strong></span
+                        >
+                        <span
+                          ><i
+                            class="soc-legend-swatch soc-legend-swatch--events"
+                            aria-hidden="true"
+                          ></i
+                          >Events <strong data-ev-count="events">128</strong></span
+                        >
+                        <span
+                          ><i
+                            class="soc-legend-swatch soc-legend-swatch--artifacts"
+                            aria-hidden="true"
+                          ></i
+                          >Artifacts
+                          <strong data-ev-count="artifacts">4</strong></span
+                        >
+                        <span
+                          ><i
+                            class="soc-legend-swatch soc-legend-swatch--enrichments"
+                            aria-hidden="true"
+                          ></i
+                          >Enrichments
+                          <strong data-ev-count="enrichments">12</strong></span
+                        >
+                      </div>
+                      <div class="soc-meter__track" aria-hidden="true">
+                        <div
+                          class="soc-meter__seg soc-meter__seg--alerts"
+                          data-ev-seg="alerts"
+                          style="flex: 5"
+                        ></div>
+                        <div
+                          class="soc-meter__seg soc-meter__seg--events"
+                          data-ev-seg="events"
+                          style="flex: 128"
+                        ></div>
+                        <div
+                          class="soc-meter__seg soc-meter__seg--artifacts"
+                          data-ev-seg="artifacts"
+                          style="flex: 4"
+                        ></div>
+                        <div
+                          class="soc-meter__seg soc-meter__seg--enrichments"
+                          data-ev-seg="enrichments"
+                          style="flex: 12"
+                        ></div>
+                      </div>
+                      <div class="soc-meter__footer">
+                        <span id="evidence-total">149 items in case</span>
+                        <span id="evidence-footnote"
+                          >5 alerts · 128 events · 16 supporting</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="soc-evidence__block">
+                    <h3 class="soc-chart-title">By detection source</h3>
+                    <p class="soc-chart-sub">Where the evidence was collected</p>
+                    <div class="soc-bars soc-bars--evidence" id="evidence-sources">
+                      <div class="soc-bar-row">
+                        <span>Endpoint / EDR</span>
+                        <div class="soc-bar-track">
+                          <div
+                            class="soc-bar-fill soc-bar-fill--malware"
+                            data-ev-bar="edr"
+                            style="width: 100%"
+                          ></div>
+                        </div>
+                        <span data-ev-src="edr">4</span>
+                      </div>
+                      <div class="soc-bar-row">
+                        <span>QRadar / SIEM</span>
+                        <div class="soc-bar-track">
+                          <div
+                            class="soc-bar-fill"
+                            data-ev-bar="siem"
+                            style="width: 50%"
+                          ></div>
+                        </div>
+                        <span data-ev-src="siem">2</span>
+                      </div>
+                      <div class="soc-bar-row">
+                        <span>Identity / IdP</span>
+                        <div class="soc-bar-track">
+                          <div
+                            class="soc-bar-fill soc-bar-fill--unauth"
+                            data-ev-bar="idp"
+                            style="width: 25%"
+                          ></div>
+                        </div>
+                        <span data-ev-src="idp">1</span>
+                      </div>
+                      <div class="soc-bar-row">
+                        <span>Mail / proxy</span>
+                        <div class="soc-bar-track">
+                          <div
+                            class="soc-bar-fill soc-bar-fill--phishing"
+                            data-ev-bar="mail"
+                            style="width: 25%"
+                          ></div>
+                        </div>
+                        <span data-ev-src="mail">1</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
             <div class="soc-alert-split" style="margin-bottom: 16px">
               <section class="soc-card">
@@ -674,9 +942,173 @@
             <span>Include this investigation in ATDS learning program.</span>
           </label>
         </div>
+        </div>
+
+        <!--
+          Evidence tab — IBM QRadar SOAR / UAX naming (not “Attachments”).
+          Full inventory behind the Overview “Evidence summary” meter.
+        -->
+        <div
+          id="view-evidence"
+          role="tabpanel"
+          aria-labelledby="tab-evidence"
+          hidden
+        >
+          <section
+            class="soc-card soc-case-evidence-card"
+            aria-labelledby="case-evidence-heading"
+          >
+            <div class="soc-card__head">
+              <h2 id="case-evidence-heading">Evidence</h2>
+            </div>
+            <div class="soc-card__body" style="padding: 0">
+              <div class="soc-toolbar" style="margin: 0; padding: 12px 16px">
+                <div
+                  class="soc-switcher soc-switcher--filter"
+                  role="tablist"
+                  aria-label="Evidence type filter"
+                  id="evidence-type-filter"
+                >
+                  <button
+                    type="button"
+                    class="is-active"
+                    role="tab"
+                    aria-selected="true"
+                    data-ev-filter="all"
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-ev-filter="alert"
+                  >
+                    Alerts
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-ev-filter="event"
+                  >
+                    Events
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-ev-filter="artifact"
+                  >
+                    Artifacts
+                  </button>
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected="false"
+                    data-ev-filter="enrichment"
+                  >
+                    Enrichments
+                  </button>
+                </div>
+              </div>
+              <table class="soc-alert-table soc-evidence-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Risk score</th>
+                    <th>Name</th>
+                    <th>Source</th>
+                    <th>Collected</th>
+                  </tr>
+                </thead>
+                <tbody id="case-evidence-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div
+          id="view-comments"
+          role="tabpanel"
+          aria-labelledby="tab-comments"
+          hidden
+        >
+          <section class="soc-card soc-case-comments-card" aria-labelledby="case-comments-heading">
+            <div class="soc-card__head">
+              <h2 id="case-comments-heading">Analyst comments</h2>
+            </div>
+            <div class="soc-card__body">
+              <p class="soc-chart-sub" style="margin-bottom: 16px">
+                Collaboration notes for this case — visible to the shift team.
+              </p>
+
+              <ul class="soc-case-comments" id="case-comments-list">
+                <li class="soc-ip-comment">
+                  <div class="soc-ip-comment__meta">
+                    <strong>Sam Taylor</strong>
+                    <time datetime="2025-05-28T07:58:00Z">May 28 · 07:58 UTC</time>
+                  </div>
+                  <p>
+                    Picked this up from passdown. Pattern looks close to closed
+                    case SOCJ233244 — verify CHG-9921 before escalating.
+                  </p>
+                </li>
+                <li class="soc-ip-comment">
+                  <div class="soc-ip-comment__meta">
+                    <strong>Alex Johnson</strong>
+                    <time datetime="2025-05-28T08:15:00Z">May 28 · 08:15 UTC</time>
+                  </div>
+                  <p>
+                    Confirmed change ticket covers endpoint-fin-04 and the
+                    scheduled window. Still waiting on outbound C2 check from
+                    EDR.
+                  </p>
+                </li>
+                <li class="soc-ip-comment">
+                  <div class="soc-ip-comment__meta">
+                    <strong>ATDS</strong>
+                    <time datetime="2025-05-28T08:22:00Z">May 28 · 08:22 UTC</time>
+                  </div>
+                  <p>
+                    Historical fingerprint match raised FP confidence to 72%.
+                    Suggested disposition: Associate with SOCJ233244.
+                  </p>
+                </li>
+                <li class="soc-ip-comment">
+                  <div class="soc-ip-comment__meta">
+                    <strong>Jordan Lee</strong>
+                    <time datetime="2025-05-28T08:36:00Z">May 28 · 08:36 UTC</time>
+                  </div>
+                  <p>
+                    No rare destinations in the last 24h for this host. Lean
+                    associate unless lateral auth (ALT-88428) confirms spread.
+                  </p>
+                </li>
+              </ul>
+
+              <form class="soc-ip-comment-form soc-case-comment-form" id="case-comment-form">
+                <label class="soc-ip-comment-form__label" for="case-comment-input"
+                  >Add comment</label
+                >
+                <textarea
+                  id="case-comment-input"
+                  name="comment"
+                  rows="4"
+                  placeholder="Share context for other analysts…"
+                  required
+                ></textarea>
+                <button type="submit" class="soc-btn soc-btn--primary">
+                  Add comment
+                </button>
+              </form>
+            </div>
+          </section>
+        </div>
       </main>
     </div>
     <script type="module" src="./soc-ip-flyout.js"></script>
+    <script type="module" src="./soc-alert-flyout.js"></script>
     <script src="./soc-demo-data.js"></script>
     <script>
       (function () {
@@ -791,6 +1223,13 @@
               credibility: 6,
               severity: 3,
             },
+            evidence: {
+              alerts: 5,
+              events: 128,
+              artifacts: 4,
+              enrichments: 12,
+              sources: { edr: 4, siem: 2, idp: 1, mail: 1 },
+            },
           },
           "INC-2025-4818": {
             severity: "Medium",
@@ -807,6 +1246,13 @@
               relevance: 7,
               credibility: 5,
               severity: 6,
+            },
+            evidence: {
+              alerts: 3,
+              events: 86,
+              artifacts: 5,
+              enrichments: 9,
+              sources: { edr: 1, siem: 2, idp: 4, mail: 0 },
             },
           },
           "INC-2025-4812": {
@@ -825,6 +1271,13 @@
               credibility: 5,
               severity: 6,
             },
+            evidence: {
+              alerts: 4,
+              events: 210,
+              artifacts: 7,
+              enrichments: 16,
+              sources: { edr: 1, siem: 2, idp: 1, mail: 5 },
+            },
           },
         };
 
@@ -838,6 +1291,271 @@
             btn.classList.toggle("soc-btn--primary", primary);
             btn.classList.toggle("soc-btn--secondary", !primary);
           });
+        }
+
+        var evidenceItems = [];
+        var evidenceFilter = "all";
+
+        function buildEvidenceItems(ev, id) {
+          var items = [];
+          var alertN = Number(ev.alerts) || 0;
+          var eventN = Number(ev.events) || 0;
+          var artN = Number(ev.artifacts) || 0;
+          var enrN = Number(ev.enrichments) || 0;
+          var alertIds = [];
+          if (window.SocDemoData && SocDemoData.corpus) {
+            var open = SocDemoData.corpus.openCases.find(function (c) {
+              return c.id === id;
+            });
+            if (open && open.alertIds) alertIds = open.alertIds.slice();
+          }
+          var heroAlerts = [
+            "ALT-88421",
+            "ALT-88419",
+            "ALT-88411",
+            "ALT-88405",
+            "ALT-88398",
+            "ALT-88428",
+          ];
+          while (alertIds.length < alertN) {
+            alertIds.push(
+              heroAlerts[alertIds.length % heroAlerts.length] ||
+                "ALT-" + (88400 - alertIds.length)
+            );
+          }
+          function riskFromSeverity(sev) {
+            if (sev === "critical") return 9;
+            if (sev === "high") return 7;
+            if (sev === "low") return 3;
+            return 5;
+          }
+          function riskTier(score) {
+            if (score >= 9) return "critical";
+            if (score >= 7) return "high";
+            if (score >= 4) return "medium";
+            return "low";
+          }
+          function demoRisk(seed, min, max) {
+            return min + ((seed * 7 + 3) % (max - min + 1));
+          }
+          alertIds.slice(0, alertN).forEach(function (aid, i) {
+            var title = aid;
+            var score = 5;
+            if (window.SocDemoData) {
+              var a = SocDemoData.getAlert && SocDemoData.getAlert(aid);
+              if (a) {
+                if (a.title) title = aid + " · " + a.title;
+                if (a.ip && typeof a.ip.score === "number") {
+                  score = a.ip.score;
+                } else if (a.severity) {
+                  score = riskFromSeverity(a.severity);
+                }
+              }
+            }
+            items.push({
+              type: "alert",
+              typeLabel: "Alert",
+              name: title,
+              alertId: aid,
+              riskScore: score,
+              riskTier: riskTier(score),
+              source: i % 2 === 0 ? "Endpoint / EDR" : "QRadar / SIEM",
+              collected: "May 28 · 08:" + String(12 + i).padStart(2, "0") + " UTC",
+            });
+          });
+          var eventNames = [
+            "Process create · powershell.exe",
+            "Network connect · 185.220.101.34:443",
+            "File write · %TEMP%\\stage.ps1",
+            "Registry set · RunOnce",
+            "DNS query · update-cdn[.]top",
+            "Auth success · j.doe@finance.com",
+            "SMB share access · \\\\fs-fin\\payroll",
+            "Scheduled task created",
+          ];
+          var eventSources = [
+            "Endpoint / EDR",
+            "QRadar / SIEM",
+            "Identity / IdP",
+            "Mail / proxy",
+          ];
+          for (var e = 0; e < eventN; e++) {
+            var evScore = demoRisk(e + 1, 2, 8);
+            items.push({
+              type: "event",
+              typeLabel: "Event",
+              name: eventNames[e % eventNames.length] + " · #" + (e + 1),
+              href: null,
+              riskScore: evScore,
+              riskTier: riskTier(evScore),
+              source: eventSources[e % eventSources.length],
+              collected:
+                "May 28 · 07:" +
+                String(55 - (e % 50)).padStart(2, "0") +
+                " UTC",
+            });
+          }
+          var artifacts = [
+            { name: "stage.ps1 (SHA-256)", source: "Endpoint / EDR" },
+            { name: "Encoded command line blob", source: "Endpoint / EDR" },
+            { name: "Memory dump · endpoint-fin-04", source: "Endpoint / EDR" },
+            { name: "Mailbox rule export", source: "Mail / proxy" },
+            { name: "OAuth consent grant JSON", source: "Identity / IdP" },
+            { name: "PCAP snippet · DNS tunnel", source: "QRadar / SIEM" },
+            { name: "Login audit CSV", source: "Identity / IdP" },
+          ];
+          for (var ar = 0; ar < artN; ar++) {
+            var art = artifacts[ar % artifacts.length];
+            var artScore = demoRisk(ar + 11, 3, 9);
+            items.push({
+              type: "artifact",
+              typeLabel: "Artifact",
+              name: art.name + (artN > artifacts.length ? " · " + (ar + 1) : ""),
+              href: null,
+              riskScore: artScore,
+              riskTier: riskTier(artScore),
+              source: art.source,
+              collected: "May 28 · 08:" + String(20 + ar).padStart(2, "0") + " UTC",
+            });
+          }
+          var enrichments = [
+            { name: "X-Force IP reputation · 185.220.101.34", source: "Threat intel" },
+            { name: "WHOIS · update-cdn[.]top", source: "Threat intel" },
+            { name: "User risk score · j.doe", source: "Identity / IdP" },
+            { name: "Asset criticality · endpoint-fin-04", source: "CMDB" },
+            { name: "GeoIP · VPN session", source: "Threat intel" },
+            { name: "Hash match · VirusTotal", source: "Threat intel" },
+            { name: "Similar closed case · SOCJ233244", source: "ATDS" },
+            { name: "MITRE mapping · T1059.001", source: "ATDS" },
+          ];
+          for (var en = 0; en < enrN; en++) {
+            var enr = enrichments[en % enrichments.length];
+            var enScore = demoRisk(en + 23, 1, 10);
+            items.push({
+              type: "enrichment",
+              typeLabel: "Enrichment",
+              name: enr.name,
+              href: null,
+              riskScore: enScore,
+              riskTier: riskTier(enScore),
+              source: enr.source,
+              collected: "May 28 · 08:" + String(30 + (en % 25)).padStart(2, "0") + " UTC",
+            });
+          }
+          return items;
+        }
+
+        function renderEvidenceTable() {
+          var body = document.getElementById("case-evidence-body");
+          if (!body) return;
+          var rows = evidenceItems.filter(function (item) {
+            return evidenceFilter === "all" || item.type === evidenceFilter;
+          });
+          body.innerHTML = rows
+            .map(function (item) {
+              var nameCell = item.alertId
+                ? '<button type="button" class="soc-link-btn" data-alert-flyout="' +
+                  escapeHtml(item.alertId) +
+                  '">' +
+                  escapeHtml(item.name) +
+                  "</button>"
+                : escapeHtml(item.name);
+              var riskCell =
+                typeof item.riskScore === "number"
+                  ? '<span class="soc-ip-score soc-ip-score--' +
+                    escapeHtml(item.riskTier || "low") +
+                    '">' +
+                    item.riskScore +
+                    "/10</span>"
+                  : "—";
+              return (
+                "<tr data-ev-type=\"" +
+                item.type +
+                '">' +
+                '<td><span class="soc-tag soc-tag--ev-' +
+                item.type +
+                '">' +
+                item.typeLabel +
+                "</span></td>" +
+                "<td>" +
+                riskCell +
+                "</td>" +
+                "<td>" +
+                nameCell +
+                "</td>" +
+                "<td>" +
+                escapeHtml(item.source) +
+                "</td>" +
+                "<td>" +
+                escapeHtml(item.collected) +
+                "</td>" +
+                "</tr>"
+              );
+            })
+            .join("");
+        }
+
+        function applyEvidence(ev) {
+          if (!ev) return;
+          var keys = ["alerts", "events", "artifacts", "enrichments"];
+          var total = 0;
+          keys.forEach(function (k) {
+            total += Number(ev[k]) || 0;
+            var countEl = document.querySelector('[data-ev-count="' + k + '"]');
+            if (countEl) countEl.textContent = String(ev[k] || 0);
+            var seg = document.querySelector('[data-ev-seg="' + k + '"]');
+            if (seg) seg.style.flex = String(Math.max(0, Number(ev[k]) || 0));
+          });
+          var meter = document.getElementById("evidence-meter");
+          if (meter) {
+            meter.setAttribute(
+              "aria-label",
+              total +
+                " evidence items. " +
+                ev.alerts +
+                " alerts, " +
+                ev.events +
+                " events, " +
+                ev.artifacts +
+                " artifacts, " +
+                ev.enrichments +
+                " enrichments."
+            );
+          }
+          var totalEl = document.getElementById("evidence-total");
+          if (totalEl) totalEl.textContent = total + " items in case";
+          var foot = document.getElementById("evidence-footnote");
+          if (foot) {
+            var supporting =
+              (Number(ev.artifacts) || 0) + (Number(ev.enrichments) || 0);
+            foot.textContent =
+              ev.alerts +
+              " alerts · " +
+              ev.events +
+              " events · " +
+              supporting +
+              " supporting";
+          }
+          var sources = ev.sources || {};
+          var srcKeys = ["edr", "siem", "idp", "mail"];
+          var maxSrc = 1;
+          srcKeys.forEach(function (k) {
+            maxSrc = Math.max(maxSrc, Number(sources[k]) || 0);
+          });
+          srcKeys.forEach(function (k) {
+            var n = Number(sources[k]) || 0;
+            var label = document.querySelector('[data-ev-src="' + k + '"]');
+            if (label) label.textContent = String(n);
+            var bar = document.querySelector('[data-ev-bar="' + k + '"]');
+            if (bar) {
+              bar.style.width = Math.round((n / maxSrc) * 100) + "%";
+              bar.parentElement.parentElement.hidden = n === 0;
+            }
+          });
+          var badge = document.getElementById("case-evidence-count");
+          if (badge) badge.textContent = String(total);
+          evidenceItems = buildEvidenceItems(ev, caseId);
+          renderEvidenceTable();
         }
 
         function caseFromDemo(openCase) {
@@ -856,6 +1574,7 @@
               : recAction === "close"
                 ? "Recommendation: ATDS suggests Close case — low residual risk after triage."
                 : 'Recommendation: ATDS suggests Associate with related case history for this client.';
+          var alertN = (openCase.alertIds && openCase.alertIds.length) || 4;
           return {
             severity: sevLabel,
             severityClass: "soc-tag--" + sevKey,
@@ -870,6 +1589,18 @@
               relevance: sevKey === "critical" ? 9 : 6,
               credibility: 6,
               severity: sevKey === "critical" ? 9 : sevKey === "high" ? 7 : sevKey === "low" ? 3 : 5,
+            },
+            evidence: {
+              alerts: alertN,
+              events: 40 + alertN * 22,
+              artifacts: 2 + (alertN % 4),
+              enrichments: 6 + alertN,
+              sources: {
+                edr: Math.max(1, Math.floor(alertN * 0.5)),
+                siem: Math.max(1, Math.floor(alertN * 0.35)),
+                idp: Math.max(0, Math.floor(alertN * 0.25)),
+                mail: Math.max(0, alertN - Math.floor(alertN * 0.5) - Math.floor(alertN * 0.35)),
+              },
             },
           };
         }
@@ -895,8 +1626,8 @@
         if (sub) sub.textContent = data.subtitle;
         var sev = document.getElementById("incident-severity");
         if (sev) {
-          sev.className = "soc-tag " + data.severityClass;
-          sev.style.marginRight = "8px";
+          sev.className =
+            "soc-tag soc-tag--severity " + data.severityClass;
           sev.textContent = data.severity;
         }
         var asset = document.getElementById("incident-asset");
@@ -904,10 +1635,62 @@
         document.querySelectorAll(".soc-atds-actions a").forEach(function (a) {
           a.href = data.complete;
         });
+        document
+          .querySelectorAll("#case-actions-menu [data-case-action]")
+          .forEach(function (el) {
+            if (el.tagName === "A") el.href = data.complete;
+          });
         var recEl = document.getElementById("incident-rec");
         if (recEl && data.recHtml) recEl.innerHTML = data.recHtml;
         applyAtdsAction(data.recAction || "associate");
         if (data.magnitude) applyMagnitude(data.magnitude);
+        if (data.evidence) applyEvidence(data.evidence);
+
+        // Carbon Menu button — Actions
+        (function initCaseActionsMenu() {
+          var root = document.querySelector("[data-soc-menu]");
+          if (!root) return;
+          var trigger = root.querySelector(".soc-menu-btn__trigger");
+          var menu = root.querySelector(".soc-menu");
+          if (!trigger || !menu) return;
+
+          function closeMenu() {
+            trigger.setAttribute("aria-expanded", "false");
+            menu.hidden = true;
+          }
+
+          function openMenu() {
+            trigger.setAttribute("aria-expanded", "true");
+            menu.hidden = false;
+            var first = menu.querySelector('[role="menuitem"]');
+            if (first) first.focus();
+          }
+
+          trigger.addEventListener("click", function (event) {
+            event.stopPropagation();
+            if (trigger.getAttribute("aria-expanded") === "true") closeMenu();
+            else openMenu();
+          });
+
+          menu.addEventListener("click", function (event) {
+            var item = event.target.closest('[role="menuitem"]');
+            if (!item) return;
+            if (item.getAttribute("data-case-action") === "assign") {
+              event.preventDefault();
+              closeMenu();
+              return;
+            }
+            closeMenu();
+          });
+
+          document.addEventListener("click", function (event) {
+            if (!root.contains(event.target)) closeMenu();
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") closeMenu();
+          });
+        })();
         if (typeof window.socEnhanceSeverity === "function") {
           window.socEnhanceSeverity();
         }
@@ -943,6 +1726,116 @@
             if (event.key === "Escape") closeTip();
           });
         });
+
+        // Case detail tabs (Carbon line tabs)
+        var tablist = document.getElementById("case-tablist");
+        var overviewPanel = document.getElementById("view-overview");
+        var evidencePanel = document.getElementById("view-evidence");
+        var commentsPanel = document.getElementById("view-comments");
+        if (tablist && overviewPanel && commentsPanel) {
+          tablist.addEventListener("click", function (event) {
+            var btn = event.target.closest("[data-view]");
+            if (!btn || !tablist.contains(btn)) return;
+            var view = btn.getAttribute("data-view");
+            tablist.querySelectorAll("[data-view]").forEach(function (tab) {
+              var active = tab === btn;
+              tab.classList.toggle("is-active", active);
+              tab.setAttribute("aria-selected", active ? "true" : "false");
+            });
+            overviewPanel.hidden = view !== "overview";
+            if (evidencePanel) evidencePanel.hidden = view !== "evidence";
+            commentsPanel.hidden = view !== "comments";
+          });
+        }
+
+        var evFilter = document.getElementById("evidence-type-filter");
+        if (evFilter) {
+          evFilter.addEventListener("click", function (event) {
+            var btn = event.target.closest("[data-ev-filter]");
+            if (!btn || !evFilter.contains(btn)) return;
+            evidenceFilter = btn.getAttribute("data-ev-filter") || "all";
+            evFilter.querySelectorAll("[data-ev-filter]").forEach(function (tab) {
+              var active = tab === btn;
+              tab.classList.toggle("is-active", active);
+              tab.setAttribute("aria-selected", active ? "true" : "false");
+            });
+            renderEvidenceTable();
+          });
+        }
+
+        function escapeHtml(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function syncCommentsCount() {
+          var list = document.getElementById("case-comments-list");
+          var badge = document.getElementById("case-comments-count");
+          if (!list || !badge) return;
+          badge.textContent = String(list.children.length);
+        }
+
+        function formatCommentTime(d) {
+          var months = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ];
+          var hh = String(d.getUTCHours()).padStart(2, "0");
+          var mm = String(d.getUTCMinutes()).padStart(2, "0");
+          return (
+            months[d.getUTCMonth()] +
+            " " +
+            d.getUTCDate() +
+            " · " +
+            hh +
+            ":" +
+            mm +
+            " UTC"
+          );
+        }
+
+        var commentForm = document.getElementById("case-comment-form");
+        var commentInput = document.getElementById("case-comment-input");
+        var commentsList = document.getElementById("case-comments-list");
+        if (commentForm && commentInput && commentsList) {
+          syncCommentsCount();
+          commentForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            var text = commentInput.value.replace(/^\s+|\s+$/g, "");
+            if (!text) return;
+            var now = new Date();
+            var li = document.createElement("li");
+            li.className = "soc-ip-comment";
+            li.innerHTML =
+              '<div class="soc-ip-comment__meta">' +
+              "<strong>Alex Johnson</strong>" +
+              '<time datetime="' +
+              now.toISOString() +
+              '">' +
+              formatCommentTime(now) +
+              "</time></div>" +
+              "<p>" +
+              escapeHtml(text) +
+              "</p>";
+            commentsList.appendChild(li);
+            commentInput.value = "";
+            syncCommentsCount();
+            li.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          });
+        }
       })();
     </script>
   </body>

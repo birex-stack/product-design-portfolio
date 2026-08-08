@@ -51,7 +51,13 @@
 
       <aside class="soc-sidebar" aria-label="Primary">
         <nav class="soc-nav">
-          <a href="./shift-briefing.html">Briefing</a>
+          <a href="./shift-briefing.html" aria-label="Briefing, completed"
+            >Briefing
+            <span class="soc-nav-done" title="Completed" aria-hidden="true"
+              ><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.7 12.3 2.5 8.1l1.1-1.1 3.1 3.1 6.5-6.5 1.1 1.1z" /></svg
+            ></span
+          ></a>
           <a class="is-active" href="./alerts.html"
             >Alerts <span class="soc-nav-badge">156</span></a
           >
@@ -68,27 +74,98 @@
 
       <main class="soc-main">
         <div class="soc-page-head">
-          <div>
-            <p
-              style="
-                font-family: var(--font-mono);
-                font-size: 0.75rem;
-                color: var(--cds-text-helper);
-                margin-bottom: 6px;
-              "
-            >
+          <div class="soc-page-head__main">
+            <p class="soc-page-head__crumb">
               <a href="./alerts.html">← Back to alerts</a>
             </p>
-            <h1>
-              <span
-                class="soc-tag"
-                id="alert-severity"
-                style="margin-right: 8px"
-                >High</span
-              >
-              <span id="alert-id">ALT-88421</span>
-            </h1>
-            <p id="alert-title">Suspicious PowerShell</p>
+            <div class="soc-page-head__title-row">
+              <div class="soc-page-head__title-block">
+                <h1>
+                  <span id="alert-id">ALT-88421</span>
+                </h1>
+                <p class="soc-page-head__subtitle" id="alert-title">
+                  Suspicious PowerShell
+                </p>
+                <div class="soc-page-head__tags" aria-label="Alert labels">
+                  <span
+                    class="soc-tag soc-tag--severity soc-tag--high"
+                    id="alert-severity"
+                    >High</span
+                  >
+                </div>
+              </div>
+              <!-- Carbon Menu button — https://carbondesignsystem.com/components/button/usage/#menu-button -->
+              <div class="soc-menu-btn" data-soc-menu>
+                <button
+                  type="button"
+                  class="soc-btn soc-btn--primary soc-menu-btn__trigger"
+                  id="alert-actions-btn"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                  aria-controls="alert-actions-menu"
+                >
+                  Actions
+                  <svg
+                    class="soc-menu-btn__chevron"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <!-- @carbon/icons ChevronDown16 -->
+                    <path d="M8 11 3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z" />
+                  </svg>
+                </button>
+                <ul
+                  class="soc-menu"
+                  id="alert-actions-menu"
+                  role="menu"
+                  aria-labelledby="alert-actions-btn"
+                  hidden
+                >
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html?case=INC-2025-4821"
+                      data-alert-action="close"
+                      >Close alert</a
+                    >
+                  </li>
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html?case=INC-2025-4821"
+                      data-alert-action="escalate"
+                      >Escalate as new case</a
+                    >
+                  </li>
+                  <li role="none">
+                    <a
+                      role="menuitem"
+                      class="soc-menu__item"
+                      href="./complete.html?case=INC-2025-4821"
+                      data-alert-action="associate"
+                      >Associate with other case</a
+                    >
+                  </li>
+                  <li role="separator" class="soc-menu__divider"></li>
+                  <li role="none">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      class="soc-menu__item"
+                      data-alert-action="assign"
+                    >
+                      Assign…
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1146,14 +1223,12 @@
         }
 
         document.title = id + " — XFTM SOC Prototype";
-        document.getElementById("alert-crumb").textContent = id;
         document.getElementById("alert-id").textContent = id;
         document.getElementById("alert-title").textContent = data.title;
         document.getElementById("alert-rule").textContent = data.title;
 
         var sev = document.getElementById("alert-severity");
-        sev.className = "soc-tag " + data.severityClass;
-        sev.style.marginRight = "8px";
+        sev.className = "soc-tag soc-tag--severity " + data.severityClass;
         sev.textContent = data.severity;
 
         var caseLink = document.getElementById("alert-case-link");
@@ -1582,9 +1657,60 @@
         document.getElementById("alert-close").href = complete;
         document.getElementById("alert-escalate").href = complete;
         document.getElementById("alert-associate").href = complete;
+        document
+          .querySelectorAll("#alert-actions-menu [data-alert-action]")
+          .forEach(function (el) {
+            if (el.tagName === "A") el.href = complete;
+          });
         applyAtdsAction(
           data.recAction || recActionFromText(data.atds || data.recHtml || "")
         );
+
+        // Carbon Menu button — Actions
+        (function initAlertActionsMenu() {
+          var root = document.querySelector("[data-soc-menu]");
+          if (!root) return;
+          var trigger = root.querySelector(".soc-menu-btn__trigger");
+          var menu = root.querySelector(".soc-menu");
+          if (!trigger || !menu) return;
+
+          function closeMenu() {
+            trigger.setAttribute("aria-expanded", "false");
+            menu.hidden = true;
+          }
+
+          function openMenu() {
+            trigger.setAttribute("aria-expanded", "true");
+            menu.hidden = false;
+            var first = menu.querySelector('[role="menuitem"]');
+            if (first) first.focus();
+          }
+
+          trigger.addEventListener("click", function (event) {
+            event.stopPropagation();
+            if (trigger.getAttribute("aria-expanded") === "true") closeMenu();
+            else openMenu();
+          });
+
+          menu.addEventListener("click", function (event) {
+            var item = event.target.closest('[role="menuitem"]');
+            if (!item) return;
+            if (item.getAttribute("data-alert-action") === "assign") {
+              event.preventDefault();
+              closeMenu();
+              return;
+            }
+            closeMenu();
+          });
+
+          document.addEventListener("click", function (event) {
+            if (!root.contains(event.target)) closeMenu();
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") closeMenu();
+          });
+        })();
 
         var rb =
           RUNBOOKS[data.runbook] || RUNBOOKS.powershell_fp;

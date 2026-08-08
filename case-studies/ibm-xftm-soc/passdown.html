@@ -50,7 +50,13 @@
 
       <aside class="soc-sidebar" aria-label="Primary">
         <nav class="soc-nav">
-          <a href="./shift-briefing.html">Briefing</a>
+          <a href="./shift-briefing.html" aria-label="Briefing, completed"
+            >Briefing
+            <span class="soc-nav-done" title="Completed" aria-hidden="true"
+              ><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.7 12.3 2.5 8.1l1.1-1.1 3.1 3.1 6.5-6.5 1.1 1.1z" /></svg
+            ></span
+          ></a>
           <a href="./alerts.html"
             >Alerts <span class="soc-nav-badge">156</span></a
           >
@@ -68,9 +74,9 @@
       <main class="soc-main">
         <div id="passdown-work">
           <div class="soc-page-head">
-            <div>
+            <div class="soc-page-head__main">
               <h1>End of shift · Passdown</h1>
-              <p>
+              <p class="soc-page-head__subtitle">
                 Confirm your shift summary for the next SOC analyst. This becomes
                 their briefing.
               </p>

@@ -50,7 +50,13 @@
 
       <aside class="soc-sidebar" aria-label="Primary">
         <nav class="soc-nav">
-          <a href="./shift-briefing.html">Briefing</a>
+          <a href="./shift-briefing.html" aria-label="Briefing, completed"
+            >Briefing
+            <span class="soc-nav-done" title="Completed" aria-hidden="true"
+              ><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M6.7 12.3 2.5 8.1l1.1-1.1 3.1 3.1 6.5-6.5 1.1 1.1z" /></svg
+            ></span
+          ></a>
           <a href="./alerts.html"
             >Alerts <span class="soc-nav-badge">156</span></a
           >
@@ -67,18 +73,17 @@
 
       <main class="soc-main">
         <div class="soc-page-head">
-          <div>
-            <h1>Cases</h1>
-            <p>
-              Open investigations · correlated alerts · ATDS recommendations
-            </p>
+          <div class="soc-page-head__main">
+            <div class="soc-page-head__title-row">
+              <h1>Cases</h1>
+              <a class="soc-btn soc-btn--secondary" href="./passdown.html"
+                >End of shift</a
+              >
+            </div>
           </div>
-          <a class="soc-btn soc-btn--secondary" href="./passdown.html"
-            >End of shift</a
-          >
         </div>
 
-        <div class="soc-toolbar">
+        <div class="soc-page-tabs">
           <div
             class="soc-switcher"
             role="tablist"
@@ -90,18 +95,114 @@
               role="tab"
               aria-selected="true"
               data-filter="mine"
+              id="tab-cases-mine"
             >
               Assigned to me
+              <span class="soc-tag soc-tag--count" id="tab-cases-mine-count"
+                >0</span
+              >
             </button>
             <button
               type="button"
               role="tab"
               aria-selected="false"
               data-filter="all"
+              id="tab-cases-all"
             >
               All
+              <span class="soc-tag soc-tag--count" id="tab-cases-all-count"
+                >0</span
+              >
             </button>
           </div>
+        </div>
+
+        <div class="soc-alert-summary" id="summary-cases">
+          <div class="soc-chart-panel">
+            <h3 class="soc-chart-title">Open cases by severity</h3>
+            <p class="soc-chart-sub" id="summary-cases-sub">0 open cases</p>
+            <div class="soc-donut-wrap">
+              <svg
+                class="soc-donut soc-donut--lg"
+                id="summary-cases-donut"
+                viewBox="0 0 120 120"
+                role="img"
+                aria-label="Open cases by severity"
+              >
+                <circle class="soc-donut-track" cx="60" cy="60" r="50" />
+                <circle
+                  class="soc-donut-seg soc-donut-seg--critical"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  pathLength="100"
+                  stroke-dasharray="0 100"
+                  stroke-dashoffset="0"
+                />
+                <circle
+                  class="soc-donut-seg soc-donut-seg--high"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  pathLength="100"
+                  stroke-dasharray="0 100"
+                  stroke-dashoffset="0"
+                />
+                <circle
+                  class="soc-donut-seg soc-donut-seg--medium"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  pathLength="100"
+                  stroke-dasharray="0 100"
+                  stroke-dashoffset="0"
+                />
+                <circle
+                  class="soc-donut-seg soc-donut-seg--low"
+                  cx="60"
+                  cy="60"
+                  r="50"
+                  pathLength="100"
+                  stroke-dasharray="0 100"
+                  stroke-dashoffset="0"
+                />
+                <text class="soc-donut-center-value" x="60" y="56" text-anchor="middle">0</text>
+                <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">cases</text>
+              </svg>
+              <ul class="soc-donut-legend" id="summary-cases-legend">
+                <li>
+                  <i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical
+                  <strong>0</strong>
+                </li>
+                <li>
+                  <i class="soc-sev soc-sev--high" aria-hidden="true"></i>High
+                  <strong>0</strong>
+                </li>
+                <li>
+                  <i class="soc-sev soc-sev--medium" aria-hidden="true"></i>Medium
+                  <strong>0</strong>
+                </li>
+                <li>
+                  <i class="soc-sev soc-sev--low" aria-hidden="true"></i>Low
+                  <strong>0</strong>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="soc-chart-panel">
+            <h3 class="soc-chart-title">Alerts correlated per case</h3>
+            <p class="soc-chart-sub" id="summary-cases-bars-sub">
+              Largest open investigations
+            </p>
+            <div
+              class="soc-bars soc-bars--typed soc-bars--cases"
+              id="summary-cases-bars"
+            ></div>
+          </div>
+        </div>
+
+        <div class="soc-toolbar">
           <div class="soc-toolbar-tools">
             <label class="soc-search" aria-label="Search cases">
               <svg
@@ -138,7 +239,22 @@
           </div>
         </div>
 
-        <div id="cases-root"></div>
+        <div class="soc-card" style="padding: 0; overflow: hidden">
+          <table class="soc-alert-table soc-cases-table">
+            <thead>
+              <tr>
+                <th>Severity</th>
+                <th>Case</th>
+                <th>Client</th>
+                <th>Alerts</th>
+                <th>Assignee</th>
+                <th>Updated</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="cases-root"></tbody>
+          </table>
+        </div>
       </main>
     </div>
 

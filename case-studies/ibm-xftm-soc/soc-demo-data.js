@@ -431,7 +431,7 @@
       (a.draftId ? a.draftId : "—");
     return (
       "<tr>" +
-      '<td><span class="soc-tag ' +
+      '<td><span class="soc-tag soc-tag--severity ' +
       a.severityTag +
       '">' +
       a.severityLabel +
@@ -512,103 +512,102 @@
     );
   }
 
-  function renderDraftGroup(draft, alertMap) {
-    var rows = draft.alertIds
-      .map(function (id) {
-        return alertMap[id];
-      })
-      .filter(Boolean)
-      .map(renderGroupedAlertRow)
-      .join("");
+  /*
+   * List rows → Carbon Data table (no nested alert tables).
+   * Nested detail belongs on case/alert pages or Side Panel.
+   * @see https://carbondesignsystem.com/components/data-table/usage/
+   */
+  function renderDraftRow(draft) {
+    var sevLabel = escapeHtml(
+      SEVERITIES.find(function (s) {
+        return s.key === draft.severity;
+      }).label
+    );
+    var n = (draft.alertIds && draft.alertIds.length) || 0;
     return (
-      '<article class="soc-incident-group">' +
-      '<a class="soc-incident-group__head soc-incident-group__head--atds" href="./incident.html?case=' +
-      encodeURIComponent(draft.id) +
-      '"><div>' +
-      '<div class="soc-incident-group__badges">' +
-      '<span class="soc-tag ' +
+      '<tr class="soc-cases-row">' +
+      '<td><span class="soc-tag soc-tag--severity ' +
       draft.severityTag +
       '">' +
-      escapeHtml(
-        SEVERITIES.find(function (s) {
-          return s.key === draft.severity;
-        }).label
-      ) +
-      "</span>" +
-      '<span class="soc-tag soc-tag--draft">Draft</span>' +
-      '<span class="soc-tag soc-tag--count">' +
-      draft.alertIds.length +
-      " alerts</span></div>" +
-      "<h3>" +
+      sevLabel +
+      "</span></td>" +
+      "<td>" +
+      '<a class="soc-cases-row__link" href="./incident.html?case=' +
+      encodeURIComponent(draft.id) +
+      '">' +
+      '<span class="soc-cases-row__id">' +
       escapeHtml(draft.id) +
-      " · " +
+      "</span>" +
+      '<span class="soc-cases-row__title">' +
       escapeHtml(draft.title) +
-      "</h3>" +
-      "<p>" +
+      "</span></a></td>" +
+      "<td>" +
       escapeHtml(draft.client) +
-      " · ATDS draft case · " +
-      draft.alertIds.length +
-      " related alerts · Updated " +
+      "</td>" +
+      "<td>" +
+      n +
+      "</td>" +
+      '<td><span class="soc-tag soc-tag--draft">Draft</span></td>' +
+      "<td>" +
       escapeHtml(draft.updated) +
-      "</p></div></a>" +
-      '<table class="soc-alert-table"><thead><tr>' +
-      "<th>Alert</th><th>ATDS</th><th>Source</th><th>Source IP</th><th>Country</th><th>Reputation</th><th>Last seen</th>" +
-      "</tr></thead><tbody>" +
-      rows +
-      "</tbody></table></article>"
+      "</td>" +
+      "<td>ATDS grouped</td>" +
+      "</tr>"
     );
   }
 
-  function renderOpenCaseGroup(c, alertMap) {
-    var rows = c.alertIds
-      .map(function (id) {
-        return alertMap[id];
-      })
-      .filter(Boolean)
-      .map(renderGroupedAlertRow)
-      .join("");
-    var assigneeLabel =
-      c.assignee === "me" ? "Assigned: you" : "Assigned: teammate";
+  /** @deprecated Prefer renderDraftRow */
+  function renderDraftGroup(draft) {
+    return renderDraftRow(draft);
+  }
+
+  function renderOpenCaseRow(c) {
+    var sevLabel = escapeHtml(
+      SEVERITIES.find(function (s) {
+        return s.key === c.severity;
+      }).label
+    );
+    var assigneeLabel = c.assignee === "me" ? "You" : "Teammate";
+    var n = (c.alertIds && c.alertIds.length) || 0;
     return (
-      '<article class="soc-incident-group" data-assignee="' +
-      c.assignee +
+      '<tr class="soc-cases-row" data-assignee="' +
+      escapeHtml(c.assignee) +
       '">' +
-      '<a class="soc-incident-group__head" href="./incident.html?case=' +
-      encodeURIComponent(c.id) +
-      '"><div>' +
-      '<div class="soc-incident-group__badges">' +
-      '<span class="soc-tag ' +
+      '<td><span class="soc-tag soc-tag--severity ' +
       c.severityTag +
       '">' +
-      escapeHtml(
-        SEVERITIES.find(function (s) {
-          return s.key === c.severity;
-        }).label
-      ) +
-      "</span>" +
-      '<span class="soc-tag soc-tag--count">' +
-      c.alertIds.length +
-      " alerts</span></div>" +
-      "<h3>" +
+      sevLabel +
+      "</span></td>" +
+      "<td>" +
+      '<a class="soc-cases-row__link" href="./incident.html?case=' +
+      encodeURIComponent(c.id) +
+      '">' +
+      '<span class="soc-cases-row__id">' +
       escapeHtml(c.id) +
-      " · " +
+      "</span>" +
+      '<span class="soc-cases-row__title">' +
       escapeHtml(c.title) +
-      "</h3>" +
-      "<p>" +
+      "</span></a></td>" +
+      "<td>" +
       escapeHtml(c.client) +
-      " · " +
-      c.alertIds.length +
-      " correlated alerts · Updated " +
-      escapeHtml(c.updated) +
-      " · " +
+      "</td>" +
+      "<td>" +
+      n +
+      "</td>" +
+      "<td>" +
       assigneeLabel +
-      " · In progress</p></div></a>" +
-      '<table class="soc-alert-table"><thead><tr>' +
-      "<th>Alert</th><th>ATDS</th><th>Source</th><th>Source IP</th><th>Country</th><th>Reputation</th><th>Last seen</th>" +
-      "</tr></thead><tbody>" +
-      rows +
-      "</tbody></table></article>"
+      "</td>" +
+      "<td>" +
+      escapeHtml(c.updated) +
+      "</td>" +
+      "<td>In progress</td>" +
+      "</tr>"
     );
+  }
+
+  /** @deprecated Prefer renderOpenCaseRow for Cases list */
+  function renderOpenCaseGroup(c, alertMap) {
+    return renderOpenCaseRow(c);
   }
 
   global.SocDemoData = {
@@ -620,7 +619,9 @@
     familyBars: familyBars,
     renderAllAlertsRow: renderAllAlertsRow,
     renderDraftGroup: renderDraftGroup,
+    renderDraftRow: renderDraftRow,
     renderOpenCaseGroup: renderOpenCaseGroup,
+    renderOpenCaseRow: renderOpenCaseRow,
     getAlert: function (id) {
       return alertsById()[id] || null;
     },

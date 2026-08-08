@@ -2,7 +2,6 @@
 (function () {
   if (!window.SocDemoData) return;
   var data = SocDemoData.corpus;
-  var map = SocDemoData.alertsById();
   var counts = SocDemoData.severityCounts(data.alerts);
   var total = data.alerts.length;
 
@@ -10,45 +9,40 @@
     if (el.closest('a[href*="alerts"]')) el.textContent = String(total);
   });
 
-  var sub = document.querySelector(".soc-chart-panel .soc-chart-sub");
-  if (sub && sub.closest(".soc-alert-summary")) {
-    sub.textContent =
-      total +
-      " open · Critical " +
-      counts.critical +
-      " · High " +
-      counts.high +
-      " · Medium " +
-      counts.medium +
-      " · Low " +
-      counts.low;
+  var tabAllCount = document.getElementById("tab-ungrouped-count");
+  if (tabAllCount) tabAllCount.textContent = String(total);
+  var tabGroupedCount = document.getElementById("tab-grouped-count");
+  if (tabGroupedCount) {
+    tabGroupedCount.textContent = String(data.drafts.length);
   }
 
-  var donut = document.querySelector(".soc-donut--lg");
-  if (donut) {
+  function paintDonut(donut, legendRoot, sevCounts, totalN, centerLabel) {
+    if (!donut) return;
     donut.setAttribute(
       "aria-label",
-      total +
-        " open alerts. Critical " +
-        counts.critical +
+      totalN +
+        " " +
+        centerLabel +
+        ". Critical " +
+        sevCounts.critical +
         ", High " +
-        counts.high +
+        sevCounts.high +
         ", Medium " +
-        counts.medium +
+        sevCounts.medium +
         ", Low " +
-        counts.low
+        sevCounts.low
     );
     var segs = [
-      { sel: ".soc-donut-seg--critical", n: counts.critical },
-      { sel: ".soc-donut-seg--high", n: counts.high },
-      { sel: ".soc-donut-seg--medium", n: counts.medium },
-      { sel: ".soc-donut-seg--low", n: counts.low },
+      { sel: ".soc-donut-seg--critical", n: sevCounts.critical },
+      { sel: ".soc-donut-seg--high", n: sevCounts.high },
+      { sel: ".soc-donut-seg--medium", n: sevCounts.medium },
+      { sel: ".soc-donut-seg--low", n: sevCounts.low },
     ];
     var offset = 0;
     segs.forEach(function (s) {
       var el = donut.querySelector(s.sel);
       if (!el) return;
-      var pct = total ? (s.n / total) * 100 : 0;
+      var pct = totalN ? (s.n / totalN) * 100 : 0;
       el.setAttribute(
         "stroke-dasharray",
         pct.toFixed(2) + " " + (100 - pct).toFixed(2)
@@ -57,33 +51,36 @@
       offset += pct;
     });
     var center = donut.querySelector(".soc-donut-center-value");
-    if (center) center.textContent = String(total);
+    if (center) center.textContent = String(totalN);
+    var centerLbl = donut.querySelector(".soc-donut-center-label");
+    if (centerLbl) centerLbl.textContent = centerLabel;
+    if (legendRoot) {
+      var legend = legendRoot.querySelectorAll("strong");
+      if (legend.length >= 4) {
+        legend[0].textContent = String(sevCounts.critical);
+        legend[1].textContent = String(sevCounts.high);
+        legend[2].textContent = String(sevCounts.medium);
+        legend[3].textContent = String(sevCounts.low);
+      }
+    }
   }
 
-  var legend = document.querySelectorAll(".soc-donut-legend strong");
-  if (legend.length >= 4) {
-    legend[0].textContent = String(counts.critical);
-    legend[1].textContent = String(counts.high);
-    legend[2].textContent = String(counts.medium);
-    legend[3].textContent = String(counts.low);
-  }
+  var barColors = [
+    "soc-bar-fill--phishing",
+    "soc-bar-fill--unauth",
+    "soc-bar-fill--malware",
+    "",
+    "soc-bar-fill--exfil",
+    "",
+  ];
 
-  var rulesPanel = document.querySelector(".soc-bars--rules");
-  if (rulesPanel) {
-    var rules = SocDemoData.topRules(data.alerts, 6);
-    var max = rules[0] ? rules[0].count : 1;
-    var colors = [
-      "soc-bar-fill--phishing",
-      "soc-bar-fill--unauth",
-      "soc-bar-fill--malware",
-      "",
-      "soc-bar-fill--exfil",
-      "",
-    ];
-    rulesPanel.innerHTML = rules
+  function paintBars(panel, rows) {
+    if (!panel) return;
+    var max = rows[0] ? rows[0].count : 1;
+    panel.innerHTML = rows
       .map(function (r, i) {
         var w = Math.round((r.count / max) * 100);
-        var cls = colors[i] || "";
+        var cls = barColors[i] || "";
         return (
           '<div class="soc-bar-row">' +
           '<span title="' +
@@ -104,13 +101,93 @@
       .join("");
   }
 
+  // All alerts summary
+  var alertsSub = document.getElementById("summary-alerts-sub");
+  if (alertsSub) {
+    alertsSub.textContent =
+      total +
+      " open · Critical " +
+      counts.critical +
+      " · High " +
+      counts.high +
+      " · Medium " +
+      counts.medium +
+      " · Low " +
+      counts.low;
+  }
+  paintDonut(
+    document.getElementById("summary-alerts-donut"),
+    document.getElementById("summary-alerts-legend"),
+    counts,
+    total,
+    "open"
+  );
+  paintBars(
+    document.getElementById("summary-alerts-rules"),
+    SocDemoData.topRules(data.alerts, 6)
+  );
+
+  // ATDS Grouped summary — draft cases, not the open-alert queue
+  var draftSev = { critical: 0, high: 0, medium: 0, low: 0 };
+  var draftAlertTotal = 0;
+  data.drafts.forEach(function (d) {
+    draftSev[d.severity] = (draftSev[d.severity] || 0) + 1;
+    draftAlertTotal += d.alertIds.length;
+  });
+  var draftCount = data.drafts.length;
+  var draftsSub = document.getElementById("summary-drafts-sub");
+  if (draftsSub) {
+    draftsSub.textContent =
+      draftCount +
+      " draft cases · " +
+      draftAlertTotal +
+      " alerts correlated · Critical " +
+      draftSev.critical +
+      " · High " +
+      draftSev.high +
+      " · Medium " +
+      draftSev.medium +
+      " · Low " +
+      draftSev.low;
+  }
+  paintDonut(
+    document.getElementById("summary-drafts-donut"),
+    document.getElementById("summary-drafts-legend"),
+    draftSev,
+    draftCount,
+    "drafts"
+  );
+  var topDrafts = data.drafts
+    .slice()
+    .sort(function (a, b) {
+      return b.alertIds.length - a.alertIds.length;
+    })
+    .slice(0, 6)
+    .map(function (d) {
+      return { title: d.title, count: d.alertIds.length };
+    });
+  var draftsBarsSub = document.getElementById("summary-drafts-bars-sub");
+  if (draftsBarsSub) {
+    draftsBarsSub.textContent =
+      draftAlertTotal +
+      " alerts across " +
+      draftCount +
+      " ATDS draft cases";
+  }
+  paintBars(document.getElementById("summary-drafts-bars"), topDrafts);
+
   var draftsRoot = document.getElementById("draft-cases-root");
   if (draftsRoot) {
     draftsRoot.innerHTML = data.drafts
       .map(function (d) {
-        return SocDemoData.renderDraftGroup(d, map);
+        return SocDemoData.renderDraftRow
+          ? SocDemoData.renderDraftRow(d)
+          : SocDemoData.renderDraftGroup(d);
       })
       .join("");
+    if (typeof window.socEnhanceSeverity === "function") {
+      window.socEnhanceSeverity();
+    }
   }
 
   var PAGE_SIZE = 50;
@@ -188,18 +265,49 @@
   var switcher = document.querySelector(".soc-switcher");
   var grouped = document.getElementById("view-grouped");
   var ungrouped = document.getElementById("view-ungrouped");
+  var summaryUngrouped = document.getElementById("summary-ungrouped");
+  var summaryGrouped = document.getElementById("summary-grouped");
+  var searchInput = document.getElementById("alerts-search");
   if (!switcher || !grouped || !ungrouped) return;
+
+  function setView(view) {
+    var isGrouped = view === "grouped";
+    grouped.hidden = !isGrouped;
+    ungrouped.hidden = isGrouped;
+    if (summaryUngrouped) summaryUngrouped.hidden = isGrouped;
+    if (summaryGrouped) summaryGrouped.hidden = !isGrouped;
+    if (searchInput) {
+      searchInput.placeholder = isGrouped
+        ? "Search draft cases"
+        : "Search alerts";
+      var label = searchInput.closest("label");
+      if (label) {
+        label.setAttribute(
+          "aria-label",
+          isGrouped ? "Search draft cases" : "Search alerts"
+        );
+      }
+    }
+    switcher.querySelectorAll("[data-view]").forEach(function (tab) {
+      var active = tab.getAttribute("data-view") === view;
+      tab.classList.toggle("is-active", active);
+      tab.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  }
 
   switcher.addEventListener("click", function (event) {
     var btn = event.target.closest("[data-view]");
     if (!btn) return;
-    switcher.querySelectorAll("[data-view]").forEach(function (tab) {
-      var active = tab === btn;
-      tab.classList.toggle("is-active", active);
-      tab.setAttribute("aria-selected", active ? "true" : "false");
+    setView(btn.getAttribute("data-view"));
+  });
+
+  // Dismissible inline tips — hide for this view only; reload shows again (demo)
+  document.querySelectorAll("[data-dismiss-notif]").forEach(function (btn) {
+    var id = btn.getAttribute("data-dismiss-notif");
+    var el = id ? document.getElementById(id) : null;
+    if (!el) return;
+    btn.addEventListener("click", function () {
+      el.hidden = true;
     });
-    var view = btn.getAttribute("data-view");
-    grouped.hidden = view !== "grouped";
-    ungrouped.hidden = view !== "ungrouped";
   });
 })();
