@@ -23,8 +23,17 @@
   --cds-tag-red: #ffb3b8;
   --cds-tag-orange-bg: #5e4400;
   --cds-tag-orange: #fddc69;
+  --cds-tag-yellow-bg: #684e00;
+  --cds-tag-yellow: #f1c21b;
   --cds-tag-blue-bg: #0043ce;
   --cds-tag-blue: #a6c8ff;
+  /* Carbon status palette (dark) — shape indicators */
+  --status-red: #fa4d56;
+  --status-orange: #ff832b;
+  --status-yellow: #f1c21b;
+  --status-green: #42be65;
+  --status-blue: #4589ff;
+  --status-purple: #a56eff;
   --cds-sidebar-w: 256px;
   --cds-header-h: 48px;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -424,7 +433,8 @@ p {
   text-transform: uppercase;
 }
 
-.soc-tag--high {
+.soc-tag--high,
+.soc-tag--critical {
   background: var(--cds-tag-red-bg);
   color: var(--cds-tag-red);
 }
@@ -435,8 +445,21 @@ p {
 }
 
 .soc-tag--low {
-  background: var(--cds-tag-blue-bg);
-  color: var(--cds-tag-blue);
+  background: var(--cds-tag-yellow-bg);
+  color: var(--cds-tag-yellow);
+}
+
+.soc-tag--severity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.soc-tag--severity .soc-sev {
+  width: 10px;
+  height: 10px;
+  /* Match tag label color for contrast on tinted tag surfaces */
+  color: currentColor;
 }
 
 .soc-tag--required {
@@ -872,21 +895,7 @@ body:has(.soc-ack) .soc-main {
   background: var(--cds-support-info);
 }
 
-.soc-legend-swatch--critical {
-  background: var(--cds-tag-red-bg);
-}
-
-.soc-legend-swatch--high {
-  background: var(--cds-tag-red);
-}
-
-.soc-legend-swatch--medium {
-  background: var(--cds-tag-orange);
-}
-
-.soc-legend-swatch--low {
-  background: var(--cds-tag-blue);
-}
+/* Severity legend markers use Carbon shape indicators (.soc-sev) */
 
 .soc-donut-wrap {
   display: flex;
@@ -948,20 +957,17 @@ body:has(.soc-ack) .soc-main {
   stroke-linecap: butt;
 }
 
-.soc-donut-seg--critical {
-  stroke: var(--cds-tag-red-bg);
-}
-
+.soc-donut-seg--critical,
 .soc-donut-seg--high {
-  stroke: var(--cds-tag-red);
+  stroke: var(--status-red);
 }
 
 .soc-donut-seg--medium {
-  stroke: var(--cds-tag-orange);
+  stroke: var(--status-orange);
 }
 
 .soc-donut-seg--low {
-  stroke: var(--cds-tag-blue);
+  stroke: var(--status-yellow);
 }
 
 .soc-donut-center-value,
@@ -1197,20 +1203,8 @@ button.soc-item.soc-watch-link span {
 }
 
 .soc-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
   margin-right: 6px;
   vertical-align: middle;
-}
-
-.soc-dot--high {
-  background: var(--cds-support-error);
-}
-
-.soc-dot--medium {
-  background: var(--cds-support-warning);
 }
 
 .soc-link-list a {
@@ -1549,14 +1543,18 @@ button.soc-item.soc-watch-link span {
   vertical-align: middle;
 }
 
-/* Carbon shape-indicator entity chip: [status] | IP | address
+/* Carbon shape-indicator entity chip: [status] | address
    @see https://carbondesignsystem.com/patterns/status-indicator-pattern/ */
-.soc-ip-link.soc-ip-entity {
+.soc-ip-link.soc-ip-entity,
+.soc-ip-entity {
+  display: inline-flex;
+  align-items: stretch;
   gap: 0;
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--cds-border);
   background: var(--cds-layer-02);
+  vertical-align: middle;
 }
 
 .soc-ip-entity__status {
@@ -1569,18 +1567,6 @@ button.soc-item.soc-watch-link span {
   border-right: 1px solid var(--cds-border);
 }
 
-.soc-ip-entity__type {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 8px;
-  border-right: 1px solid var(--cds-border);
-  color: var(--cds-text-helper);
-  font-family: "IBM Plex Sans", system-ui, sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
 .soc-ip-entity__value {
   display: inline-flex;
   align-items: center;
@@ -1590,14 +1576,42 @@ button.soc-item.soc-watch-link span {
   font-size: 0.75rem;
 }
 
-.soc-ip-link.soc-ip-entity:hover {
+.soc-ip-link.soc-ip-entity:hover,
+.soc-watch-link:hover > .soc-ip-entity {
   background: var(--cds-layer-hover);
   color: inherit;
   text-decoration: none;
 }
 
-.soc-ip-link.soc-ip-entity:hover .soc-ip-entity__value {
+.soc-ip-link.soc-ip-entity:hover .soc-ip-entity__value,
+.soc-watch-link:hover > .soc-ip-entity .soc-ip-entity__value {
   color: #a6c8ff;
+}
+
+/* Inline chips in prose (briefing takeaways, passdown notes) */
+.soc-takeaways .soc-ip-link.soc-ip-entity,
+.soc-passdown-ip-row .soc-ip-link.soc-ip-entity {
+  margin: 0 4px;
+}
+
+.soc-passdown-ip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.soc-passdown-ip-row.soc-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 0;
+}
+
+.soc-passdown-ip-row.soc-item .soc-ip-link.soc-ip-entity {
+  margin: 0;
 }
 
 .soc-ip-link:hover {
@@ -1611,43 +1625,73 @@ button.soc-item.soc-watch-link span {
   outline-offset: -2px;
 }
 
-/* Carbon status shape indicators (security 1–10 scale for IP objects) */
+/*
+ * Carbon shape indicators (security severity / threat objects)
+ * @see https://carbondesignsystem.com/patterns/status-indicator-pattern/#shape-indicator
+ */
+.soc-sev,
 .soc-status-shape {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 12px;
   height: 12px;
+  flex-shrink: 0;
   color: var(--cds-text-helper);
+  background: transparent !important;
+  border: none;
+  vertical-align: middle;
 }
 
+strong > .soc-sev {
+  margin-right: 6px;
+}
+
+.soc-sev svg,
 .soc-status-shape svg {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 100%;
+  height: 100%;
 }
 
+.soc-sev--critical,
+.soc-sev--high,
 .soc-status-shape--critical,
 .soc-status-shape--high {
-  color: #fa4d56; /* $status-red (dark) */
+  color: var(--status-red);
 }
 
+.soc-sev--medium,
 .soc-status-shape--medium {
-  color: #ff832b; /* $status-orange */
+  color: var(--status-orange);
 }
 
-.soc-status-shape--low {
-  color: #f1c21b; /* $status-yellow */
-}
-
+.soc-sev--low,
+.soc-sev--cautious,
+.soc-status-shape--low,
 .soc-status-shape--cautious {
-  color: #f1c21b;
+  color: var(--status-yellow);
 }
 
+.soc-sev--stable,
 .soc-status-shape--stable {
-  color: #42be65; /* $status-green */
+  color: var(--status-green);
 }
 
+.soc-sev--undefined,
 .soc-status-shape--undefined {
-  color: #a56eff; /* $status-purple */
+  color: var(--status-purple);
+}
+
+.soc-sev--failed,
+.soc-status-shape--failed {
+  color: var(--status-red);
+}
+
+.soc-donut-legend .soc-sev,
+.soc-chart-legend .soc-sev {
+  width: 12px;
+  height: 12px;
 }
 
 /* Watchlist rows reuse .soc-ip-link but keep list layout */
@@ -1671,9 +1715,12 @@ button.soc-item.soc-watch-link.soc-ip-link:hover {
   text-decoration: none;
 }
 
-button.soc-item.soc-watch-link.soc-ip-link strong {
-  color: var(--cds-link);
-  font-family: var(--font-mono);
+button.soc-item.soc-watch-link.soc-ip-link > .soc-ip-entity {
+  margin-bottom: 4px;
+  max-width: 100%;
+}
+
+button.soc-item.soc-watch-link.soc-ip-link > .soc-ip-entity .soc-ip-entity__value {
   font-size: 0.8125rem;
 }
 
@@ -1764,12 +1811,25 @@ button.soc-item.soc-watch-link.soc-ip-link strong {
 }
 
 .soc-flyout__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   font-family: var(--font-mono);
   font-size: 1.125rem;
   font-weight: 500;
   color: var(--cds-text);
   word-break: break-all;
+}
+
+.soc-flyout__title .soc-sev {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.soc-flyout__title-text {
+  min-width: 0;
 }
 
 .soc-flyout__close {

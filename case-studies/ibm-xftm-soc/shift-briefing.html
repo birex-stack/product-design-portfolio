@@ -199,10 +199,10 @@
                         <text class="soc-donut-center-label" x="60" y="72" text-anchor="middle">alerts</text>
                       </svg>
                       <ul class="soc-donut-legend">
-                        <li><i class="soc-legend-swatch soc-legend-swatch--critical"></i>Critical <strong>8</strong></li>
-                        <li><i class="soc-legend-swatch soc-legend-swatch--high"></i>High <strong>24</strong></li>
-                        <li><i class="soc-legend-swatch soc-legend-swatch--medium"></i>Medium <strong>51</strong></li>
-                        <li><i class="soc-legend-swatch soc-legend-swatch--low"></i>Low <strong>45</strong></li>
+                        <li><i class="soc-sev soc-sev--critical" aria-hidden="true"></i>Critical <strong>8</strong></li>
+                        <li><i class="soc-sev soc-sev--high" aria-hidden="true"></i>High <strong>24</strong></li>
+                        <li><i class="soc-sev soc-sev--medium" aria-hidden="true"></i>Medium <strong>51</strong></li>
+                        <li><i class="soc-sev soc-sev--low" aria-hidden="true"></i>Low <strong>45</strong></li>
                       </ul>
                     </div>
                   </div>
@@ -331,7 +331,25 @@
                       image.
                     </li>
                     <li>
-                      Watchlist IP 203.0.113.45 seen across two client tenants.
+                      Watchlist
+                      <button
+                        type="button"
+                        class="soc-ip-link"
+                        data-ip="203.0.113.45"
+                        data-country="Netherlands"
+                        data-flag="🇳🇱"
+                        data-score="8"
+                        data-asn="AS64500"
+                        data-org="Bulletproof Hosting LLC"
+                        data-type="External IP"
+                        data-categories="Malware sandbox, C2"
+                        data-first-seen="2025-05-20"
+                        data-last-seen="2025-05-28"
+                        data-notes="Seen in malware sandbox across two client tenants. Keep blocked at edge."
+                      >
+                        203.0.113.45
+                      </button>
+                      seen across two client tenants.
                     </li>
                   </ul>
                 </div>
@@ -351,14 +369,14 @@
                 </h4>
                 <div class="soc-item">
                   <strong
-                    ><span class="soc-dot soc-dot--high"></span
+                    ><span class="soc-sev soc-sev--high" aria-hidden="true"></span
                     >INC-2025-4821</strong
                   >
                   <span>Suspected ransomware staging · Finance · High</span>
                 </div>
                 <div class="soc-item">
                   <strong
-                    ><span class="soc-dot soc-dot--medium"></span
+                    ><span class="soc-sev soc-sev--medium" aria-hidden="true"></span
                     >INC-2025-4818</strong
                   >
                   <span>Impossible travel · Remote access · Medium</span>

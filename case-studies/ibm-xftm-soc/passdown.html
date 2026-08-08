@@ -129,8 +129,27 @@ INC-2025-4812 — Phishing → mailbox rule. User contacted; rule removed; monit
                   </div>
                   <div class="soc-field">
                     <label for="watchlist">Watchlist updates</label>
+                    <div class="soc-passdown-ip-row">
+                      <button
+                        type="button"
+                        class="soc-ip-link"
+                        data-ip="203.0.113.45"
+                        data-country="Netherlands"
+                        data-flag="🇳🇱"
+                        data-score="8"
+                        data-asn="AS64500"
+                        data-org="Bulletproof Hosting LLC"
+                        data-type="External IP"
+                        data-categories="Malware sandbox, C2"
+                        data-first-seen="2025-05-20"
+                        data-last-seen="2025-05-28"
+                        data-notes="Seen in malware sandbox across two client tenants. Keep blocked at edge."
+                      >
+                        203.0.113.45
+                      </button>
+                    </div>
                     <textarea id="watchlist">
-Keep 203.0.113.45 blocked. New hash from INC-2025-4821 escalation package shared with IR.</textarea
+Keep blocked at edge. New hash from INC-2025-4821 escalation package shared with IR.</textarea
                     >
                   </div>
                   <div class="soc-field">
@@ -167,24 +186,44 @@ Escalated INC-2025-4821 to IR after accepting ATDS guidance. Host isolated, IOC 
                 </p>
                 <div class="soc-item">
                   <strong
-                    ><span class="soc-dot soc-dot--high"></span
+                    ><span class="soc-sev soc-sev--high" aria-hidden="true"></span
                     >INC-2025-4821 · Escalated</strong
                   >
                   <span>Ransomware staging · IR owns containment</span>
                 </div>
                 <div class="soc-item">
                   <strong
-                    ><span class="soc-dot soc-dot--medium"></span
+                    ><span class="soc-sev soc-sev--medium" aria-hidden="true"></span
                     >INC-2025-4818 · Open</strong
                   >
                   <span>Impossible travel · awaiting travel desk</span>
                 </div>
                 <div class="soc-item">
                   <strong
-                    ><span class="soc-dot soc-dot--medium"></span
+                    ><span class="soc-sev soc-sev--medium" aria-hidden="true"></span
                     >INC-2025-4812 · Monitoring</strong
                   >
                   <span>Phishing · forwarding rule removed</span>
+                </div>
+                <div class="soc-item soc-passdown-ip-row">
+                  <button
+                    type="button"
+                    class="soc-ip-link"
+                    data-ip="203.0.113.45"
+                    data-country="Netherlands"
+                    data-flag="🇳🇱"
+                    data-score="8"
+                    data-asn="AS64500"
+                    data-org="Bulletproof Hosting LLC"
+                    data-type="External IP"
+                    data-categories="Malware sandbox, C2"
+                    data-first-seen="2025-05-20"
+                    data-last-seen="2025-05-28"
+                    data-notes="Seen in malware sandbox across two client tenants. Keep blocked at edge."
+                  >
+                    203.0.113.45
+                  </button>
+                  <span>Watchlist · keep blocked at edge</span>
                 </div>
                 <p
                   style="
@@ -292,6 +331,7 @@ Escalated INC-2025-4821 to IR after accepting ATDS guidance. Host isolated, IOC 
       </main>
     </div>
 
+    <script type="module" src="./soc-ip-flyout.js"></script>
     <script>
       const form = document.getElementById("passdown-form");
       const work = document.getElementById("passdown-work");

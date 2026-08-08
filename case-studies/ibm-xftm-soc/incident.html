@@ -538,6 +538,9 @@
         document.querySelectorAll(".soc-atds-actions a").forEach(function (a) {
           a.href = data.complete;
         });
+        if (typeof window.socEnhanceSeverity === "function") {
+          window.socEnhanceSeverity();
+        }
       })();
     </script>
   </body>
