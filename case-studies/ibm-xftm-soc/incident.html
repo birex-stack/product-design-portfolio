@@ -642,20 +642,29 @@
         </section>
 
         <div class="soc-flow-actions">
-          <p class="soc-atds-rec">
+          <p class="soc-atds-rec" id="incident-rec">
             Recommendation: ATDS suggests to associate with other closed case,
             id:
             <a href="./cases.html">SOCJ233244</a>.
           </p>
 
           <div class="soc-atds-actions" data-atds-action="associate">
-            <a class="soc-btn soc-btn--secondary" href="./complete.html"
+            <a
+              class="soc-btn soc-btn--secondary"
+              data-atds-btn="close"
+              href="./complete.html"
               >Close case</a
             >
-            <a class="soc-btn soc-btn--secondary" href="./complete.html"
+            <a
+              class="soc-btn soc-btn--secondary"
+              data-atds-btn="escalate"
+              href="./complete.html"
               >Escalate to IR</a
             >
-            <a class="soc-btn soc-btn--primary" href="./complete.html"
+            <a
+              class="soc-btn soc-btn--primary"
+              data-atds-btn="associate"
+              href="./complete.html"
               >Associate with other case</a
             >
           </div>
@@ -668,6 +677,7 @@
       </main>
     </div>
     <script type="module" src="./soc-ip-flyout.js"></script>
+    <script src="./soc-demo-data.js"></script>
     <script>
       (function () {
         /** Arc from 12 o'clock, clockwise. value 0–10 → fraction of full circle. */
@@ -772,6 +782,9 @@
               "Suspicious PowerShell on finance workstation · correlated historical pattern",
             asset: "Acme Finance · endpoint-fin-04 (Win10)",
             complete: "./complete.html?case=INC-2025-4821",
+            recHtml:
+              'Recommendation: ATDS suggests Associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+            recAction: "associate",
             magnitude: {
               score: 4,
               relevance: 5,
@@ -786,6 +799,9 @@
               "Impossible travel / remote access · VPN and new device authentication",
             asset: "Acme Finance · vpn-gateway / remote access",
             complete: "./complete.html?case=INC-2025-4818",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate to IR after travel-desk confirmation.",
+            recAction: "escalate",
             magnitude: {
               score: 6,
               relevance: 7,
@@ -800,6 +816,9 @@
               "Phishing click → mailbox rule · messaging compromise pattern",
             asset: "Acme Finance · mailbox / messaging",
             complete: "./complete.html?case=INC-2025-4812",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate to IR — active phishing-to-mailbox pattern.",
+            recAction: "escalate",
             magnitude: {
               score: 8,
               relevance: 8,
@@ -808,9 +827,63 @@
             },
           },
         };
+
+        function applyAtdsAction(action) {
+          var key = action || "associate";
+          var wrap = document.querySelector(".soc-atds-actions");
+          if (!wrap) return;
+          wrap.setAttribute("data-atds-action", key);
+          wrap.querySelectorAll("[data-atds-btn]").forEach(function (btn) {
+            var primary = btn.getAttribute("data-atds-btn") === key;
+            btn.classList.toggle("soc-btn--primary", primary);
+            btn.classList.toggle("soc-btn--secondary", !primary);
+          });
+        }
+
+        function caseFromDemo(openCase) {
+          var sevKey = openCase.severity || "medium";
+          var sevLabel =
+            sevKey.charAt(0).toUpperCase() + sevKey.slice(1);
+          var recAction =
+            sevKey === "critical" || sevKey === "high"
+              ? "escalate"
+              : sevKey === "low"
+                ? "close"
+                : "associate";
+          var recHtml =
+            recAction === "escalate"
+              ? "Recommendation: ATDS suggests Escalate to IR based on case severity and correlated alerts."
+              : recAction === "close"
+                ? "Recommendation: ATDS suggests Close case — low residual risk after triage."
+                : 'Recommendation: ATDS suggests Associate with related case history for this client.';
+          return {
+            severity: sevLabel,
+            severityClass: "soc-tag--" + sevKey,
+            subtitle: openCase.title + " · " + openCase.client,
+            asset: "Acme Finance · " + openCase.client,
+            complete:
+              "./complete.html?case=" + encodeURIComponent(openCase.id),
+            recHtml: recHtml,
+            recAction: recAction,
+            magnitude: {
+              score: sevKey === "critical" ? 9 : sevKey === "high" ? 7 : sevKey === "low" ? 3 : 5,
+              relevance: sevKey === "critical" ? 9 : 6,
+              credibility: 6,
+              severity: sevKey === "critical" ? 9 : sevKey === "high" ? 7 : sevKey === "low" ? 3 : 5,
+            },
+          };
+        }
+
         var params = new URLSearchParams(window.location.search);
         var caseId = params.get("case") || "INC-2025-4821";
-        var data = cases[caseId] || cases["INC-2025-4821"];
+        var data = cases[caseId];
+        if (!data && window.SocDemoData && SocDemoData.corpus) {
+          var open = SocDemoData.corpus.openCases.find(function (c) {
+            return c.id === caseId;
+          });
+          if (open) data = caseFromDemo(open);
+        }
+        if (!data) data = cases["INC-2025-4821"];
         document.title = caseId + " — XFTM SOC Prototype";
         var crumb = document.querySelector(
           '.soc-breadcrumb span[aria-current="page"]'
@@ -831,6 +904,9 @@
         document.querySelectorAll(".soc-atds-actions a").forEach(function (a) {
           a.href = data.complete;
         });
+        var recEl = document.getElementById("incident-rec");
+        if (recEl && data.recHtml) recEl.innerHTML = data.recHtml;
+        applyAtdsAction(data.recAction || "associate");
         if (data.magnitude) applyMagnitude(data.magnitude);
         if (typeof window.socEnhanceSeverity === "function") {
           window.socEnhanceSeverity();

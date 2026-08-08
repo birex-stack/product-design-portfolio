@@ -306,18 +306,21 @@
             <a
               class="soc-btn soc-btn--secondary"
               id="alert-close"
+              data-atds-btn="close"
               href="./complete.html?case=INC-2025-4821"
               >Close Alert</a
             >
             <a
               class="soc-btn soc-btn--secondary"
               id="alert-escalate"
+              data-atds-btn="escalate"
               href="./complete.html?case=INC-2025-4821"
               >Escalate as new case</a
             >
             <a
               class="soc-btn soc-btn--primary"
               id="alert-associate"
+              data-atds-btn="associate"
               href="./complete.html?case=INC-2025-4821"
               >Associate with other case</a
             >
@@ -545,7 +548,8 @@
               "No outbound C2 confirmed for this host in last 24h.",
             ],
             recHtml:
-              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+              'Recommendation: ATDS suggests Associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+            recAction: "associate",
           },
           "ALT-88419": {
             title: "Encoded command",
@@ -578,7 +582,8 @@
               "Aligned with approved automation ticket CHG-9921.",
             ],
             recHtml:
-              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+              'Recommendation: ATDS suggests Associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+            recAction: "associate",
           },
           "ALT-88411": {
             title: "Rare process tree",
@@ -611,7 +616,8 @@
               "Correlate with PowerShell alerts before closing.",
             ],
             recHtml:
-              "Recommendation: ATDS suggests further investigation before disposition.",
+              "Recommendation: ATDS suggests Escalate as new case — investigate before closing.",
+            recAction: "escalate",
           },
           "ALT-88405": {
             title: "Unusual SMB shares",
@@ -642,7 +648,9 @@
               "Host accessed uncommon SMB shares on the finance file server.",
               "May be staging activity — verify against ransomware playbook.",
             ],
-            recHtml: "Recommendation: ATDS suggests monitor while correlating sibling alerts.",
+            recHtml:
+              "Recommendation: ATDS suggests Close Alert — monitor while correlating sibling alerts.",
+            recAction: "close",
           },
           "ALT-88398": {
             title: "Scheduled task update",
@@ -674,7 +682,8 @@
               "Matches historical FP pattern for IT automation tooling.",
             ],
             recHtml:
-              'Recommendation: ATDS suggests to associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+              'Recommendation: ATDS suggests Associate with other closed case, id: <a href="./cases.html">SOCJ233244</a>.',
+            recAction: "associate",
           },
           "ALT-88390": {
             title: "Geo velocity",
@@ -708,7 +717,8 @@
               "Awaiting travel desk confirmation for the user.",
             ],
             recHtml:
-              "Recommendation: ATDS suggests investigate — confirm travel or escalate.",
+              "Recommendation: ATDS suggests Escalate as new case — confirm travel or escalate to IR.",
+            recAction: "escalate",
           },
           "ALT-88388": {
             title: "New device auth",
@@ -741,7 +751,9 @@
               "Source IP is a known Tor exit node.",
               "Correlate with geo-velocity alert ALT-88390.",
             ],
-            recHtml: "Recommendation: ATDS suggests monitor pending travel desk response.",
+            recHtml:
+              "Recommendation: ATDS suggests Close Alert — monitor pending travel desk response.",
+            recAction: "close",
           },
           "ALT-88385": {
             title: "Concurrent sessions",
@@ -772,7 +784,9 @@
               "Overlapping VPN sessions from geographically distant IPs.",
               "May indicate account sharing or credential theft.",
             ],
-            recHtml: "Recommendation: ATDS suggests investigate session ownership.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — investigate session ownership.",
+            recAction: "escalate",
           },
           "ALT-88341": {
             title: "Inbox forwarding rule",
@@ -804,7 +818,9 @@
               "Destination aligns with known phishing infrastructure.",
               "User contacted; rule removed — continue monitoring 24h.",
             ],
-            recHtml: "Recommendation: ATDS suggests escalate as mailbox compromise case.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — mailbox compromise pattern.",
+            recAction: "escalate",
           },
           "ALT-88340": {
             title: "Credential harvest URL",
@@ -837,7 +853,9 @@
               "Hosting IP linked to active phishing kit.",
               "Block IOC and continue mailbox monitoring.",
             ],
-            recHtml: "Recommendation: ATDS suggests escalate — phishing lead-in to mailbox rule.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — phishing lead-in to mailbox rule.",
+            recAction: "escalate",
           },
           "ALT-88338": {
             title: "Suspicious reply-all",
@@ -868,7 +886,9 @@
               "Unusual reply-all pattern after phishing interaction.",
               "May be user noise — keep under watch with sibling alerts.",
             ],
-            recHtml: "Recommendation: ATDS suggests monitor within the phishing case.",
+            recHtml:
+              "Recommendation: ATDS suggests Close Alert — monitor within the phishing case.",
+            recAction: "close",
           },
           "ALT-88335": {
             title: "Lookalike domain click",
@@ -899,7 +919,9 @@
               "User navigated to lookalike finance domain via proxy.",
               "Domain hosting associated with phishing infrastructure.",
             ],
-            recHtml: "Recommendation: ATDS suggests investigate as part of phishing chain.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — part of phishing chain.",
+            recAction: "escalate",
           },
           "ALT-88428": {
             title: "Lateral movement attempt",
@@ -930,7 +952,9 @@
               "Host attempted authentication to multiple peer workstations.",
               "Pattern consistent with early lateral movement after staging.",
             ],
-            recHtml: "Recommendation: ATDS suggests escalate with the ransomware staging case.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case with the ransomware staging case.",
+            recAction: "escalate",
           },
           "ALT-88425": {
             title: "DNS tunneling spike",
@@ -961,7 +985,9 @@
               "Elevated TXT query volume to uncommon external resolver path.",
               "Possible tunneling — correlate with endpoint process tree.",
             ],
-            recHtml: "Recommendation: ATDS suggests investigate DNS anomaly before closing.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — investigate DNS anomaly.",
+            recAction: "escalate",
           },
           "ALT-88422": {
             title: "Anomalous OAuth consent",
@@ -992,7 +1018,9 @@
               "User granted OAuth consent to an uncommon third-party app.",
               "App requests mail.read — verify publisher and revoke if unexpected.",
             ],
-            recHtml: "Recommendation: ATDS suggests investigate OAuth grant with identity team.",
+            recHtml:
+              "Recommendation: ATDS suggests Escalate as new case — review OAuth grant with identity.",
+            recAction: "escalate",
           },
         };
 
@@ -1003,6 +1031,28 @@
           network: "dns_oauth",
         };
 
+        function recActionFromText(text) {
+          var t = String(text || "").toLowerCase();
+          if (/escalat/.test(t)) return "escalate";
+          if (/investigat/.test(t)) return "escalate";
+          if (/associate/.test(t)) return "associate";
+          if (/\bmonitor\b/.test(t)) return "close";
+          if (/\bclose\b/.test(t)) return "close";
+          return "associate";
+        }
+
+        function applyAtdsAction(action) {
+          var key = action || "associate";
+          var wrap = document.querySelector(".soc-atds-actions");
+          if (!wrap) return;
+          wrap.setAttribute("data-atds-action", key);
+          wrap.querySelectorAll("[data-atds-btn]").forEach(function (btn) {
+            var primary = btn.getAttribute("data-atds-btn") === key;
+            btn.classList.toggle("soc-btn--primary", primary);
+            btn.classList.toggle("soc-btn--secondary", !primary);
+          });
+        }
+
         function fromDemoAlert(demo) {
           var risk =
             demo.severity === "critical"
@@ -1012,6 +1062,30 @@
                 : demo.severity === "medium"
                   ? 48
                   : 30;
+          var verb = demo.atdsVerb || "Investigate";
+          var recAction = recActionFromText(verb + " " + (demo.atds || ""));
+          var recHtml;
+          if (recAction === "associate") {
+            recHtml =
+              'Recommendation: ATDS suggests Associate with other case' +
+              (demo.caseId
+                ? ', id: <a href="./incident.html?case=' +
+                  encodeURIComponent(demo.caseId) +
+                  '">' +
+                  demo.caseId +
+                  "</a>."
+                : ".");
+          } else if (recAction === "close") {
+            recHtml =
+              "Recommendation: ATDS suggests Close Alert — likely false positive / monitor path.";
+          } else {
+            recHtml =
+              "Recommendation: ATDS suggests " +
+              verb +
+              (verb === "Escalate"
+                ? " as new case."
+                : " — continue investigation via escalate path.");
+          }
           return {
             title: demo.title,
             severity: demo.severityLabel,
@@ -1054,7 +1128,8 @@
                 "/10.",
               "ATDS disposition path: " + demo.atds + ".",
             ],
-            recHtml: "Recommendation: ATDS suggests " + demo.atdsVerb + ".",
+            recHtml: recHtml,
+            recAction: recAction,
           };
         }
 
@@ -1507,6 +1582,9 @@
         document.getElementById("alert-close").href = complete;
         document.getElementById("alert-escalate").href = complete;
         document.getElementById("alert-associate").href = complete;
+        applyAtdsAction(
+          data.recAction || recActionFromText(data.atds || data.recHtml || "")
+        );
 
         var rb =
           RUNBOOKS[data.runbook] || RUNBOOKS.powershell_fp;
