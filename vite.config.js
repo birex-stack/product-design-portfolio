@@ -1,9 +1,34 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { copyFileSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+
+/**
+ * Classic (non-module) script tags are left as relative URLs by Vite and are
+ * not emitted into dist — GH Pages then 404s soc-demo-data / list renderers.
+ */
+function copySocClassicScripts() {
+  const files = [
+    'case-studies/ibm-xftm-soc/soc-demo-data.js',
+    'case-studies/ibm-xftm-soc/soc-alerts-page.js',
+    'case-studies/ibm-xftm-soc/soc-cases-page.js',
+  ];
+  return {
+    name: 'copy-soc-classic-scripts',
+    closeBundle() {
+      const outDir = 'dist';
+      for (const file of files) {
+        const dest = join(outDir, file);
+        mkdirSync(dirname(dest), { recursive: true });
+        copyFileSync(file, dest);
+      }
+    },
+  };
+}
 
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/product-design-portfolio/',
-  plugins: [react()],
+  plugins: [react(), copySocClassicScripts()],
   optimizeDeps: {
     include: [
       '@emotion/react',
